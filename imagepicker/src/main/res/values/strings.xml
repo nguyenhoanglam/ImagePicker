@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ImagePicker</string>
+
+    <string name="permission_write_external_rationale">Allow access external storage to select images</string>
+
+    <string name="ok">OK</string>
+    <string name="add">ADD</string>
+
+    <string name="title_select_image">Tap to select images</string>
+
+    <string name="limit_exceeded">Can select a maximum of %d images</string>
+
+    <string name="selected">%d selected</string>
+    <string name="selected_with_limit">%1$d/%2$d selected</string>
+
+    <string name="error_create_image_file">Failed to create image file</string>
+    <string name="error_no_camera">No camera found</string>
+    <string name="error_null_cursor">Oops, something went wrong!</string>
+
+    <string name="msg_empty_images">No images found</string>
+    <string name="msg_no_write_external_permission">Could not select images</string>
+    <string name="msg_limit_images">Maximum image selection limit</string>
+
+</resources>

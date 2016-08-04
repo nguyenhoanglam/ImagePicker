@@ -1,0 +1,8 @@
+<component name="CopyrightManager">
+  <settings default="HOANGLAM">
+    <module2copyright>
+      <element module="All" copyright="HOANGLAM" />
+    </module2copyright>
+    <LanguageOptions name="JAVA" />
+  </settings>
+</component>

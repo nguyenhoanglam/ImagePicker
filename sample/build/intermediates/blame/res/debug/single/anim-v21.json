@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/anim-v21/design_bottom_sheet_slide_out.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/design/24.1.1/res/anim-v21/design_bottom_sheet_slide_out.xml"
+    },
+    {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/anim-v21/design_bottom_sheet_slide_in.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/design/24.1.1/res/anim-v21/design_bottom_sheet_slide_in.xml"
+    },
+    {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/anim-v21/design_appbar_state_list_animator.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/design/24.1.1/res/anim-v21/design_appbar_state_list_animator.xml"
+    }
+]
