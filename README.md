@@ -4,7 +4,8 @@ A simple library to pick images from the gallery and camera.
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
 
 ## Screenshot
-![device-2016-08-06-004242](https://cloud.githubusercontent.com/assets/4979755/17445822/b11d2288-5b70-11e6-914d-a15a4e956f4c.png)
+![](url =widthxheight)
+![](https://cloud.githubusercontent.com/assets/4979755/17445822/b11d2288-5b70-11e6-914d-a15a4e956f4c.png =384x640)
 
 ## Download
 Add it to your module's build.gradle with:
