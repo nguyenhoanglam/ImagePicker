@@ -50,4 +50,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // do your logic ....
     }
 }
-```  
+```
+#Thanks
+- Darshan Dorai for [MultipleImageSelect](https://github.com/darsh2/MultipleImageSelect) 
+- [Glide](https://github.com/bumptech/glide)
