@@ -20,19 +20,14 @@ dependencies {
 
 ## How to use
 ### Start image picker activity
-
 ```java
-  public void startImagePicker() {
-      Intent intent = new Intent(this, ImagePickerActivity.class);
-
-      intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-      intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
-      intent.putExtra(ImagePickerActivity.INTENT_EXTRA_CAMERA, true);
-      intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
-
-      startActivityForResult(intent, ImagePickerActivity.REQUEST_CODE_PICKER);
-  }
-```
+    ImagePicker.create(this)
+                .single() // single mode
+                .limit(10) // multi mode (default mode)
+                .showCamera(true) // show camera or not (true by default)
+                .origin(images) // original selected images, used in multi mode
+                .start(REQUEST_CODE_PICKER); // start image picker activity with request code
+```                
 
 ### Extra options
 ```java
