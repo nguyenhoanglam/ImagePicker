@@ -44,6 +44,7 @@ import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.io.File;
 import java.util.ArrayList;
+
 /**
  * Created by hoanglam on 7/31/16.
  */
@@ -59,12 +60,13 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public static final String INTENT_EXTRA_CAMERA = "camera";
     public static final String INTENT_EXTRA_MODE = "mode";
 
+
     private ArrayList<Image> images;
     private ArrayList<Image> selectedImages;
     private File fileTemp;
     private Uri fileUri;
 
-    private boolean isCameraEnable;
+    private boolean showCamera;
     private int mode;
     private int limit;
 
@@ -109,11 +111,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
 
 
-        limit = intent.getIntExtra(INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
-        mode = intent.getIntExtra(INTENT_EXTRA_MODE, MODE_MULTIPLE);
-        isCameraEnable = intent.getBooleanExtra(INTENT_EXTRA_CAMERA, true);
-        if (mode == MODE_MULTIPLE && intent.hasExtra(INTENT_EXTRA_SELECTED_IMAGES)) {
-            selectedImages = intent.getParcelableArrayListExtra(INTENT_EXTRA_SELECTED_IMAGES);
+        limit = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
+        mode = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+        showCamera = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_CAMERA, true);
+        if (mode == ImagePickerActivity.MODE_MULTIPLE && intent.hasExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES)) {
+            selectedImages = intent.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
         }
 
         if (selectedImages == null)
@@ -142,7 +144,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menuDone = menu.findItem(R.id.menu_add);
         menuCamera = menu.findItem(R.id.menu_capture_image);
-        menuCamera.setVisible(isCameraEnable);
+        menuCamera.setVisible(showCamera);
         updateTitle();
         return true;
     }
@@ -161,14 +163,14 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             if (selectedImages != null && selectedImages.size() > 0) {
                 for (int i = 0; i < selectedImages.size(); i++) {
                     Image image = selectedImages.get(i);
-                    File file = new File(image.path);
+                    File file = new File(image.getPath());
                     if (file == null || !file.exists()) {
                         selectedImages.remove(i);
                         i--;
                     }
                 }
                 Intent data = new Intent();
-                data.putParcelableArrayListExtra(INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
+                data.putParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
                 setResult(RESULT_OK, data);
                 finish();
             }
@@ -283,7 +285,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     private void clickImage(int position) {
-        if (mode == MODE_MULTIPLE) {
+        if (mode == ImagePickerActivity.MODE_MULTIPLE) {
             if (!selectedImages.contains(images.get(position))) {
                 if (selectedImages.size() < limit) {
                     adapter.addSelected(images.get(position));
@@ -374,12 +376,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                         for (int j = 0; j < temps.size(); j++) {
                             for (int i = 0; i < images.size(); i++) {
                                 if (fileTemp != null && fileTemp.exists())
-                                    if (images.get(i).path.equals(fileTemp.getPath())) {
+                                    if (images.get(i).getPath().equals(fileTemp.getPath())) {
                                         temps.add(new Image(0, "", fileTemp.getPath(), false));
                                         fileTemp = null;
                                     }
 
-                                if (images.get(i).path.equals(temps.get(j).path)) {
+                                if (images.get(i).getPath().equals(temps.get(j).getPath())) {
                                     clickImage(i);
                                 }
                             }
@@ -423,7 +425,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             if (menuDone != null)
                 menuDone.setVisible(false);
         } else {
-            if (mode == MODE_MULTIPLE) {
+            if (mode == ImagePickerActivity.MODE_MULTIPLE) {
                 if (limit == Constants.MAX_LIMIT)
                     actionBar.setTitle(String.format(getString(R.string.selected), selectedImages.size()));
                 else

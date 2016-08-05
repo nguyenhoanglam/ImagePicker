@@ -55,7 +55,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         viewHolder.itemView.getLayoutParams().height = size;
 
         Glide.with(context)
-                .load(image.path)
+                .load(image.getPath())
                 .placeholder(R.drawable.image_placeholder)
                 .error(R.drawable.image_placeholder)
                 .override(imageSize, imageSize)

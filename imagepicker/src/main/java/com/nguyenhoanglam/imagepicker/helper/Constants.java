@@ -5,12 +5,11 @@ package com.nguyenhoanglam.imagepicker.helper;
  */
 public class Constants {
 
-    public static final int REQUEST_CODE_PICKER = 2000;
-    public static final int REQUEST_CODE_CAPTURE = 2001;
+    public static final int REQUEST_CODE_CAPTURE = 2000;
 
-    public static final int FETCH_STARTED = 2002;
-    public static final int FETCH_COMPLETED = 2003;
-    public static final int ERROR = 2004;
+    public static final int FETCH_STARTED = 2001;
+    public static final int FETCH_COMPLETED = 2002;
+    public static final int ERROR = 2003;
 
     public static final int MAX_LIMIT = 99;
 

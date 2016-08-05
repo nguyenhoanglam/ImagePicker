@@ -1,11 +1,11 @@
 [
     {
-        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/abc_list_pressed_holo_dark.9.png",
-        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable-mdpi-v4/abc_list_pressed_holo_dark.9.png"
-    },
-    {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/ic_camera_white.png",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/bundles/debug/res/drawable-mdpi-v4/ic_camera_white.png"
+    },
+    {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/abc_list_pressed_holo_dark.9.png",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable-mdpi-v4/abc_list_pressed_holo_dark.9.png"
     },
     {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png",

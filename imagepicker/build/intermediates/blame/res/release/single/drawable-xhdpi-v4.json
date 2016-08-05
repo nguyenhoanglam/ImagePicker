@@ -100,16 +100,16 @@
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable-xhdpi-v4/abc_btn_switch_to_on_mtrl_00012.9.png"
     },
     {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/drawable-xhdpi-v4/abc_ic_menu_cut_mtrl_alpha.png",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable-xhdpi-v4/abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/drawable-xhdpi-v4/ic_done_white.png",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/src/main/res/drawable-xhdpi/ic_done_white.png"
     },
     {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/drawable-xhdpi-v4/abc_scrubber_track_mtrl_alpha.9.png",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable-xhdpi-v4/abc_scrubber_track_mtrl_alpha.9.png"
-    },
-    {
-        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/drawable-xhdpi-v4/abc_ic_menu_cut_mtrl_alpha.png",
-        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable-xhdpi-v4/abc_ic_menu_cut_mtrl_alpha.png"
     },
     {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/drawable-xhdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png",
