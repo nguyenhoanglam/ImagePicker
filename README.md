@@ -30,6 +30,16 @@ ImagePicker.create(this)
             .start(REQUEST_CODE_PICKER); // start image picker activity with request code
 ```                
 - Or use traditional Intent
+```java
+Intent intent = new Intent(this, ImagePickerActivity.class);
+
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
+
+startActivityForResult(intent, REQUEST_CODE_PICKER);
+```        
 ### Receive result
 
 ```java
