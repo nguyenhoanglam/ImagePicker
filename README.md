@@ -1,6 +1,7 @@
 ## ImagePicker
-A simple library to pick pictures from the gallery and camera.
+A simple library to pick images from the gallery and camera.
 
+[![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
 ## Download
 Add it to your module's build.gradle with:
 ```java
