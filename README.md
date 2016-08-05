@@ -20,6 +20,7 @@ dependencies {
 
 ## How to use
 ### Start image picker activity
+- Quick call
 ```java
 ImagePicker.create(this)
             .single() // single mode
@@ -28,6 +29,7 @@ ImagePicker.create(this)
             .origin(images) // original selected images, used in multi mode
             .start(REQUEST_CODE_PICKER); // start image picker activity with request code
 ```                
+- Or use traditional Intent
 ### Receive result
 
 ```java
