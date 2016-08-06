@@ -24,7 +24,7 @@ dependencies {
 ```
 
 ## How to use
-#### Start image picker activity
+### Start image picker activity
 - Quick call
 ```java
 ImagePicker.create(this)
@@ -45,7 +45,7 @@ intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
 
 startActivityForResult(intent, REQUEST_CODE_PICKER);
 ```        
-#### Receive result
+### Receive result
 
 ```java
 @Override
