@@ -29,7 +29,8 @@ dependencies {
 ```java
 ImagePicker.create(this)
             .single() // single mode
-            .limit(10) // multi mode (default mode)
+            .multi() // multi mode (default mode)
+            .limit(10) // max images can be selected
             .showCamera(true) // show camera or not (true by default)
             .origin(images) // original selected images, used in multi mode
             .start(REQUEST_CODE_PICKER); // start image picker activity with request code
