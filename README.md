@@ -4,8 +4,7 @@ A simple library to pick images from the gallery and camera.
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
 
 ## Screenshot
-![](url =widthxheight)
-![](https://cloud.githubusercontent.com/assets/4979755/17445822/b11d2288-5b70-11e6-914d-a15a4e956f4c.png =384x640)
+![111](https://cloud.githubusercontent.com/assets/4979755/17454014/c6b48a5e-5bb2-11e6-9dde-9b8321a569d5.png)
 
 ## Download
 Add it to your module's build.gradle with:
@@ -59,4 +58,4 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 #Thanks
 - Darshan Dorai for [MultipleImageSelect](https://github.com/darsh2/MultipleImageSelect) 
-- [Glide](https://github.com/bumptech/glide)
+- [Glide](https://github.com/bumptech/glide) for loading image implementation
