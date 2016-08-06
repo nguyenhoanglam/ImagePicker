@@ -57,7 +57,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     public static final String INTENT_EXTRA_SELECTED_IMAGES = "selectedImages";
     public static final String INTENT_EXTRA_LIMIT = "limit";
-    public static final String INTENT_EXTRA_CAMERA = "camera";
+    public static final String INTENT_EXTRA_SHOW_CAMERA = "showCamera";
     public static final String INTENT_EXTRA_MODE = "mode";
 
 
@@ -113,7 +113,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
         limit = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
         mode = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-        showCamera = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_CAMERA, true);
+        showCamera = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
         if (mode == ImagePickerActivity.MODE_MULTIPLE && intent.hasExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES)) {
             selectedImages = intent.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
         }

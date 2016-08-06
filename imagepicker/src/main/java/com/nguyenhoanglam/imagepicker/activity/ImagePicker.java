@@ -71,7 +71,7 @@ public class ImagePicker {
         Intent intent = new Intent(activity, ImagePickerActivity.class);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, mode);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, limit);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_CAMERA, showCamera);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, showCamera);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
 
         activity.startActivityForResult(intent, requestCode);

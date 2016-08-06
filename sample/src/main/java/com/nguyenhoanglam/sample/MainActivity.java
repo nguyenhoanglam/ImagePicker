@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         buttonPickImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startImagePickerVer2();
+                start();
             }
         });
 
@@ -47,18 +47,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Quick call image picker
-    public void startImagePickerVer1() {
-        ImagePicker.create(this).multi().limit(10).showCamera(true).origin(images).start(REQUEST_CODE_PICKER);
+    // Quick call
+    public void start() {
+        ImagePicker.create(this)
+                .multi()
+                .limit(10)
+                .showCamera(true)
+                .origin(images)
+                .start(REQUEST_CODE_PICKER);
     }
 
-    // Traditional call image picker
-    public void startImagePickerVer2() {
+    // Traditional intent
+    public void startWithIntent() {
         Intent intent = new Intent(this, ImagePickerActivity.class);
 
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_CAMERA, true);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
 
         startActivityForResult(intent, REQUEST_CODE_PICKER);
