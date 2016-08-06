@@ -56,6 +56,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 }
 ```
-#Thanks
+###Thanks
 - Darshan Dorai for [MultipleImageSelect](https://github.com/darsh2/MultipleImageSelect) 
-- [Glide](https://github.com/bumptech/glide) for loading image implementation
+- [Glide](https://github.com/bumptech/glide) for image loading implementation
