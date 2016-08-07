@@ -2,6 +2,7 @@
 A simple library to pick images from the gallery and camera.
 
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 
 ## Screenshot
 ![111](https://cloud.githubusercontent.com/assets/4979755/17454014/c6b48a5e-5bb2-11e6-9dde-9b8321a569d5.png)
