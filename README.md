@@ -63,7 +63,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 - [Glide](https://github.com/bumptech/glide) for image loading implementation
 
 ##License
-Copyright 2016 fanrunqi
+Copyright 2016 Nguyen Hoang Lam
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
