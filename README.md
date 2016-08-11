@@ -5,7 +5,7 @@ A simple library to pick images from the gallery and camera.
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 
 ## Screenshot
-![111](https://cloud.githubusercontent.com/assets/4979755/17454014/c6b48a5e-5bb2-11e6-9dde-9b8321a569d5.png)
+![ImagePicker](https://cloud.githubusercontent.com/assets/4979755/17599426/383026aa-6029-11e6-95fc-27db43f4dbfa.png)
 
 ## Download
 Add it to your module's build.gradle with:
