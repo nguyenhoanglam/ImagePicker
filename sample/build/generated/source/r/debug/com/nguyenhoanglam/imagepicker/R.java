@@ -705,8 +705,6 @@ public final class R {
 		public static final int list_item = 0x7f0c0043;
 		public static final int main = 0x7f0c006c;
 		public static final int media_actions = 0x7f0c0081;
-		public static final int menu_add = 0x7f0c008c;
-		public static final int menu_capture_image = 0x7f0c008b;
 		public static final int middle = 0x7f0c0034;
 		public static final int mini = 0x7f0c0032;
 		public static final int multiply = 0x7f0c001b;
@@ -838,9 +836,6 @@ public final class R {
 		public static final int support_simple_spinner_dropdown_item = 0x7f040034;
 		public static final int toolbar = 0x7f040035;
 	}
-	public static final class menu {
-		public static final int menu_main = 0x7f0d0000;
-	}
 	public static final class mipmap {
 		public static final int ic_launcher = 0x7f030000;
 	}
@@ -880,20 +875,21 @@ public final class R {
 		public static final int app_name = 0x7f060021;
 		public static final int appbar_scrolling_view_behavior = 0x7f060022;
 		public static final int bottom_sheet_behavior = 0x7f060023;
-		public static final int character_counter_pattern = 0x7f060024;
-		public static final int error_create_image_file = 0x7f060025;
-		public static final int error_no_camera = 0x7f060026;
-		public static final int error_null_cursor = 0x7f060027;
-		public static final int limit_exceeded = 0x7f060028;
-		public static final int msg_empty_images = 0x7f060029;
-		public static final int msg_limit_images = 0x7f06002a;
-		public static final int msg_no_write_external_permission = 0x7f06002b;
-		public static final int ok = 0x7f06002c;
-		public static final int permission_write_external_rationale = 0x7f06002d;
-		public static final int selected = 0x7f06002e;
-		public static final int selected_with_limit = 0x7f06002f;
+		public static final int camera = 0x7f060024;
+		public static final int character_counter_pattern = 0x7f060025;
+		public static final int error_create_image_file = 0x7f060026;
+		public static final int error_no_camera = 0x7f060027;
+		public static final int error_null_cursor = 0x7f060028;
+		public static final int limit_exceeded = 0x7f060029;
+		public static final int msg_empty_images = 0x7f06002a;
+		public static final int msg_limit_images = 0x7f06002b;
+		public static final int msg_no_write_external_permission = 0x7f06002c;
+		public static final int ok = 0x7f06002d;
+		public static final int permission_write_external_rationale = 0x7f06002e;
+		public static final int selected = 0x7f06002f;
+		public static final int selected_with_limit = 0x7f060030;
 		public static final int status_bar_notification_info_overflow = 0x7f060013;
-		public static final int title_select_image = 0x7f060030;
+		public static final int title_select_image = 0x7f060031;
 	}
 	public static final class style {
 		public static final int AlertDialog_AppCompat = 0x7f08008c;

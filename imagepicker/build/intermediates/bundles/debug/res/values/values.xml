@@ -9,6 +9,7 @@
     <dimen name="item_padding">1dp</dimen>
     <string name="add">ADD</string>
     <string name="app_name">ImagePicker</string>
+    <string name="camera">CAMERA</string>
     <string name="error_create_image_file">Failed to create image file</string>
     <string name="error_no_camera">No camera found</string>
     <string name="error_null_cursor">Oops, something went wrong!</string>
@@ -34,12 +35,10 @@
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="actionMenuTextColor">@color/colorTextPrimary</item>
     </style>
-    <style name="ImagePickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
+    <style name="ImagePickerTheme" parent="AppTheme">
         <item name="actionModeStyle">@style/CustomActionModeStyle</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>

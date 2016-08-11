@@ -22,7 +22,7 @@ MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Pr
 MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
 MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:14:5-28:19
+MERGED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:14:5-24:19
 MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
@@ -112,7 +112,7 @@ ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/D
 	android:name
 		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:12:22-78
 activity#com.nguyenhoanglam.imagepicker.activity.ImagePickerActivity
-ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:19:9-27:20
+ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:19:9-23:55
 	android:label
 		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:22:13-45
 	android:configChanges
@@ -121,9 +121,3 @@ ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/D
 		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:23:13-52
 	android:name
 		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:20:13-87
-intent-filter#android.intent.category.DEFAULT
-ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:24:13-26:29
-category#android.intent.category.DEFAULT
-ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:25:17-76
-	android:name
-		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:25:27-73

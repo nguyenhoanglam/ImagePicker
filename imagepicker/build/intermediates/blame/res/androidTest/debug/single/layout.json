@@ -76,12 +76,12 @@
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/notification_media_cancel_action.xml"
     },
     {
-        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/androidTest/debug/layout/support_simple_spinner_dropdown_item.xml",
-        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/support_simple_spinner_dropdown_item.xml"
-    },
-    {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/androidTest/debug/layout/abc_action_bar_view_list_nav_layout.xml",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/abc_action_bar_view_list_nav_layout.xml"
+    },
+    {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/androidTest/debug/layout/support_simple_spinner_dropdown_item.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/support_simple_spinner_dropdown_item.xml"
     },
     {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/androidTest/debug/layout/design_navigation_menu.xml",

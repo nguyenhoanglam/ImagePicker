@@ -72,7 +72,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     private ActionBar actionBar;
 
-    private MenuItem menuDone, menuCamera;
+    private MenuItem menuAdd, menuCamera;
+    private final int menuAddId = 100;
+    private final int menuCameraId = 101;
 
     private RelativeLayout mainLayout;
     private ProgressBar progressBar;
@@ -141,11 +143,21 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        menuDone = menu.findItem(R.id.menu_add);
-        menuCamera = menu.findItem(R.id.menu_capture_image);
-        menuCamera.setVisible(showCamera);
+
+        if (menu.findItem(menuCameraId) == null) {
+            menuCamera = menu.add(Menu.NONE, menuCameraId, 1, getString(R.string.camera));
+            menuCamera.setIcon(R.drawable.ic_camera_white);
+            menuCamera.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuCamera.setVisible(showCamera);
+        }
+
+        if (menu.findItem(menuAddId) == null) {
+            menuAdd = menu.add(Menu.NONE, menuAddId, 2, getString(R.string.add));
+            menuAdd.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        }
+
         updateTitle();
+
         return true;
     }
 
@@ -159,7 +171,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             return true;
         }
 
-        if (id == R.id.menu_add) {
+        if (id == menuAddId) {
             if (selectedImages != null && selectedImages.size() > 0) {
                 for (int i = 0; i < selectedImages.size(); i++) {
                     Image image = selectedImages.get(i);
@@ -176,7 +188,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             }
             return true;
         }
-        if (id == R.id.menu_capture_image) {
+        if (id == menuCameraId) {
             captureImage();
             return true;
         }
@@ -422,8 +434,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void updateTitle() {
         if (selectedImages.size() == 0) {
             actionBar.setTitle(getString(R.string.title_select_image));
-            if (menuDone != null)
-                menuDone.setVisible(false);
+            if (menuAdd != null)
+                menuAdd.setVisible(false);
         } else {
             if (mode == ImagePickerActivity.MODE_MULTIPLE) {
                 if (limit == Constants.MAX_LIMIT)
@@ -431,8 +443,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                 else
                     actionBar.setTitle(String.format(getString(R.string.selected_with_limit), selectedImages.size(), limit));
             }
-            if (menuDone != null)
-                menuDone.setVisible(true);
+            if (menuAdd != null)
+                menuAdd.setVisible(true);
         }
     }
 

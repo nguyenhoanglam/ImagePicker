@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     // Quick call
     public void start() {
         ImagePicker.create(this)
+                .single()
                 .multi()
                 .limit(10)
                 .showCamera(true)

@@ -301,6 +301,7 @@
     <string name="app_name">sample</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="bottom_sheet_behavior" translatable="false">android.support.design.widget.BottomSheetBehavior</string>
+    <string name="camera">CAMERA</string>
     <string name="character_counter_pattern" translatable="false">%1$d / %2$d</string>
     <string name="error_create_image_file">Failed to create image file</string>
     <string name="error_no_camera">No camera found</string>
@@ -1346,13 +1347,11 @@
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="actionMenuTextColor">@color/colorTextPrimary</item>
     </style>
-    <style name="ImagePickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
+    <style name="ImagePickerTheme" parent="AppTheme">
         <item name="actionModeStyle">@style/CustomActionModeStyle</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
     <style name="Platform.AppCompat" parent="android:Theme">
         <item name="android:windowNoTitle">true</item>
