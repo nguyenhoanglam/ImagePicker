@@ -20,7 +20,7 @@ allprojects {
 and:
 ```java
 dependencies {
-    compile 'com.github.nguyenhoanglam:ImagePicker:1.0.1'
+    compile 'com.github.nguyenhoanglam:ImagePicker:1.0.2'
 }
 ```
 
