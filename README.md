@@ -52,7 +52,7 @@ startActivityForResult(intent, REQUEST_CODE_PICKER);
 ```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == ImagePickerActivity.REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
+    if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
         ArrayList<Image> images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
         // do your logic ....
     }
