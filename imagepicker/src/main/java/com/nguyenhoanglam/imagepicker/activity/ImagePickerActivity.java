@@ -59,16 +59,18 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public static final String INTENT_EXTRA_LIMIT = "limit";
     public static final String INTENT_EXTRA_SHOW_CAMERA = "showCamera";
     public static final String INTENT_EXTRA_MODE = "mode";
+    public static final String INTENT_EXTRA_TITLE = "title";
 
 
     private ArrayList<Image> images;
-    private ArrayList<Image> selectedImages;
     private File fileTemp;
     private Uri fileUri;
 
+    private ArrayList<Image> selectedImages;
     private boolean showCamera;
     private int mode;
     private int limit;
+    private String title;
 
     private ActionBar actionBar;
 
@@ -109,12 +111,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.title_select_image);
         }
 
 
         limit = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
         mode = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+        title = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_TITLE);
         showCamera = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
         if (mode == ImagePickerActivity.MODE_MULTIPLE && intent.hasExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES)) {
             selectedImages = intent.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
@@ -123,6 +125,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         if (selectedImages == null)
             selectedImages = new ArrayList<>();
         images = new ArrayList<>();
+
+        // Set default toolbar title
+        if (actionBar != null)
+            actionBar.setTitle(title);
 
         adapter = new ImagePickerAdapter(this, images, selectedImages, this);
 
@@ -433,7 +439,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     private void updateTitle() {
         if (selectedImages.size() == 0) {
-            actionBar.setTitle(getString(R.string.title_select_image));
+            actionBar.setTitle(title);
             if (menuAdd != null)
                 menuAdd.setVisible(false);
         } else {

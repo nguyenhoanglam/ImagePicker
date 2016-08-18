@@ -8,6 +8,7 @@ package com.nguyenhoanglam.sample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -50,12 +51,13 @@ public class MainActivity extends AppCompatActivity {
     // Quick call
     public void start() {
         ImagePicker.create(this)
-                .single()
-                .multi()
-                .limit(10)
-                .showCamera(true)
-                .origin(images)
-                .start(REQUEST_CODE_PICKER);
+                .title("Tap to select") // picker's title
+                .single() // single mode
+                .multi() // multi mode (default mode)
+                .limit(10) // max images can be selected
+                .showCamera(true) // show camera or not (true by default)
+                .origin(images) // original selected images, used in multi mode
+                .start(REQUEST_CODE_PICKER); // start image picker activity with request code
     }
 
     // Traditional intent
@@ -66,19 +68,22 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
-
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_TITLE, "Tap to select images");
         startActivityForResult(intent, REQUEST_CODE_PICKER);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
+            Log.d("1", "true");
             images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0, l = images.size(); i < l; i++) {
                 stringBuffer.append(images.get(i).getPath() + "\n");
             }
             textView.setText(stringBuffer.toString());
+        } else {
+            Log.d("1", "false");
         }
     }
 }

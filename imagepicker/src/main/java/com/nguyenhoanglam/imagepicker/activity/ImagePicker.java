@@ -8,6 +8,7 @@ package com.nguyenhoanglam.imagepicker.activity;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.Constants;
 import com.nguyenhoanglam.imagepicker.model.Image;
 
@@ -22,49 +23,52 @@ public class ImagePicker {
     private int mode;
     private int limit;
     private boolean showCamera;
+    private String title;
     private ArrayList<Image> selectedImages;
-
-    private static ImagePicker sImagePicker;
 
     public ImagePicker(Activity activity) {
         this.activity = activity;
         this.mode = ImagePickerActivity.MODE_MULTIPLE;
         this.limit = Constants.MAX_LIMIT;
         this.showCamera = true;
+        this.title = activity.getString(R.string.title_select_image);
         this.selectedImages = new ArrayList<>();
     }
 
 
     public static ImagePicker create(Activity activity) {
-        if (sImagePicker == null)
-            sImagePicker = new ImagePicker(activity);
-        return sImagePicker;
+        return new ImagePicker(activity);
     }
 
     public ImagePicker single() {
         mode = ImagePickerActivity.MODE_SINGLE;
-        return sImagePicker;
+        return this;
     }
 
     public ImagePicker multi() {
         mode = ImagePickerActivity.MODE_MULTIPLE;
-        return sImagePicker;
+        return this;
     }
 
 
     public ImagePicker limit(int count) {
         limit = count;
-        return sImagePicker;
+        return this;
     }
 
     public ImagePicker showCamera(boolean show) {
         showCamera = show;
-        return sImagePicker;
+        return this;
+    }
+
+    public ImagePicker title(String title) {
+        this.title = title;
+        return this;
     }
 
     public ImagePicker origin(ArrayList<Image> images) {
         selectedImages = images;
-        return sImagePicker;
+        return this;
     }
 
     public void start(int requestCode) {
@@ -72,6 +76,7 @@ public class ImagePicker {
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, mode);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, limit);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, showCamera);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_TITLE, title);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
 
         activity.startActivityForResult(intent, requestCode);

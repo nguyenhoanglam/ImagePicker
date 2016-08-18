@@ -1,6 +1,7 @@
 package com.nguyenhoanglam.imagepicker.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
         if (selectedImages.indexOf(image) != -1) {
             viewHolder.view.setAlpha(0.5f);
-            ((FrameLayout) viewHolder.itemView).setForeground(context.getResources().getDrawable(R.drawable.ic_done_white));
+            ((FrameLayout) viewHolder.itemView).setForeground(ContextCompat.getDrawable(context,R.drawable.ic_done_white));
         } else {
             viewHolder.view.setAlpha(0.0f);
             ((FrameLayout) viewHolder.itemView).setForeground(null);
@@ -103,10 +104,10 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
     public void removeSelected(Image image) {
         selectedImages.remove(image);
         notifyItemChanged(images.indexOf(image));
-        for (int i = 0; i < selectedImages.size(); i++) {
-            Image image1 = selectedImages.get(i);
-            notifyItemChanged(images.indexOf(image1));
-        }
+//        for (int i = 0; i < selectedImages.size(); i++) {
+//            Image image1 = selectedImages.get(i);
+//            notifyItemChanged(images.indexOf(image1));
+//        }
     }
 
 

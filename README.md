@@ -8,7 +8,7 @@ A simple library to pick images from the gallery and camera.
 ![ImagePicker](https://cloud.githubusercontent.com/assets/4979755/17599426/383026aa-6029-11e6-95fc-27db43f4dbfa.png)
 
 ## Download
-Add it to your module's build.gradle with:
+Add to your module's build.gradle:
 ```java
 allprojects {
     repositories {
@@ -29,12 +29,13 @@ dependencies {
 - Quick call
 ```java
 ImagePicker.create(this)
-            .single() // single mode
-            .multi() // multi mode (default mode)
-            .limit(10) // max images can be selected
-            .showCamera(true) // show camera or not (true by default)
-            .origin(images) // original selected images, used in multi mode
-            .start(REQUEST_CODE_PICKER); // start image picker activity with request code
+                .title("Tap to select") // picker's title
+                .single() // single mode
+                .multi() // multi mode (default mode)
+                .limit(10) // max images can be selected
+                .showCamera(true) // show camera or not (true by default)
+                .origin(images) // original selected images, used in multi mode
+                .start(REQUEST_CODE_PICKER); // start image picker activity with request code
 ```                
 - Or use traditional Intent
 ```java
@@ -44,6 +45,7 @@ intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_
 intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
 intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
 intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_TITLE, "Tap to select");
 
 startActivityForResult(intent, REQUEST_CODE_PICKER);
 ```        
@@ -58,6 +60,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 }
 ```
+##Changelog
+- v.1.0.3 - Allow to change picker's title, fixed [issue #13](https://github.com/nguyenhoanglam/ImagePicker/issues/13), add traditional Chinese localization by [jeungjeung](https://github.com/nguyenhoanglam/ImagePicker/pull/11)  
+
 ##Thanks
 - Darshan Dorai for [MultipleImageSelect](https://github.com/darsh2/MultipleImageSelect) 
 - [Glide](https://github.com/bumptech/glide) for image loading implementation
