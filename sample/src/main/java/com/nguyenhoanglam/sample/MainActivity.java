@@ -8,7 +8,6 @@ package com.nguyenhoanglam.sample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -75,15 +74,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
-            Log.d("1", "true");
             images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0, l = images.size(); i < l; i++) {
                 stringBuffer.append(images.get(i).getPath() + "\n");
             }
             textView.setText(stringBuffer.toString());
-        } else {
-            Log.d("1", "false");
         }
     }
 }
