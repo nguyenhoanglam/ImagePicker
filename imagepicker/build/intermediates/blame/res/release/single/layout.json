@@ -124,12 +124,12 @@
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/abc_popup_menu_item_layout.xml"
     },
     {
-        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/layout/abc_screen_simple.xml",
-        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/abc_screen_simple.xml"
-    },
-    {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/layout/notification_template_part_time.xml",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/notification_template_part_time.xml"
+    },
+    {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/layout/abc_screen_simple.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/abc_screen_simple.xml"
     },
     {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/res/merged/release/layout/abc_action_mode_close_item_material.xml",
