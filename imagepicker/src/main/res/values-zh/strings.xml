@@ -6,7 +6,6 @@
     <string name="error_create_image_file">建立相片檔案失敗</string>
     <string name="error_no_camera">找不到相機</string>
     <string name="error_null_cursor">噢，發生問題</string>
-    <string name="limit_exceeded">最多可選 %d 張相片</string>
     <string name="msg_empty_images">找不到相片</string>
     <string name="msg_limit_images">已達到最多選擇相片數量</string>
     <string name="msg_no_write_external_permission">不能選擇相片</string>
