@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ImagePicker</string>
+    <string name="add">ДОБАВИТЬ</string>
+    <string name="camera">КАМЕРА</string>
+    <string name="error_create_image_file">Не удалось сохранить изображение</string>
+    <string name="error_no_camera">Камера не обнаружена</string>
+    <string name="error_null_cursor">Уупс, что-то пошло не так!</string>
+    <string name="msg_empty_images">Изображения не найдены</string>
+    <string name="msg_limit_images">Лимит достигнут</string>
+    <string name="msg_no_write_external_permission">Не удалось получить доступ к хранилищу</string>
+    <string name="ok">ОК</string>
+    <string name="permission_write_external_rationale">Разрешите доступ, чтобы добавить фото</string>
+    <string name="selected">%d выбрано</string>
+    <string name="selected_with_limit">%1$d/%2$d выбрано</string>
+    <string name="title_select_image">Нажми, чтобы выбрать</string>
+</resources>

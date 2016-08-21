@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -116,7 +117,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
         limit = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
         mode = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-        title = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_TITLE);
+        if(intent.hasExtra(INTENT_EXTRA_TITLE)) {
+            title = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_TITLE);
+        } else {
+            title = getString(R.string.title_select_image);
+        }
         showCamera = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
         if (mode == ImagePickerActivity.MODE_MULTIPLE && intent.hasExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES)) {
             selectedImages = intent.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);

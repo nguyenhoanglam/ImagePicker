@@ -9,8 +9,6 @@
 
     <string name="title_select_image">Tap to select images</string>
 
-    <string name="limit_exceeded">Can select a maximum of %d images</string>
-
     <string name="selected">%d selected</string>
     <string name="selected_with_limit">%1$d/%2$d selected</string>
 
