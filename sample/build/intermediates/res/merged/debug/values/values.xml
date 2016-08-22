@@ -306,7 +306,6 @@
     <string name="error_create_image_file">Failed to create image file</string>
     <string name="error_no_camera">No camera found</string>
     <string name="error_null_cursor">Oops, something went wrong!</string>
-    <string name="limit_exceeded">Can select a maximum of %d images</string>
     <string name="msg_empty_images">No images found</string>
     <string name="msg_limit_images">Maximum image selection limit</string>
     <string name="msg_no_write_external_permission">Could not select images</string>
