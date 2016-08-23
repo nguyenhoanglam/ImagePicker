@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public void start() {
         ImagePicker.create(this)
                 .title("Tap to select") // picker's title
+                .folderMode(true)
                 .single() // single mode
                 .multi() // multi mode (default mode)
                 .limit(10) // max images can be selected
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public void startWithIntent() {
         Intent intent = new Intent(this, ImagePickerActivity.class);
 
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, true);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);

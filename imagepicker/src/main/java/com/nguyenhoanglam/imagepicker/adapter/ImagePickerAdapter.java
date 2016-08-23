@@ -14,6 +14,7 @@ import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hoanglam on 7/31/16.
@@ -21,15 +22,15 @@ import java.util.ArrayList;
 public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<Image> images;
-    private ArrayList<Image> selectedImages;
+    private List<Image> images;
+    private List<Image> selectedImages;
     private ViewHolder.OnItemClickListener onItemClickListener;
     private LayoutInflater inflater;
     private int size;
     private int imageSize;
     private int padding;
 
-    public ImagePickerAdapter(Context context, ArrayList<Image> images, ArrayList<Image> selectedImages, ViewHolder.OnItemClickListener onItemClickListener) {
+    public ImagePickerAdapter(Context context, List<Image> images, List<Image> selectedImages, ViewHolder.OnItemClickListener onItemClickListener) {
         this.context = context;
         this.images = images;
         this.selectedImages = selectedImages;
@@ -63,7 +64,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                 .centerCrop()
                 .into(viewHolder.imageView);
 
-        if (selectedImages.indexOf(image) != -1) {
+        if (isSelected(image)) {
             viewHolder.view.setAlpha(0.5f);
             ((FrameLayout) viewHolder.itemView).setForeground(ContextCompat.getDrawable(context,R.drawable.ic_done_white));
         } else {
@@ -71,6 +72,16 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
             ((FrameLayout) viewHolder.itemView).setForeground(null);
         }
 
+    }
+
+    private boolean isSelected(Image image) {
+        for (Image selectedImage:selectedImages) {
+            if (selectedImage.getPath().equals(image.getPath())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -86,11 +97,10 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public void clear() {
         images.clear();
-        selectedImages.clear();
         notifyDataSetChanged();
     }
 
-    public void addAll(ArrayList<Image> images) {
+    public void addAll(List<Image> images) {
         int startIndex = this.images.size();
         this.images.addAll(startIndex, images);
         notifyItemRangeInserted(startIndex, images.size());
@@ -108,6 +118,16 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 //            Image image1 = selectedImages.get(i);
 //            notifyItemChanged(images.indexOf(image1));
 //        }
+    }
+
+    public void removeSelectedPosition(int position, int clickPosition) {
+        selectedImages.remove(position);
+        notifyItemChanged(clickPosition);
+    }
+
+    public void removeAllSelectedSingleClick() {
+        selectedImages.clear();
+        notifyDataSetChanged();
     }
 
 
