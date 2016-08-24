@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -38,13 +39,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
+import com.nguyenhoanglam.imagepicker.adapter.FolderPickerAdapter;
 import com.nguyenhoanglam.imagepicker.adapter.ImagePickerAdapter;
 import com.nguyenhoanglam.imagepicker.helper.Constants;
 import com.nguyenhoanglam.imagepicker.helper.ImageUtils;
+import com.nguyenhoanglam.imagepicker.listeners.OnFolderClickListener;
+import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hoanglam on 7/31/16.
@@ -60,6 +65,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public static final String INTENT_EXTRA_LIMIT = "limit";
     public static final String INTENT_EXTRA_SHOW_CAMERA = "showCamera";
     public static final String INTENT_EXTRA_MODE = "mode";
+    public static final String INTENT_EXTRA_FOLDER_MODE = "folder_mode";
     public static final String INTENT_EXTRA_TITLE = "title";
 
 
@@ -70,6 +76,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private ArrayList<Image> selectedImages;
     private boolean showCamera;
     private int mode;
+    private boolean folderMode;
     private int limit;
     private String title;
 
@@ -85,14 +92,15 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private TextView emptyTextView;
 
     private ImagePickerAdapter adapter;
-
+    private FolderPickerAdapter folderAdapter;
 
     private ContentObserver observer;
     private Handler handler;
     private Thread thread;
 
-    private final String[] projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA};
+    private final String[] projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
+    private Parcelable foldersState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +125,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
         limit = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
         mode = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+        folderMode = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, false);
         if(intent.hasExtra(INTENT_EXTRA_TITLE)) {
             title = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_TITLE);
         } else {
@@ -136,7 +145,13 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             actionBar.setTitle(title);
 
         adapter = new ImagePickerAdapter(this, images, selectedImages, this);
-
+        folderAdapter = new FolderPickerAdapter(this, new OnFolderClickListener() {
+            @Override
+            public void onFolderClick(Folder bucket) {
+                foldersState = recyclerView.getLayoutManager().onSaveInstanceState();
+                setFilesAdapter(bucket);
+            }
+        });
 
         mainLayout = (RelativeLayout) findViewById(R.id.main);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -144,6 +159,20 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         orientationBasedUI(getResources().getConfiguration().orientation);
+    }
+
+    private void setFilesAdapter(Folder bucket) {
+        adapter.clear();
+        adapter.addAll(bucket.getImages());
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void setFoldersAdapter() {
+        adapter.clear();
+        recyclerView.setAdapter(folderAdapter);
+        if (foldersState != null) {
+            recyclerView.getLayoutManager().onRestoreInstanceState(foldersState);
+        }
     }
 
     @Override
@@ -177,8 +206,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            setResult(RESULT_CANCELED);
-            finish();
+            onBackPressed();
             return true;
         }
 
@@ -225,6 +253,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         if (adapter != null) {
             int size = metrics.widthPixels / columns;
             adapter.setImageSize(size);
+        }
+
+        if (folderAdapter != null) {
+            int size = metrics.widthPixels / columns;
+            folderAdapter.setImageSize(size);
         }
     }
 
@@ -308,26 +341,38 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     private void clickImage(int position) {
+        int selectedItemPosition = selectedImagePosition(images.get(position));
         if (mode == ImagePickerActivity.MODE_MULTIPLE) {
-            if (!selectedImages.contains(images.get(position))) {
+            if (selectedItemPosition == -1) {
                 if (selectedImages.size() < limit) {
                     adapter.addSelected(images.get(position));
                 } else {
                     Toast.makeText(this, R.string.msg_limit_images, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                adapter.removeSelected(images.get(position));
+                adapter.removeSelectedPosition(selectedItemPosition, position);
             }
         } else {
-            if (selectedImages.contains(images.get(position)))
-                adapter.removeSelected(images.get(position));
+            if (selectedItemPosition != -1)
+                adapter.removeSelectedPosition(selectedItemPosition, position);
             else {
-                for (int i = 0; i < selectedImages.size(); i++)
-                    adapter.removeSelected(selectedImages.get(i));
+                if (selectedImages.size() > 0) {
+                    adapter.removeAllSelectedSingleClick();
+                }
                 adapter.addSelected(images.get(position));
             }
         }
         updateTitle();
+    }
+
+    private int selectedImagePosition(Image image) {
+        for (int i = 0; i < selectedImages.size(); i++) {
+            if (selectedImages.get(i).getPath().equals(image.getPath())) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @Override
@@ -387,27 +432,23 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                         ArrayList<Image> newImages = new ArrayList<>();
                         newImages.addAll(images);
 
-                        adapter.clear();
-                        adapter.addAll(newImages);
-                        recyclerView.setAdapter(adapter);
+                        if (folderMode) {
+                            folderAdapter.setData(folders);
+                            recyclerView.setAdapter(folderAdapter);
 
-                        if (images.size() != 0)
-                            hideLoading();
-                        else
-                            showEmpty();
+                            if (folders.size() != 0)
+                                hideLoading();
+                            else
+                                showEmpty();
+                        } else {
+                            adapter.clear();
+                            adapter.addAll(newImages);
+                            recyclerView.setAdapter(adapter);
 
-                        for (int j = 0; j < temps.size(); j++) {
-                            for (int i = 0; i < images.size(); i++) {
-                                if (fileTemp != null && fileTemp.exists())
-                                    if (images.get(i).getPath().equals(fileTemp.getPath())) {
-                                        temps.add(new Image(0, "", fileTemp.getPath(), false));
-                                        fileTemp = null;
-                                    }
-
-                                if (images.get(i).getPath().equals(temps.get(j).getPath())) {
-                                    clickImage(i);
-                                }
-                            }
+                            if (images.size() != 0)
+                                hideLoading();
+                            else
+                                showEmpty();
                         }
 
                         break;
@@ -492,6 +533,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
+    List<Folder> folders;
 
     private class ImageLoaderRunnable implements Runnable {
 
@@ -527,6 +569,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
             ArrayList<Image> temp = new ArrayList<>(cursor.getCount());
             File file;
+            folders = new ArrayList<>();
 
             if (cursor.moveToLast()) {
                 do {
@@ -537,11 +580,22 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                     long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
                     String name = cursor.getString(cursor.getColumnIndex(projection[1]));
                     String path = cursor.getString(cursor.getColumnIndex(projection[2]));
+                    String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
 
                     file = new File(path);
                     if (file.exists()) {
                         Image image = new Image(id, name, path, false);
                         temp.add(image);
+
+                        if (folderMode) {
+                            Folder folder = getFolder(bucket);
+                            if (folder == null) {
+                                folder = new Folder(bucket);
+                                folders.add(folder);
+                            }
+
+                            folder.getImages().add(image);
+                        }
                     }
 
                 } while (cursor.moveToPrevious());
@@ -562,4 +616,24 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
+    public Folder getFolder(String name) {
+        for (Folder folder:folders) {
+            if (folder.getFolderName().equals(name)) {
+                return folder;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (folderMode && recyclerView.getAdapter() instanceof ImagePickerAdapter) {
+            setFoldersAdapter();
+            return;
+        }
+
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
+    }
 }

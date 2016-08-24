@@ -25,6 +25,7 @@ public class ImagePicker {
     private boolean showCamera;
     private String title;
     private ArrayList<Image> selectedImages;
+    private boolean folderMode;
 
     public ImagePicker(Activity activity) {
         this.activity = activity;
@@ -33,6 +34,7 @@ public class ImagePicker {
         this.showCamera = true;
         this.title = activity.getString(R.string.title_select_image);
         this.selectedImages = new ArrayList<>();
+        this.folderMode = false;
     }
 
 
@@ -71,6 +73,11 @@ public class ImagePicker {
         return this;
     }
 
+    public ImagePicker folderMode(boolean folderMode) {
+        this.folderMode = folderMode;
+        return this;
+    }
+
     public void start(int requestCode) {
         Intent intent = new Intent(activity, ImagePickerActivity.class);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, mode);
@@ -78,6 +85,7 @@ public class ImagePicker {
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, showCamera);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_TITLE, title);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, folderMode);
 
         activity.startActivityForResult(intent, requestCode);
     }
