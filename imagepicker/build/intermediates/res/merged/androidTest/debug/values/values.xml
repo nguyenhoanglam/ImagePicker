@@ -236,6 +236,8 @@
     <dimen name="design_tab_text_size_2line">12sp</dimen>
     <item format="float" name="disabled_alpha_material_dark" type="dimen">0.30</item>
     <item format="float" name="disabled_alpha_material_light" type="dimen">0.26</item>
+    <dimen name="font_medium">16sp</dimen>
+    <dimen name="font_small">12sp</dimen>
     <item format="float" name="highlight_alpha_material_colored" type="dimen">0.26</item>
     <item format="float" name="highlight_alpha_material_dark" type="dimen">0.20</item>
     <item format="float" name="highlight_alpha_material_light" type="dimen">0.12</item>
@@ -243,9 +245,15 @@
     <dimen name="item_touch_helper_max_drag_scroll_per_frame">20dp</dimen>
     <dimen name="item_touch_helper_swipe_escape_max_velocity">800dp</dimen>
     <dimen name="item_touch_helper_swipe_escape_velocity">120dp</dimen>
+    <dimen name="margin_large">15dp</dimen>
+    <dimen name="margin_medium">10dp</dimen>
+    <dimen name="margin_small">5dp</dimen>
     <dimen name="notification_large_icon_height">64dp</dimen>
     <dimen name="notification_large_icon_width">64dp</dimen>
     <dimen name="notification_subtext_size">12dp</dimen>
+    <dimen name="padding_large">15dp</dimen>
+    <dimen name="padding_medium">10dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
     <item name="action_bar_activity_content" type="id"/>
     <item name="action_bar_spinner" type="id"/>
@@ -304,14 +312,18 @@
     <string name="error_create_image_file">Failed to create image file</string>
     <string name="error_no_camera">No camera found</string>
     <string name="error_null_cursor">Oops, something went wrong!</string>
+    <string name="image_directory">Camera</string>
     <string name="msg_empty_images">No images found</string>
-    <string name="msg_limit_images">Maximum image selection limit</string>
-    <string name="msg_no_write_external_permission">Could not select images</string>
+    <string name="msg_limit_images">Image selection limit</string>
+    <string name="msg_no_camera_permission">Please grant camera permission to select images</string>
+    <string name="msg_no_write_external_permission">Please grant storage permission to select images</string>
     <string name="ok">OK</string>
     <string name="permission_write_external_rationale">Allow access external storage to select images</string>
     <string name="selected">%d selected</string>
     <string name="selected_with_limit">%1$d/%2$d selected</string>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <string name="title_folder">Folder</string>
+    <string name="title_permission_denied">Permission denied</string>
     <string name="title_select_image">Tap to select images</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>

@@ -23,18 +23,22 @@ public class ImagePicker {
     private int mode;
     private int limit;
     private boolean showCamera;
-    private String title;
+    private String folderTitle;
+    private String imageTitle;
     private ArrayList<Image> selectedImages;
     private boolean folderMode;
+    private String imageDirectory;
 
     public ImagePicker(Activity activity) {
         this.activity = activity;
         this.mode = ImagePickerActivity.MODE_MULTIPLE;
         this.limit = Constants.MAX_LIMIT;
         this.showCamera = true;
-        this.title = activity.getString(R.string.title_select_image);
+        this.folderTitle = activity.getString(R.string.title_folder);
+        this.imageTitle = activity.getString(R.string.title_select_image);
         this.selectedImages = new ArrayList<>();
         this.folderMode = false;
+        this.imageDirectory = activity.getString(R.string.image_directory);
     }
 
 
@@ -63,8 +67,13 @@ public class ImagePicker {
         return this;
     }
 
-    public ImagePicker title(String title) {
-        this.title = title;
+    public ImagePicker folderTitle(String title) {
+        this.folderTitle = title;
+        return this;
+    }
+
+    public ImagePicker imageTitle(String title) {
+        this.imageTitle = title;
         return this;
     }
 
@@ -78,14 +87,21 @@ public class ImagePicker {
         return this;
     }
 
+    public ImagePicker imageDirectory(String directory) {
+        this.imageDirectory = directory;
+        return this;
+    }
+
     public void start(int requestCode) {
         Intent intent = new Intent(activity, ImagePickerActivity.class);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, mode);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, limit);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, showCamera);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_TITLE, title);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE, folderTitle);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE, imageTitle);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, folderMode);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, imageDirectory);
 
         activity.startActivityForResult(intent, requestCode);
     }

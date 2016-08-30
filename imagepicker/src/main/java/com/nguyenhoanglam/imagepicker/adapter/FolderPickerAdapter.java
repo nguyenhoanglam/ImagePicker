@@ -18,73 +18,51 @@ import java.util.List;
 /**
  * Created by boss1088 on 8/22/16.
  */
-public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapter.FoldersViewHolder> {
+public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapter.FolderViewHolder> {
 
+    private Context context;
+    private LayoutInflater inflater;
     private int size;
-    private int imageSize;
-    private int padding;
     private final OnFolderClickListener folderClickListener;
 
     private List<Folder> folders;
 
     public FolderPickerAdapter(Context context, OnFolderClickListener folderClickListener) {
+        this.context = context;
         this.folderClickListener = folderClickListener;
-        padding = context.getResources().getDimensionPixelSize(R.dimen.item_padding);
+        inflater = LayoutInflater.from(this.context);
     }
 
     @Override
-    public FoldersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new FoldersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_folder, null));
+    public FolderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = inflater.inflate(R.layout.item_folder, parent, false);
+        return new FolderViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final FoldersViewHolder holder, int position) {
-        holder.image.getLayoutParams().width = imageSize;
-        holder.image.getLayoutParams().height = imageSize;
+    public void onBindViewHolder(final FolderViewHolder holder, int position) {
 
-        holder.image.getLayoutParams().width = size;
-        holder.image.getLayoutParams().height = size;
+        final Folder folder = folders.get(position);
 
-        Glide.with(holder.image.getContext())
-                .load(folders.get(position).getImages().get(0).getPath()) // Uri of the picture
-                .override(imageSize, imageSize)
-                .placeholder(R.drawable.image_placeholder)
-                .error(R.drawable.image_placeholder)
-                .centerCrop()
+        holder.itemView.getLayoutParams().width = size;
+        holder.itemView.getLayoutParams().height = size;
+
+        Glide.with(context)
+                .load(folder.getImages().get(0).getPath())
+                .placeholder(R.drawable.folder_placeholder)
+                .error(R.drawable.folder_placeholder)
                 .into(holder.image);
 
         holder.name.setText(folders.get(position).getFolderName());
-        holder.files.setText(String.valueOf(folders.get(position).getImages().size())); //String.format(holder.files.getContext().getString(R.string.gallery_image_count_format), data.get(folders[position]).size()));
+        holder.number.setText(String.valueOf(folders.get(position).getImages().size()));
 
-        holder.selector.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (folderClickListener != null)
-                    folderClickListener.onFolderClick(folders.get(holder.getAdapterPosition()));
+                    folderClickListener.onFolderClick(folder);
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return folders.size();
-    }
-
-    public static class FoldersViewHolder extends RecyclerView.ViewHolder {
-
-        private ImageView image;
-        private View selector;
-        private TextView name;
-        private TextView files;
-
-        public FoldersViewHolder(View itemView) {
-            super(itemView);
-
-            image = (ImageView) itemView.findViewById(R.id.image);
-            selector = itemView.findViewById(R.id.selector);
-            name = (TextView) itemView.findViewById(R.id.name);
-            files = (TextView) itemView.findViewById(R.id.num);
-        }
     }
 
     public void setData(List<Folder> folders) {
@@ -93,8 +71,28 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
         notifyDataSetChanged();
     }
 
-    public void setImageSize(int size) {
+    public void setFolderSize(int size) {
         this.size = size;
-        imageSize = size - padding * 2;
     }
+
+    @Override
+    public int getItemCount() {
+        return folders.size();
+    }
+
+    public static class FolderViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView image;
+        private TextView name;
+        private TextView number;
+
+        public FolderViewHolder(View itemView) {
+            super(itemView);
+
+            image = (ImageView) itemView.findViewById(R.id.image);
+            name = (TextView) itemView.findViewById(R.id.tv_name);
+            number = (TextView) itemView.findViewById(R.id.tv_number);
+        }
+    }
+
 }

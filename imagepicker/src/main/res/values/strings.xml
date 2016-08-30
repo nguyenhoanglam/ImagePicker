@@ -6,8 +6,11 @@
     <string name="ok">OK</string>
     <string name="add">ADD</string>
     <string name="camera">CAMERA</string>
+    <string name="image_directory">Camera</string>
 
+    <string name="title_folder">Folder</string>
     <string name="title_select_image">Tap to select images</string>
+    <string name="title_permission_denied">Permission denied</string>
 
     <string name="selected">%d selected</string>
     <string name="selected_with_limit">%1$d/%2$d selected</string>
@@ -17,7 +20,8 @@
     <string name="error_null_cursor">Oops, something went wrong!</string>
 
     <string name="msg_empty_images">No images found</string>
-    <string name="msg_no_write_external_permission">Could not select images</string>
-    <string name="msg_limit_images">Maximum image selection limit</string>
+    <string name="msg_no_write_external_permission">Please grant storage permission to select images</string>
+    <string name="msg_no_camera_permission">Please grant camera permission to select images</string>
+    <string name="msg_limit_images">Image selection limit</string>
 
 </resources>

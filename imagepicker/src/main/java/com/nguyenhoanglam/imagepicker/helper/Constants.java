@@ -14,5 +14,9 @@ public class Constants {
     public static final int MAX_LIMIT = 99;
 
     public static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
+    public static final int PERMISSION_REQUEST_CAMERA = 24;
+
+    public static final String PREF_WRITE_EXTERNAL_STORAGE_REQUESTED = "writeExternalRequested";
+    public static final String PREF_CAMERA_REQUESTED = "cameraRequested";
 
 }

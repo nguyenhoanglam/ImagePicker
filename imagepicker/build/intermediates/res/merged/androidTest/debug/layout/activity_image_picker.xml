@@ -15,9 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:padding="@dimen/padding_large"
         android:text="@string/msg_empty_images"
+        android:textSize="@dimen/font_medium"
         android:visibility="gone" />
 
     <ProgressBar
@@ -32,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:padding="@dimen/item_padding" />
 
 </RelativeLayout>
