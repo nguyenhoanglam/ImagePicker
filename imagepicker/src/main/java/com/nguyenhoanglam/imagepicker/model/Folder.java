@@ -1,7 +1,6 @@
 package com.nguyenhoanglam.imagepicker.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by boss1088 on 8/22/16.
@@ -9,7 +8,7 @@ import java.util.List;
 public class Folder {
 
     private String folderName;
-    private List<Image> images;
+    private ArrayList<Image> images;
 
     public Folder(String bucket) {
         folderName = bucket;
@@ -24,11 +23,11 @@ public class Folder {
         this.folderName = folderName;
     }
 
-    public List<Image> getImages() {
+    public ArrayList<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(ArrayList<Image> images) {
         this.images = images;
     }
 }

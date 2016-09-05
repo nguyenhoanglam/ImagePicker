@@ -311,8 +311,46 @@
                     "startLine": 18,
                     "startColumn": 4,
                     "startOffset": 1170,
+                    "endColumn": 42,
+                    "endOffset": 1208
+                },
+                "from": {
+                    "file": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/src/main/res/values-sw600dp/dimens.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 58,
+                        "endColumn": 42,
+                        "endOffset": 96
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 1213,
+                    "endColumn": 41,
+                    "endOffset": 1250
+                },
+                "from": {
+                    "file": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/src/main/res/values-sw600dp/dimens.xml",
+                    "position": {
+                        "startLine": 1,
+                        "startColumn": 4,
+                        "startOffset": 16,
+                        "endColumn": 41,
+                        "endOffset": 53
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 1255,
                     "endColumn": 62,
-                    "endOffset": 1228
+                    "endOffset": 1313
                 },
                 "from": {
                     "file": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/design/24.1.1/res/values-sw600dp-v13/values-sw600dp-v13.xml",
@@ -327,12 +365,12 @@
             },
             {
                 "to": {
-                    "startLine": 19,
+                    "startLine": 21,
                     "startColumn": 4,
-                    "startOffset": 1233,
-                    "endLine": 22,
+                    "startOffset": 1318,
+                    "endLine": 24,
                     "endColumn": 12,
-                    "endOffset": 1410
+                    "endOffset": 1495
                 },
                 "from": {
                     "file": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/imagepicker/build/intermediates/exploded-aar/com.android.support/design/24.1.1/res/values-sw600dp-v13/values-sw600dp-v13.xml",

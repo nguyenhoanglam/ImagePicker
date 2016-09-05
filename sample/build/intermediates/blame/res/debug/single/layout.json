@@ -16,6 +16,10 @@
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/design/24.1.1/res/layout/design_navigation_item_header.xml"
     },
     {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/layout/item_folder.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/res/layout/item_folder.xml"
+    },
+    {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/layout/abc_action_mode_close_item_material.xml",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/abc_action_mode_close_item_material.xml"
     },
@@ -68,12 +72,12 @@
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/abc_popup_menu_header_item_layout.xml"
     },
     {
-        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/layout/abc_screen_toolbar.xml",
-        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/abc_screen_toolbar.xml"
-    },
-    {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/layout/notification_template_lines.xml",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/notification_template_lines.xml"
+    },
+    {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/layout/abc_screen_toolbar.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/layout/abc_screen_toolbar.xml"
     },
     {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/layout/design_menu_item_action_area.xml",

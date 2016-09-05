@@ -1,38 +1,36 @@
 package com.nguyenhoanglam.imagepicker.activity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.os.Process;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,17 +42,20 @@ import com.nguyenhoanglam.imagepicker.adapter.ImagePickerAdapter;
 import com.nguyenhoanglam.imagepicker.helper.Constants;
 import com.nguyenhoanglam.imagepicker.helper.ImageUtils;
 import com.nguyenhoanglam.imagepicker.listeners.OnFolderClickListener;
+import com.nguyenhoanglam.imagepicker.listeners.OnImageClickListener;
 import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.view.GridSpacingItemDecoration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
  * Created by hoanglam on 7/31/16.
  */
-public class ImagePickerActivity extends AppCompatActivity implements ImagePickerAdapter.ViewHolder.OnItemClickListener {
+public class ImagePickerActivity extends AppCompatActivity implements OnImageClickListener {
 
     private static final String TAG = "ImagePickerActivity";
 
@@ -65,20 +66,25 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public static final String INTENT_EXTRA_LIMIT = "limit";
     public static final String INTENT_EXTRA_SHOW_CAMERA = "showCamera";
     public static final String INTENT_EXTRA_MODE = "mode";
-    public static final String INTENT_EXTRA_FOLDER_MODE = "folder_mode";
-    public static final String INTENT_EXTRA_TITLE = "title";
+    public static final String INTENT_EXTRA_FOLDER_MODE = "folderMode";
+    public static final String INTENT_EXTRA_FOLDER_TITLE = "folderTitle";
+    public static final String INTENT_EXTRA_IMAGE_TITLE = "imageTitle";
+    public static final String INTENT_EXTRA_IMAGE_DIRECTORY = "imageDirectory";
 
 
+    private List<Folder> folders;
     private ArrayList<Image> images;
-    private File fileTemp;
-    private Uri fileUri;
+    private HashSet<String> imageSet;
+    private File currentFile;
+    private Uri currentUri;
+    private String imageDirectory;
 
     private ArrayList<Image> selectedImages;
     private boolean showCamera;
     private int mode;
     private boolean folderMode;
     private int limit;
-    private String title;
+    private String folderTitle, imageTitle;
 
     private ActionBar actionBar;
 
@@ -88,10 +94,16 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     private RelativeLayout mainLayout;
     private ProgressBar progressBar;
-    private RecyclerView recyclerView;
     private TextView emptyTextView;
+    private RecyclerView recyclerView;
 
-    private ImagePickerAdapter adapter;
+    private GridLayoutManager layoutManager;
+    private GridSpacingItemDecoration itemOffsetDecoration;
+
+    private int imageColumns;
+    private int folderColumns;
+
+    private ImagePickerAdapter imageAdapter;
     private FolderPickerAdapter folderAdapter;
 
     private ContentObserver observer;
@@ -101,6 +113,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private final String[] projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
     private Parcelable foldersState;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +125,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             finish();
         }
 
+        mainLayout = (RelativeLayout) findViewById(R.id.main);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        emptyTextView = (TextView) findViewById(R.id.tv_empty_images);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
@@ -122,57 +140,55 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-
+        /** Get extras */
         limit = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
         mode = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
         folderMode = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, false);
-        if(intent.hasExtra(INTENT_EXTRA_TITLE)) {
-            title = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_TITLE);
+
+        if (intent.hasExtra(INTENT_EXTRA_FOLDER_TITLE)) {
+            folderTitle = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE);
         } else {
-            title = getString(R.string.title_select_image);
+            folderTitle = getString(R.string.title_folder);
         }
+
+        if (intent.hasExtra(INTENT_EXTRA_IMAGE_TITLE)) {
+            imageTitle = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE);
+        } else {
+            imageTitle = getString(R.string.title_select_image);
+        }
+
+        imageDirectory = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY);
+        if (imageDirectory == null || TextUtils.isEmpty(imageDirectory)) {
+            imageDirectory = getString(R.string.image_directory);
+        }
+
         showCamera = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
         if (mode == ImagePickerActivity.MODE_MULTIPLE && intent.hasExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES)) {
             selectedImages = intent.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
         }
-
         if (selectedImages == null)
             selectedImages = new ArrayList<>();
         images = new ArrayList<>();
+        imageSet = new HashSet<>();
 
-        // Set default toolbar title
-        if (actionBar != null)
-            actionBar.setTitle(title);
 
-        adapter = new ImagePickerAdapter(this, images, selectedImages, this);
+        /** Set activity title */
+        if (actionBar != null) {
+            actionBar.setTitle(folderMode ? folderTitle : imageTitle);
+        }
+
+        /** Init folder and image adapter */
+        imageAdapter = new ImagePickerAdapter(this, images, selectedImages, this);
         folderAdapter = new FolderPickerAdapter(this, new OnFolderClickListener() {
             @Override
             public void onFolderClick(Folder bucket) {
                 foldersState = recyclerView.getLayoutManager().onSaveInstanceState();
-                setFilesAdapter(bucket);
+                setImageAdapter(bucket.getImages());
             }
         });
 
-        mainLayout = (RelativeLayout) findViewById(R.id.main);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        emptyTextView = (TextView) findViewById(R.id.tv_empty_images);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
         orientationBasedUI(getResources().getConfiguration().orientation);
-    }
 
-    private void setFilesAdapter(Folder bucket) {
-        adapter.clear();
-        adapter.addAll(bucket.getImages());
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void setFoldersAdapter() {
-        adapter.clear();
-        recyclerView.setAdapter(folderAdapter);
-        if (foldersState != null) {
-            recyclerView.getLayoutManager().onRestoreInstanceState(foldersState);
-        }
     }
 
     @Override
@@ -181,19 +197,53 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         getDataWithPermission();
     }
 
+    /**
+     * Set image adapter
+     * 1. Set new data
+     * 2. Update item decoration
+     * 3. Update title
+     */
+    private void setImageAdapter(ArrayList<Image> images) {
+        imageAdapter.setData(images);
+        setItemDecoration(imageColumns);
+        recyclerView.setAdapter(imageAdapter);
+        updateTitle();
+    }
+
+    /**
+     * Set folder adapter
+     * 1. Set new data
+     * 2. Update item decoration
+     * 3. Update title
+     */
+    private void setFolderAdapter() {
+        folderAdapter.setData(folders);
+        setItemDecoration(folderColumns);
+        recyclerView.setAdapter(folderAdapter);
+
+        if (foldersState != null) {
+            layoutManager.setSpanCount(folderColumns);
+            recyclerView.getLayoutManager().onRestoreInstanceState(foldersState);
+        }
+        updateTitle();
+    }
+
+    /**
+     * Create option menus and update title
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         if (menu.findItem(menuCameraId) == null) {
             menuCamera = menu.add(Menu.NONE, menuCameraId, 1, getString(R.string.camera));
             menuCamera.setIcon(R.drawable.ic_camera_white);
-            menuCamera.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuCamera.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             menuCamera.setVisible(showCamera);
         }
 
         if (menu.findItem(menuAddId) == null) {
             menuAdd = menu.add(Menu.NONE, menuAddId, 2, getString(R.string.add));
-            menuAdd.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menuAdd.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
         updateTitle();
@@ -201,6 +251,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         return true;
     }
 
+    /**
+     * Handle option menu's click event
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -212,6 +265,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
         if (id == menuAddId) {
             if (selectedImages != null && selectedImages.size() > 0) {
+
+                /** Scan selected images which not existed */
                 for (int i = 0; i < selectedImages.size(); i++) {
                     Image image = selectedImages.get(i);
                     File file = new File(image.getPath());
@@ -220,6 +275,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                         i--;
                     }
                 }
+
                 Intent data = new Intent();
                 data.putParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
                 setResult(RESULT_OK, data);
@@ -228,78 +284,63 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             return true;
         }
         if (id == menuCameraId) {
-            captureImage();
+            //captureImage();
+            captureImageWithPermission();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Config recyclerView when configuration changed
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         orientationBasedUI(newConfig.orientation);
     }
 
+    /**
+     * Set item size, column size base on the screen's orientation
+     */
     private void orientationBasedUI(int orientation) {
-        final WindowManager windowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        final DisplayMetrics metrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(metrics);
+        imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
+        folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
 
-        int columns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
-
-        GridLayoutManager layoutManager = new GridLayoutManager(this, columns);
+        int columns = isDisplayingFolderView() ? folderColumns : imageColumns;
+        layoutManager = new GridLayoutManager(this, columns);
         recyclerView.setLayoutManager(layoutManager);
-
-        if (adapter != null) {
-            int size = metrics.widthPixels / columns;
-            adapter.setImageSize(size);
-        }
-
-        if (folderAdapter != null) {
-            int size = metrics.widthPixels / columns;
-            folderAdapter.setImageSize(size);
-        }
+        recyclerView.setHasFixedSize(true);
+        setItemDecoration(columns);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode != Constants.PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE) {
-            Log.d(TAG, "Got unexpected permission result: " + requestCode);
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            return;
-        }
-
-        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Write External permission granted");
-            refreshData();
-            return;
-        }
-
-        Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
-                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                finish();
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.title_select_image))
-                .setMessage(R.string.msg_no_write_external_permission)
-                .setPositiveButton(R.string.ok, listener)
-                .show();
+    /**
+     * Set item decoration
+     */
+    private void setItemDecoration(int columns) {
+        layoutManager.setSpanCount(columns);
+        if (itemOffsetDecoration != null)
+            recyclerView.removeItemDecoration(itemOffsetDecoration);
+        itemOffsetDecoration = new GridSpacingItemDecoration(columns, getResources().getDimensionPixelSize(R.dimen.item_padding), false);
+        recyclerView.addItemDecoration(itemOffsetDecoration);
     }
 
+
+    /**
+     * Check permission
+     */
     private void getDataWithPermission() {
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (rc == PackageManager.PERMISSION_GRANTED)
-            refreshData();
+            getData();
         else
             requestWriteExternalPermission();
     }
 
-    private void refreshData() {
+    /**
+     * Get data
+     */
+    private void getData() {
         abortLoading();
 
         ImageLoaderRunnable runnable = new ImageLoaderRunnable();
@@ -307,32 +348,124 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         thread.start();
     }
 
+    /**
+     * Request for permission
+     * If permission denied or app is first launched, request for permission
+     * If permission denied and user choose 'Nerver Ask Again', show snackbar with an action that navigate to app settings
+     */
     private void requestWriteExternalPermission() {
         Log.w(TAG, "Write External permission is not granted. Requesting permission");
 
         final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
-            return;
+        } else {
+            if (isPermissionRequested(Constants.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED) == false) {
+                ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+                setPermissionRequested(Constants.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED);
+            } else {
+                Snackbar snackbar = Snackbar.make(mainLayout, R.string.msg_no_write_external_permission,
+                        Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openAppSettings();
+                    }
+                });
+                snackbar.show();
+            }
         }
 
-        final Activity thisActivity = this;
+    }
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityCompat.requestPermissions(thisActivity, permissions,
-                        Constants.PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+    private void requestCameraPermission() {
+        Log.w(TAG, "Write External permission is not granted. Requesting permission");
+
+        final String[] permissions = new String[]{Manifest.permission.CAMERA};
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+            ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_CAMERA);
+        } else {
+            if (isPermissionRequested(Constants.PREF_CAMERA_REQUESTED) == false) {
+                ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_CAMERA);
+                setPermissionRequested(Constants.PREF_CAMERA_REQUESTED);
+            } else {
+                Snackbar snackbar = Snackbar.make(mainLayout, R.string.msg_no_camera_permission,
+                        Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openAppSettings();
+                    }
+                });
+                snackbar.show();
             }
-        };
+        }
+    }
 
-        Snackbar.make(mainLayout, R.string.msg_no_write_external_permission,
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.ok, listener)
-                .show();
+    /**
+     * Handle permission results
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
+        switch (requestCode) {
+            case Constants.PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Write External permission granted");
+                    getData();
+                    return;
+                }
+                Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                        " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+                finish();
+            }
+            case Constants.PERMISSION_REQUEST_CAMERA: {
+                if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Camera permission granted");
+                    captureImage();
+                    return;
+                }
+                Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                        " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+                break;
+            }
+            default: {
+                Log.d(TAG, "Got unexpected permission result: " + requestCode);
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Open app settings screen
+     */
+    private void openAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", getPackageName(), null));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    /**
+     * Set a permission is requested
+     */
+    private void setPermissionRequested(String permission) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(permission, true);
+        editor.commit();
+    }
+
+    /**
+     * Check if a permission is requestted or not (false by default)
+     */
+    private boolean isPermissionRequested(String permission) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getBoolean(permission, false);
     }
 
     @Override
@@ -340,26 +473,29 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         clickImage(position);
     }
 
+    /**
+     * Handle image selection event: add or remove selected image, change title
+     */
     private void clickImage(int position) {
         int selectedItemPosition = selectedImagePosition(images.get(position));
         if (mode == ImagePickerActivity.MODE_MULTIPLE) {
             if (selectedItemPosition == -1) {
                 if (selectedImages.size() < limit) {
-                    adapter.addSelected(images.get(position));
+                    imageAdapter.addSelected(images.get(position));
                 } else {
                     Toast.makeText(this, R.string.msg_limit_images, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                adapter.removeSelectedPosition(selectedItemPosition, position);
+                imageAdapter.removeSelectedPosition(selectedItemPosition, position);
             }
         } else {
             if (selectedItemPosition != -1)
-                adapter.removeSelectedPosition(selectedItemPosition, position);
+                imageAdapter.removeSelectedPosition(selectedItemPosition, position);
             else {
                 if (selectedImages.size() > 0) {
-                    adapter.removeAllSelectedSingleClick();
+                    imageAdapter.removeAllSelectedSingleClick();
                 }
-                adapter.addSelected(images.get(position));
+                imageAdapter.addSelected(images.get(position));
             }
         }
         updateTitle();
@@ -375,19 +511,22 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         return -1;
     }
 
+    /**
+     * Check if the captured image is stored successfully
+     * Then reload data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CODE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                if (fileTemp != null && fileTemp.exists()) {
+                if (currentFile != null && currentFile.exists()) {
                     MediaScannerConnection.scanFile(this,
-                            new String[]{fileTemp.getAbsolutePath()}, null,
+                            new String[]{currentFile.getAbsolutePath()}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
                                 @Override
                                 public void onScanCompleted(String path, Uri uri) {
-                                    Log.v("MediaScanWork", "file " + path
-                                            + " was scanned successfully: " + uri);
+                                    Log.v("MediaScanWork", "file " + path + " was scanned successfully: " + uri);
                                     getDataWithPermission();
                                 }
                             });
@@ -396,13 +535,34 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
+    /**
+     * Request for camera permission
+     */
+    private void captureImageWithPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+            if (rc == PackageManager.PERMISSION_GRANTED) {
+                captureImage();
+            } else {
+                Log.w(TAG, "Camera permission is not granted. Requesting permission");
+                requestCameraPermission();
+            }
+        } else {
+            captureImage();
+        }
+    }
+
+    /**
+     * Start camera intent
+     * Create a temporary file and pass file Uri to camera intent
+     */
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
-            fileTemp = ImageUtils.getOutputMediaFile();
-            if (fileTemp != null) {
-                fileUri = Uri.fromFile(fileTemp);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            currentFile = ImageUtils.getOutputMediaFile(imageDirectory);
+            if (currentFile != null) {
+                currentUri = Uri.fromFile(currentFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, currentUri);
                 startActivityForResult(intent, Constants.REQUEST_CODE_CAPTURE);
             } else {
                 Toast.makeText(this, getString(R.string.error_create_image_file), Toast.LENGTH_LONG).show();
@@ -413,6 +573,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
 
+    /**
+     * Init handler to handle loading data results
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -432,19 +595,25 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                         ArrayList<Image> newImages = new ArrayList<>();
                         newImages.addAll(images);
 
-                        if (folderMode) {
-                            folderAdapter.setData(folders);
-                            recyclerView.setAdapter(folderAdapter);
+                        imageSet.clear();
 
+                        if (folderMode) {
+                            for (Folder folder : folders) {
+                                for (Image image : folder.getImages()) {
+                                    imageSet.add(image.getName());
+                                }
+                            }
+                            setFolderAdapter();
                             if (folders.size() != 0)
                                 hideLoading();
                             else
                                 showEmpty();
-                        } else {
-                            adapter.clear();
-                            adapter.addAll(newImages);
-                            recyclerView.setAdapter(adapter);
 
+                        } else {
+                            for (Image image : newImages) {
+                                imageSet.add(image.getName());
+                            }
+                            setImageAdapter(newImages);
                             if (images.size() != 0)
                                 hideLoading();
                             else
@@ -462,13 +631,15 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         observer = new ContentObserver(handler) {
             @Override
             public void onChange(boolean selfChange) {
-                refreshData();
+                getData();
             }
         };
         getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
     }
 
-
+    /**
+     * Stop loading data task
+     */
     private void abortLoading() {
         if (thread == null)
             return;
@@ -482,36 +653,64 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
+    /**
+     * Check if displaying folders view
+     */
+    private boolean isDisplayingFolderView() {
+        return (folderMode &&
+                (recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter));
+    }
 
+    /**
+     * Update activity title
+     * If we're displaying folder, set folder title
+     * If we're displaying images, show number of selected images
+     */
     private void updateTitle() {
-        if (selectedImages.size() == 0) {
-            actionBar.setTitle(title);
-            if (menuAdd != null)
+        if (menuAdd != null && menuCamera != null) {
+            if (isDisplayingFolderView()) {
+                actionBar.setTitle(folderTitle);
                 menuAdd.setVisible(false);
-        } else {
-            if (mode == ImagePickerActivity.MODE_MULTIPLE) {
-                if (limit == Constants.MAX_LIMIT)
-                    actionBar.setTitle(String.format(getString(R.string.selected), selectedImages.size()));
-                else
-                    actionBar.setTitle(String.format(getString(R.string.selected_with_limit), selectedImages.size(), limit));
+            } else {
+                if (selectedImages.size() == 0) {
+                    actionBar.setTitle(imageTitle);
+                    if (menuAdd != null)
+                        menuAdd.setVisible(false);
+                } else {
+                    if (mode == ImagePickerActivity.MODE_MULTIPLE) {
+                        if (limit == Constants.MAX_LIMIT)
+                            actionBar.setTitle(String.format(getString(R.string.selected), selectedImages.size()));
+                        else
+                            actionBar.setTitle(String.format(getString(R.string.selected_with_limit), selectedImages.size(), limit));
+                    }
+                    if (menuAdd != null)
+                        menuAdd.setVisible(true);
+                }
             }
-            if (menuAdd != null)
-                menuAdd.setVisible(true);
         }
     }
 
+    /**
+     * Show progessbar when loading data
+     */
     private void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         emptyTextView.setVisibility(View.GONE);
     }
 
+    /**
+     * Hide progressbar when data loaded
+     */
     private void hideLoading() {
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         emptyTextView.setVisibility(View.GONE);
     }
 
+    /**
+     * Show empty data
+     */
     private void showEmpty() {
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
@@ -533,8 +732,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
-    List<Folder> folders;
-
+    /**
+     * Loading data task
+     */
     private class ImageLoaderRunnable implements Runnable {
 
         @Override
@@ -542,7 +742,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
             Message message;
-            if (adapter == null) {
+            if (imageAdapter == null) {
                 /*
                 If the adapter is null, this is first time this activity's view is
                 being shown, hence send FETCH_STARTED message to show progress bar
@@ -607,29 +807,36 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             images.clear();
             images.addAll(temp);
 
-            message = handler.obtainMessage();
-            message.what = Constants.FETCH_COMPLETED;
-            message.sendToTarget();
+            if (handler != null) {
+                message = handler.obtainMessage();
+                message.what = Constants.FETCH_COMPLETED;
+                message.sendToTarget();
+            }
 
             Thread.interrupted();
 
         }
     }
 
+    /**
+     * Return folder base on folder name
+     */
     public Folder getFolder(String name) {
-        for (Folder folder:folders) {
+        for (Folder folder : folders) {
             if (folder.getFolderName().equals(name)) {
                 return folder;
             }
         }
-
         return null;
     }
 
+    /**
+     * When press back button, show folders if view is displaying images
+     */
     @Override
     public void onBackPressed() {
-        if (folderMode && recyclerView.getAdapter() instanceof ImagePickerAdapter) {
-            setFoldersAdapter();
+        if (folderMode && !isDisplayingFolderView()) {
+            setFolderAdapter();
             return;
         }
 

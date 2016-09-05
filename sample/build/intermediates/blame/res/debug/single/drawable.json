@@ -56,6 +56,10 @@
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable/abc_ic_menu_overflow_material.xml"
     },
     {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/drawable/folder_placeholder.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/res/drawable/folder_placeholder.xml"
+    },
+    {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/drawable/abc_ic_search_api_material.xml",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable/abc_ic_search_api_material.xml"
     },

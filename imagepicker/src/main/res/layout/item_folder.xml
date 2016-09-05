@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.nguyenhoanglam.imagepicker.view.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="1dp"
-    android:id="@+id/selector" >
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/image"
@@ -11,34 +9,34 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
+        android:background="@drawable/folder_placeholder"
         android:scaleType="centerCrop" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#66000000"
-        android:padding="1dp"/>
-
-    <TextView
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
         android:layout_gravity="bottom"
-        android:maxLines="3"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:background="@color/black_alpha_50"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_small">
 
-    <TextView
-        android:id="@+id/num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center_vertical"
-        android:layout_gravity="top|right"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="3"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_small" />
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/font_small" />
+    </LinearLayout>
+
+</com.nguyenhoanglam.imagepicker.view.SquareFrameLayout>

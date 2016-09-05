@@ -47,15 +47,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Quick call
+    // Recomended builder
     public void start() {
         ImagePicker.create(this)
-                .title("Tap to select") // picker's title
-                .folderMode(true)
+                .folderMode(true) // set folder mode (false by default)
+                .folderTitle("Folder") // folder selection title
+                .imageTitle("Tap to select") // image selection title
                 .single() // single mode
                 .multi() // multi mode (default mode)
-                .limit(10) // max images can be selected
+                .limit(10) // max images can be selected (99 by default)
                 .showCamera(true) // show camera or not (true by default)
+                .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .origin(images) // original selected images, used in multi mode
                 .start(REQUEST_CODE_PICKER); // start image picker activity with request code
     }
@@ -69,7 +71,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_TITLE, "Tap to select images");
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE, "Album");
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE, "Tap to select images");
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, "Camera");
         startActivityForResult(intent, REQUEST_CODE_PICKER);
     }
 
