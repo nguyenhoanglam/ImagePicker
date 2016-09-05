@@ -84,12 +84,12 @@
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable/abc_ic_go_search_api_material.xml"
     },
     {
-        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/drawable/abc_seekbar_thumb_material.xml",
-        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable/abc_seekbar_thumb_material.xml"
-    },
-    {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/drawable/abc_seekbar_tick_mark_material.xml",
         "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable/abc_seekbar_tick_mark_material.xml"
+    },
+    {
+        "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/drawable/abc_seekbar_thumb_material.xml",
+        "source": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/res/drawable/abc_seekbar_thumb_material.xml"
     },
     {
         "merged": "/Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/res/merged/debug/drawable/abc_seekbar_track_material.xml",

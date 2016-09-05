@@ -26,7 +26,6 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
     private List<Image> images;
     private List<Image> selectedImages;
     private OnImageClickListener itemClickListener;
-    private int size;
 
     public ImagePickerAdapter(Context context, List<Image> images, List<Image> selectedImages, OnImageClickListener itemClickListener) {
         this.context = context;
@@ -46,9 +45,6 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
     public void onBindViewHolder(ImageViewHolder viewHolder, int position) {
 
         Image image = images.get(position);
-
-        viewHolder.itemView.getLayoutParams().width = size;
-        viewHolder.itemView.getLayoutParams().height = size;
 
         Glide.with(context)
                 .load(image.getPath())
@@ -82,16 +78,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
     }
 
 
-    public void setImageSize(int size) {
-        this.size = size;
-    }
-
-    public void clear() {
-        images.clear();
-        notifyDataSetChanged();
-    }
-
-    public void setData(List<Image> images){
+    public void setData(List<Image> images) {
         this.images.clear();
         this.images.addAll(images);
     }

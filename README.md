@@ -5,7 +5,8 @@ A simple library to pick images from the gallery and camera.
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 
 ## Screenshot
-![ImagePicker](https://cloud.githubusercontent.com/assets/4979755/17599426/383026aa-6029-11e6-95fc-27db43f4dbfa.png)
+
+![Folder](https://cloud.githubusercontent.com/assets/4979755/18254915/48696560-73cd-11e6-88b8-d3f3c8464766.png)![Image](https://cloud.githubusercontent.com/assets/4979755/18254918/56ab89aa-73cd-11e6-8d3d-324b1bae02c3.png)
 
 ## Download
 Add to your module's build.gradle:
@@ -29,11 +30,14 @@ dependencies {
 - Quick call
 ```java
 ImagePicker.create(this)
-                .title("Tap to select") // picker's title
+                .folderMode(true) // set folder mode (false by default)
+                .folderTitle("Folder") // folder selection title
+                .imageTitle("Tap to select") // image selection title
                 .single() // single mode
                 .multi() // multi mode (default mode)
-                .limit(10) // max images can be selected
+                .limit(10) // max images can be selected (99 by default)
                 .showCamera(true) // show camera or not (true by default)
+                .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .origin(images) // original selected images, used in multi mode
                 .start(REQUEST_CODE_PICKER); // start image picker activity with request code
 ```                
@@ -41,11 +45,14 @@ ImagePicker.create(this)
 ```java
 Intent intent = new Intent(this, ImagePickerActivity.class);
 
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, true);
 intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
 intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
 intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
 intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_TITLE, "Tap to select");
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE, "Album");
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE, "Tap to select images");
+intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, "Camera");
 
 startActivityForResult(intent, REQUEST_CODE_PICKER);
 ```        

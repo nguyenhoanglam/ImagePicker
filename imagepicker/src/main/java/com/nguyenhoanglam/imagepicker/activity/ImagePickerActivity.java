@@ -1,7 +1,6 @@
 package com.nguyenhoanglam.imagepicker.activity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,7 +16,6 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.os.Process;
 import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -29,12 +27,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,13 +45,9 @@ import com.nguyenhoanglam.imagepicker.listeners.OnFolderClickListener;
 import com.nguyenhoanglam.imagepicker.listeners.OnImageClickListener;
 import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.model.Image;
-import com.nguyenhoanglam.imagepicker.view.RecyclerViewItemOffsetDecoration;
+import com.nguyenhoanglam.imagepicker.view.GridSpacingItemDecoration;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -106,7 +98,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     private RecyclerView recyclerView;
 
     private GridLayoutManager layoutManager;
-    private RecyclerViewItemOffsetDecoration itemOffsetDecoration;
+    private GridSpacingItemDecoration itemOffsetDecoration;
 
     private int imageColumns;
     private int folderColumns;
@@ -191,7 +183,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
             @Override
             public void onFolderClick(Folder bucket) {
                 foldersState = recyclerView.getLayoutManager().onSaveInstanceState();
-                setImageAdapter(bucket);
+                setImageAdapter(bucket.getImages());
             }
         });
 
@@ -203,32 +195,32 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     protected void onResume() {
         super.onResume();
         getDataWithPermission();
-
     }
 
     /**
      * Set image adapter
+     * 1. Set new data
+     * 2. Update item decoration
+     * 3. Update title
      */
-    private void setImageAdapter(Folder bucket) {
-        imageAdapter.setData(bucket.getImages());
-        layoutManager.setSpanCount(imageColumns);
-        recyclerView.setAdapter(imageAdapter);
-        updateTitle();
-    }
-
     private void setImageAdapter(ArrayList<Image> images) {
         imageAdapter.setData(images);
-        layoutManager.setSpanCount(imageColumns);
+        setItemDecoration(imageColumns);
         recyclerView.setAdapter(imageAdapter);
         updateTitle();
     }
 
     /**
      * Set folder adapter
+     * 1. Set new data
+     * 2. Update item decoration
+     * 3. Update title
      */
     private void setFolderAdapter() {
         folderAdapter.setData(folders);
+        setItemDecoration(folderColumns);
         recyclerView.setAdapter(folderAdapter);
+
         if (foldersState != null) {
             layoutManager.setSpanCount(folderColumns);
             recyclerView.getLayoutManager().onRestoreInstanceState(foldersState);
@@ -237,8 +229,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     }
 
     /**
-     * Because onCreateOptionsMenu() called after onCreate(), we should not call getDataWithPermission() in onCreate() to avoid an error in updateTitle()
-     * So, call getDataWithPermission() only after options menu created
+     * Create option menus and update title
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -260,6 +251,9 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         return true;
     }
 
+    /**
+     * Handle option menu's click event
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -310,33 +304,25 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
      * Set item size, column size base on the screen's orientation
      */
     private void orientationBasedUI(int orientation) {
-        final WindowManager windowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        final DisplayMetrics metrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-
         imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
         folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
 
-        if (imageAdapter != null) {
-            int size = metrics.widthPixels / imageColumns;
-            imageAdapter.setImageSize(size);
-        }
-
-        if (folderAdapter != null) {
-            int size = metrics.widthPixels / folderColumns;
-            folderAdapter.setFolderSize(size);
-        }
-
-        if (itemOffsetDecoration == null)
-            itemOffsetDecoration = new RecyclerViewItemOffsetDecoration(this, R.dimen.item_padding);
-
-        recyclerView.removeItemDecoration(itemOffsetDecoration);
-        recyclerView.addItemDecoration(itemOffsetDecoration);
-        recyclerView.setHasFixedSize(true);
-
-        layoutManager = new GridLayoutManager(this, isDisplayingFolderView() ? folderColumns : imageColumns);
+        int columns = isDisplayingFolderView() ? folderColumns : imageColumns;
+        layoutManager = new GridLayoutManager(this, columns);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        setItemDecoration(columns);
+    }
 
+    /**
+     * Set item decoration
+     */
+    private void setItemDecoration(int columns) {
+        layoutManager.setSpanCount(columns);
+        if (itemOffsetDecoration != null)
+            recyclerView.removeItemDecoration(itemOffsetDecoration);
+        itemOffsetDecoration = new GridSpacingItemDecoration(columns, getResources().getDimensionPixelSize(R.dimen.item_padding), false);
+        recyclerView.addItemDecoration(itemOffsetDecoration);
     }
 
 
@@ -534,82 +520,19 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CODE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                String[] projection = {MediaStore.Images.ImageColumns.SIZE,
-                        MediaStore.Images.ImageColumns.DISPLAY_NAME,
-                        MediaStore.Images.ImageColumns.DATA,
-                        BaseColumns._ID,};
                 if (currentFile != null && currentFile.exists()) {
-                    if (currentFile.length() > 0) {
-                        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-                                null, null, MediaStore.Images.Media.DATE_ADDED);
-                        Log.d("1", "cursor size: " + cursor.getCount());
-                        Log.d("1", "origianl file name: " + currentFile.getPath());
-                        if (cursor.moveToLast()) {
-                            do {
-                                boolean bFound = imageSet.contains(cursor.getString(1));
-                                if (!bFound) {
-                                    File f = new File(cursor.getString(2));
-                                    Log.d("1", "new path: " + f.getAbsolutePath());
-                                    if (f.exists() && (currentFile.length() < cursor.getLong(0)) && currentFile.delete()) {
-                                        try {
-                                            currentFile.createNewFile();
-                                            FileChannel source = null;
-                                            FileChannel destination = null;
-                                            try {
-                                                source = new FileInputStream(f).getChannel();
-                                                destination = new FileOutputStream(currentFile).getChannel();
-                                                destination.transferFrom(source, 0, source.size());
-                                            } finally {
-                                                if (source != null) {
-                                                    source.close();
-                                                }
-                                                if (destination != null) {
-                                                    destination.close();
-                                                }
-                                            }
-                                        } catch (IOException e) {
-                                            Log.v(TAG, "Failed to copy file");
-                                        }
-                                        getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                                                , BaseColumns._ID + "=" + cursor.getString(3), null);
-                                        break;
-                                    }
-                                }
-                            } while (cursor.moveToPrevious());
-                        }
-                        cursor.close();
-
-                    }
-
                     MediaScannerConnection.scanFile(this,
                             new String[]{currentFile.getAbsolutePath()}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
                                 @Override
                                 public void onScanCompleted(String path, Uri uri) {
-                                    Log.v(TAG, "file " + path + " was scanned successfully: " + uri);
+                                    Log.v("MediaScanWork", "file " + path + " was scanned successfully: " + uri);
                                     getDataWithPermission();
                                 }
                             });
                 }
             }
         }
-
-
-//        if (requestCode == Constants.REQUEST_CODE_CAPTURE) {
-//            if (resultCode == RESULT_OK) {
-//                if (currentFile != null && currentFile.exists()) {
-//                    MediaScannerConnection.scanFile(this,
-//                            new String[]{currentFile.getAbsolutePath()}, null,
-//                            new MediaScannerConnection.OnScanCompletedListener() {
-//                                @Override
-//                                public void onScanCompleted(String path, Uri uri) {
-//                                    Log.v("MediaScanWork", "file " + path + " was scanned successfully: " + uri);
-//                                    getDataWithPermission();
-//                                }
-//                            });
-//                }
-//            }
-//        }
     }
 
     /**
@@ -675,28 +598,22 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
                         imageSet.clear();
 
                         if (folderMode) {
-
                             for (Folder folder : folders) {
                                 for (Image image : folder.getImages()) {
                                     imageSet.add(image.getName());
                                 }
                             }
-
                             setFolderAdapter();
-
                             if (folders.size() != 0)
                                 hideLoading();
                             else
                                 showEmpty();
 
                         } else {
-
                             for (Image image : newImages) {
                                 imageSet.add(image.getName());
                             }
-
                             setImageAdapter(newImages);
-
                             if (images.size() != 0)
                                 hideLoading();
                             else

@@ -22,7 +22,6 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
 
     private Context context;
     private LayoutInflater inflater;
-    private int size;
     private final OnFolderClickListener folderClickListener;
 
     private List<Folder> folders;
@@ -43,9 +42,6 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
     public void onBindViewHolder(final FolderViewHolder holder, int position) {
 
         final Folder folder = folders.get(position);
-
-        holder.itemView.getLayoutParams().width = size;
-        holder.itemView.getLayoutParams().height = size;
 
         Glide.with(context)
                 .load(folder.getImages().get(0).getPath())
@@ -69,10 +65,6 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
         this.folders = folders;
 
         notifyDataSetChanged();
-    }
-
-    public void setFolderSize(int size) {
-        this.size = size;
     }
 
     @Override
