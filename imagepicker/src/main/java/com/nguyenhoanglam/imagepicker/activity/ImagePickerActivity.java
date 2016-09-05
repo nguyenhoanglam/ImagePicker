@@ -88,7 +88,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
 
     private ActionBar actionBar;
 
-    private MenuItem menuAdd, menuCamera;
+    private MenuItem menuDone, menuCamera;
     private final int menuAddId = 100;
     private final int menuCameraId = 101;
 
@@ -242,8 +242,8 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         }
 
         if (menu.findItem(menuAddId) == null) {
-            menuAdd = menu.add(Menu.NONE, menuAddId, 2, getString(R.string.add));
-            menuAdd.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menuDone = menu.add(Menu.NONE, menuAddId, 2, getString(R.string.done));
+            menuDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
         updateTitle();
@@ -667,15 +667,15 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
      * If we're displaying images, show number of selected images
      */
     private void updateTitle() {
-        if (menuAdd != null && menuCamera != null) {
+        if (menuDone != null && menuCamera != null) {
             if (isDisplayingFolderView()) {
                 actionBar.setTitle(folderTitle);
-                menuAdd.setVisible(false);
+                menuDone.setVisible(false);
             } else {
                 if (selectedImages.size() == 0) {
                     actionBar.setTitle(imageTitle);
-                    if (menuAdd != null)
-                        menuAdd.setVisible(false);
+                    if (menuDone != null)
+                        menuDone.setVisible(false);
                 } else {
                     if (mode == ImagePickerActivity.MODE_MULTIPLE) {
                         if (limit == Constants.MAX_LIMIT)
@@ -683,8 +683,8 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
                         else
                             actionBar.setTitle(String.format(getString(R.string.selected_with_limit), selectedImages.size(), limit));
                     }
-                    if (menuAdd != null)
-                        menuAdd.setVisible(true);
+                    if (menuDone != null)
+                        menuDone.setVisible(true);
                 }
             }
         }

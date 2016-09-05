@@ -4,7 +4,7 @@
     <string name="permission_write_external_rationale">Allow access external storage to select images</string>
 
     <string name="ok">OK</string>
-    <string name="add">ADD</string>
+    <string name="done">DONE</string>
     <string name="camera">CAMERA</string>
     <string name="image_directory">Camera</string>
 
@@ -21,7 +21,7 @@
 
     <string name="msg_empty_images">No images found</string>
     <string name="msg_no_write_external_permission">Please grant storage permission to select images</string>
-    <string name="msg_no_camera_permission">Please grant camera permission to select images</string>
+    <string name="msg_no_camera_permission">Please grant camera permission to capture image</string>
     <string name="msg_limit_images">Image selection limit</string>
 
 </resources>
