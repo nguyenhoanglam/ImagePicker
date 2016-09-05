@@ -21,7 +21,7 @@ allprojects {
 and:
 ```java
 dependencies {
-    compile 'com.github.nguyenhoanglam:ImagePicker:1.0.3'
+    compile 'com.github.nguyenhoanglam:ImagePicker:1.1.0'
 }
 ```
 
@@ -67,8 +67,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 }
 ```
-##Changelog
-- v.1.0.3 - Allow to change picker's title, fixed [issue #13](https://github.com/nguyenhoanglam/ImagePicker/issues/13), add traditional Chinese localization by [jeungjeung](https://github.com/nguyenhoanglam/ImagePicker/pull/11)  
 
 ##Thanks
 - Darshan Dorai for [MultipleImageSelect](https://github.com/darsh2/MultipleImageSelect) 
