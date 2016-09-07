@@ -1,12 +1,13 @@
 ## ImagePicker
-A simple library to pick images from the gallery and camera.
+A simple library to select images from the gallery and camera.
 
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 
 ## Screenshot
 
-![Folder](https://cloud.githubusercontent.com/assets/4979755/18254915/48696560-73cd-11e6-88b8-d3f3c8464766.png)![Image](https://cloud.githubusercontent.com/assets/4979755/18254918/56ab89aa-73cd-11e6-8d3d-324b1bae02c3.png)
+<img src="https://cloud.githubusercontent.com/assets/4979755/18304733/46cfad58-750e-11e6-9a6c-129ece6cfc7d.png" height="683" width="384">
+<img src="https://cloud.githubusercontent.com/assets/4979755/18304727/44117484-750e-11e6-8ad1-85301a171690.png" height="683" width="384">
 
 ## Download
 Add to your module's build.gradle:
@@ -30,16 +31,16 @@ dependencies {
 - Quick call
 ```java
 ImagePicker.create(this)
-                .folderMode(true) // set folder mode (false by default)
-                .folderTitle("Folder") // folder selection title
-                .imageTitle("Tap to select") // image selection title
-                .single() // single mode
-                .multi() // multi mode (default mode)
-                .limit(10) // max images can be selected (99 by default)
-                .showCamera(true) // show camera or not (true by default)
-                .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
-                .origin(images) // original selected images, used in multi mode
-                .start(REQUEST_CODE_PICKER); // start image picker activity with request code
+            .folderMode(true) // folder mode (false by default)
+            .folderTitle("Folder") // folder selection title
+            .imageTitle("Tap to select") // image selection title
+            .single() // single mode
+            .multi() // multi mode (default mode)
+            .limit(10) // max images can be selected (99 by default)
+            .showCamera(true) // show camera or not (true by default)
+            .imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
+            .origin(images) // original selected images, used in multi mode
+            .start(REQUEST_CODE_PICKER); // start image picker activity with request code
 ```                
 - Or use traditional Intent
 ```java
