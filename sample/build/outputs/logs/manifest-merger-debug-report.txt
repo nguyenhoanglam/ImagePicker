@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:2:1-19:12
+ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:2:1-20:12
 	package
 		ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:3:5-40
 		INJECTED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml
@@ -15,32 +15,12 @@ ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/
 		INJECTED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml
 application
 ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:5:5-17:19
+MERGED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:15:5-35:19
 MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:15:5-25:19
-MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:design:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/design/24.1.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:22:5-20
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
 	android:label
 		ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:8:9-41
 	android:supportsRtl
@@ -58,43 +38,22 @@ ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
 ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:12:13-15:29
 action#android.intent.action.MAIN
-ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:13:17-69
+ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:13:17-76
 	android:name
 		ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:13:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:14:17-77
+ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:14:17-86
 	android:name
 		ADDED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml:14:27-74
 uses-sdk
 INJECTED from /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/src/main/AndroidManifest.xml reason: use-sdk injection requested
-MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:21:5-23:78
-MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:21:5-43
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:21:5-43
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
 MERGED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:21:5-23:78
 MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:21:5-43
 MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:21:5-43
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
 MERGED from [com.android.support:recyclerview-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.1.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
 MERGED from [com.android.support:design:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/design/24.1.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:recyclerview-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.1.1/AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:21:5-23:78
-MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:21:5-43
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:21:5-43
-MERGED from [com.android.support:support-v4:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
 	tools:overrideLibrary
 		ADDED from [com.android.support:appcompat-v7:24.1.1] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:23:9-75
 	android:targetSdkVersion
@@ -125,3 +84,19 @@ ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/D
 		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:24:13-52
 	android:name
 		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:21:13-87
+provider#android.support.v4.content.FileProvider
+ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:26:9-34:20
+	android:authorities
+		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:28:13-63
+	android:grantUriPermissions
+		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:30:13-47
+	android:exported
+		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:29:13-37
+	android:name
+		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:27:13-67
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:31:13-33:58
+	android:resource
+		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:33:17-55
+	android:name
+		ADDED from [com.github.nguyenhoanglam:imagepicker:unspecified] /Users/hoanglam/Documents/Programming/Android/MyProjects/ImagePicker/sample/build/intermediates/exploded-aar/com.github.nguyenhoanglam/imagepicker/unspecified/AndroidManifest.xml:32:17-67

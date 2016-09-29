@@ -7,6 +7,7 @@ package com.nguyenhoanglam.imagepicker.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.Constants;
@@ -17,9 +18,8 @@ import java.util.ArrayList;
 /**
  * Created by hoanglam on 8/4/16.
  */
-public class ImagePicker {
+public abstract class ImagePicker {
 
-    private Activity activity;
     private int mode;
     private int limit;
     private boolean showCamera;
@@ -29,8 +29,42 @@ public class ImagePicker {
     private boolean folderMode;
     private String imageDirectory;
 
-    public ImagePicker(Activity activity) {
-        this.activity = activity;
+    public abstract void start(int requestCode);
+
+    public static class ImagePickerWithActivity extends ImagePicker {
+
+        private Activity activity;
+
+        public ImagePickerWithActivity(Activity activity) {
+            this.activity = activity;
+            init(activity);
+        }
+
+        @Override
+        public void start(int requestCode) {
+            Intent intent = getIntent(activity);
+            activity.startActivityForResult(intent, requestCode);
+        }
+    }
+
+    public static class ImagePickerWithFragment extends ImagePicker {
+
+        private Fragment fragment;
+
+        public ImagePickerWithFragment(Fragment fragment) {
+            this.fragment = fragment;
+            init(fragment.getActivity());
+        }
+
+        @Override
+        public void start(int requestCode) {
+            Intent intent = getIntent(fragment.getActivity());
+            fragment.startActivityForResult(intent, requestCode);
+        }
+    }
+
+
+    public void init(Activity activity) {
         this.mode = ImagePickerActivity.MODE_MULTIPLE;
         this.limit = Constants.MAX_LIMIT;
         this.showCamera = true;
@@ -42,8 +76,12 @@ public class ImagePicker {
     }
 
 
-    public static ImagePicker create(Activity activity) {
-        return new ImagePicker(activity);
+    public static ImagePickerWithActivity create(Activity activity) {
+        return new ImagePickerWithActivity(activity);
+    }
+
+    public static ImagePickerWithFragment create(Fragment fragment) {
+        return new ImagePickerWithFragment(fragment);
     }
 
     public ImagePicker single() {
@@ -92,7 +130,7 @@ public class ImagePicker {
         return this;
     }
 
-    public void start(int requestCode) {
+    public Intent getIntent(Activity activity) {
         Intent intent = new Intent(activity, ImagePickerActivity.class);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, mode);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, limit);
@@ -102,8 +140,8 @@ public class ImagePicker {
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, folderMode);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, imageDirectory);
-
-        activity.startActivityForResult(intent, requestCode);
+        return intent;
     }
+
 
 }

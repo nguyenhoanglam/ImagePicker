@@ -21,6 +21,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,7 +32,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,10 +46,10 @@ import com.nguyenhoanglam.imagepicker.listeners.OnImageClickListener;
 import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.view.GridSpacingItemDecoration;
+import com.nguyenhoanglam.imagepicker.view.ProgressWheel;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -74,9 +74,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
 
     private List<Folder> folders;
     private ArrayList<Image> images;
-    private HashSet<String> imageSet;
-    private File currentFile;
-    private Uri currentUri;
+    private String currentImagePath;
     private String imageDirectory;
 
     private ArrayList<Image> selectedImages;
@@ -89,11 +87,11 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     private ActionBar actionBar;
 
     private MenuItem menuDone, menuCamera;
-    private final int menuAddId = 100;
+    private final int menuDoneId = 100;
     private final int menuCameraId = 101;
 
     private RelativeLayout mainLayout;
-    private ProgressBar progressBar;
+    private ProgressWheel progressBar;
     private TextView emptyTextView;
     private RecyclerView recyclerView;
 
@@ -126,7 +124,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         }
 
         mainLayout = (RelativeLayout) findViewById(R.id.main);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar = (ProgressWheel) findViewById(R.id.progress_bar);
         emptyTextView = (TextView) findViewById(R.id.tv_empty_images);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -169,7 +167,6 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         if (selectedImages == null)
             selectedImages = new ArrayList<>();
         images = new ArrayList<>();
-        imageSet = new HashSet<>();
 
 
         /** Set activity title */
@@ -241,8 +238,8 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
             menuCamera.setVisible(showCamera);
         }
 
-        if (menu.findItem(menuAddId) == null) {
-            menuDone = menu.add(Menu.NONE, menuAddId, 2, getString(R.string.done));
+        if (menu.findItem(menuDoneId) == null) {
+            menuDone = menu.add(Menu.NONE, menuDoneId, 2, getString(R.string.done));
             menuDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
@@ -263,7 +260,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
             return true;
         }
 
-        if (id == menuAddId) {
+        if (id == menuDoneId) {
             if (selectedImages != null && selectedImages.size() > 0) {
 
                 /** Scan selected images which not existed */
@@ -301,7 +298,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     }
 
     /**
-     * Set item size, column size base on the screen's orientation
+     * Set item size, column size base on the screen orientation
      */
     private void orientationBasedUI(int orientation) {
         imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
@@ -520,13 +517,14 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CODE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                if (currentFile != null && currentFile.exists()) {
+                Uri imageUri = Uri.parse(currentImagePath);
+                if (imageUri != null) {
                     MediaScannerConnection.scanFile(this,
-                            new String[]{currentFile.getAbsolutePath()}, null,
+                            new String[]{imageUri.getPath()}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
                                 @Override
                                 public void onScanCompleted(String path, Uri uri) {
-                                    Log.v("MediaScanWork", "file " + path + " was scanned successfully: " + uri);
+                                    Log.v(TAG, "File " + path + " was scanned successfully: " + uri);
                                     getDataWithPermission();
                                 }
                             });
@@ -559,10 +557,11 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
-            currentFile = ImageUtils.getOutputMediaFile(imageDirectory);
-            if (currentFile != null) {
-                currentUri = Uri.fromFile(currentFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, currentUri);
+            File imageFile = ImageUtils.createImageFile(imageDirectory);
+            if (imageFile != null) {
+                Uri uri = FileProvider.getUriForFile(this, getString(R.string.shared_file_provider), imageFile);
+                currentImagePath = "file:" + imageFile.getAbsolutePath();
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(intent, Constants.REQUEST_CODE_CAPTURE);
             } else {
                 Toast.makeText(this, getString(R.string.error_create_image_file), Toast.LENGTH_LONG).show();
@@ -595,14 +594,8 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
                         ArrayList<Image> newImages = new ArrayList<>();
                         newImages.addAll(images);
 
-                        imageSet.clear();
 
                         if (folderMode) {
-                            for (Folder folder : folders) {
-                                for (Image image : folder.getImages()) {
-                                    imageSet.add(image.getName());
-                                }
-                            }
                             setFolderAdapter();
                             if (folders.size() != 0)
                                 hideLoading();
@@ -610,9 +603,6 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
                                 showEmpty();
 
                         } else {
-                            for (Image image : newImages) {
-                                imageSet.add(image.getName());
-                            }
                             setImageAdapter(newImages);
                             if (images.size() != 0)
                                 hideLoading();
@@ -742,7 +732,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
             android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
             Message message;
-            if (imageAdapter == null) {
+            if (recyclerView.getAdapter() == null) {
                 /*
                 If the adapter is null, this is first time this activity's view is
                 being shown, hence send FETCH_STARTED message to show progress bar
