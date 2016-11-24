@@ -22,7 +22,7 @@ allprojects {
 and:
 ```java
 dependencies {
-    compile 'com.github.nguyenhoanglam:ImagePicker:1.1.2'
+    compile 'com.github.nguyenhoanglam:ImagePicker:1.1.3'
 }
 ```
 
@@ -36,12 +36,17 @@ ImagePicker.create(this)
             .imageTitle("Tap to select") // image selection title
             .single() // single mode
             .multi() // multi mode (default mode)
-            .limit(10) // max images can be selected (99 by default)
+            .limit(10) // max images can be selected (999 by default)
             .showCamera(true) // show camera or not (true by default)
             .imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
             .origin(images) // original selected images, used in multi mode
             .start(REQUEST_CODE_PICKER); // start image picker activity with request code
 ```                
+- If you want to deselect all selected images, do not call origin() method:
+```java
+ ImagePicker.create(this)
+                .start(REQUEST_CODE_PICKER);
+```
 - Or use traditional Intent
 ```java
 Intent intent = new Intent(this, ImagePickerActivity.class);

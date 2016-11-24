@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 .imageTitle("Tap to select") // image selection title
                 .single() // single mode
                 .multi() // multi mode (default mode)
-                .limit(10) // max images can be selected (99 by default)
+                .limit(10) // max images can be selected (999 by default)
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .origin(images) // original selected images, used in multi mode
@@ -81,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
             images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0, l = images.size(); i < l; i++) {
-                stringBuffer.append(images.get(i).getPath() + "\n");
+                sb.append(images.get(i).getPath() + "\n");
             }
-            textView.setText(stringBuffer.toString());
+            textView.setText(sb.toString());
         }
     }
 }

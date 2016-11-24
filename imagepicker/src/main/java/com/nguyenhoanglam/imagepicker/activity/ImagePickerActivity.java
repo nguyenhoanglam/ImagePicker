@@ -267,7 +267,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
                 for (int i = 0; i < selectedImages.size(); i++) {
                     Image image = selectedImages.get(i);
                     File file = new File(image.getPath());
-                    if (file == null || !file.exists()) {
+                    if (!file.exists()) {
                         selectedImages.remove(i);
                         i--;
                     }
@@ -358,7 +358,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
         } else {
-            if (isPermissionRequested(Constants.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED) == false) {
+            if (!isPermissionRequested(Constants.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED)) {
                 ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
                 setPermissionRequested(Constants.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED);
             } else {
@@ -385,7 +385,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_CAMERA);
         } else {
-            if (isPermissionRequested(Constants.PREF_CAMERA_REQUESTED) == false) {
+            if (!isPermissionRequested(Constants.PREF_CAMERA_REQUESTED)) {
                 ActivityCompat.requestPermissions(this, permissions, Constants.PERMISSION_REQUEST_CAMERA);
                 setPermissionRequested(Constants.PREF_CAMERA_REQUESTED);
             } else {
@@ -454,7 +454,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(permission, true);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -516,7 +516,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.REQUEST_CODE_CAPTURE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK && currentImagePath != null) {
                 Uri imageUri = Uri.parse(currentImagePath);
                 if (imageUri != null) {
                     MediaScannerConnection.scanFile(this,
@@ -559,7 +559,8 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         if (intent.resolveActivity(getPackageManager()) != null) {
             File imageFile = ImageUtils.createImageFile(imageDirectory);
             if (imageFile != null) {
-                Uri uri = FileProvider.getUriForFile(this, getString(R.string.shared_file_provider), imageFile);
+                String authority = getPackageName() + ".fileprovider";
+                Uri uri = FileProvider.getUriForFile(this, authority, imageFile);
                 currentImagePath = "file:" + imageFile.getAbsolutePath();
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(intent, Constants.REQUEST_CODE_CAPTURE);
