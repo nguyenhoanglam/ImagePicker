@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .origin(images) // original selected images, used in multi mode
+                .autoPickFromCamera(true) // pick recently tooken picture
                 .start(REQUEST_CODE_PICKER); // start image picker activity with request code
     }
 

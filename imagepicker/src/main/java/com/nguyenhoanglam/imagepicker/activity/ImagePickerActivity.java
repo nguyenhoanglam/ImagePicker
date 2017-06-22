@@ -70,6 +70,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     public static final String INTENT_EXTRA_FOLDER_TITLE = "folderTitle";
     public static final String INTENT_EXTRA_IMAGE_TITLE = "imageTitle";
     public static final String INTENT_EXTRA_IMAGE_DIRECTORY = "imageDirectory";
+    public static final String INTENT_EXTRA_AUTO_PICK_FROM_CAMERA = "autiPickFromCamera";
 
 
     private List<Folder> folders;
@@ -82,6 +83,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     private int mode;
     private boolean folderMode;
     private int limit;
+    boolean autoPickFromCamera;
     private String folderTitle, imageTitle;
 
     private ActionBar actionBar;
@@ -140,8 +142,15 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
 
         /** Get extras */
         limit = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
+        autoPickFromCamera = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_AUTO_PICK_FROM_CAMERA, true);
+
+
+
+
         mode = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
         folderMode = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, false);
+
+
 
         if (intent.hasExtra(INTENT_EXTRA_FOLDER_TITLE)) {
             folderTitle = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE);
@@ -523,9 +532,39 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
                             new String[]{imageUri.getPath()}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
                                 @Override
-                                public void onScanCompleted(String path, Uri uri) {
+                                public void onScanCompleted(String path, Uri uri)
+                                {
+
+
                                     Log.v(TAG, "File " + path + " was scanned successfully: " + uri);
                                     getDataWithPermission();
+
+
+                                    if(autoPickFromCamera)
+                                    {
+                                        Cursor cursor = null;
+                                        try {
+                                            cursor = getContentResolver().query(uri, projection,
+                                                    null, null, MediaStore.Images.Media.DATE_ADDED);
+
+                                            if (cursor != null) {
+                                                cursor.moveToFirst();
+                                                long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
+                                                String name = cursor.getString(cursor.getColumnIndex(projection[1]));
+                                                String tmpPath = cursor.getString(cursor.getColumnIndex(projection[2]));
+                                                String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
+                                                File file = new File(path);
+                                                if (file.exists()) {
+                                                    Image image = new Image(id, name, tmpPath, false);
+                                                    selectedImages.add(image);
+                                                }
+                                            }
+                                        } finally {
+                                            if (cursor != null) {
+                                                cursor.close();
+                                            }
+                                        }
+                                    }
                                 }
                             });
                 }
