@@ -28,6 +28,7 @@ public abstract class ImagePicker {
     private ArrayList<Image> selectedImages;
     private boolean folderMode;
     private String imageDirectory;
+    private boolean autoPickFromCamera;
 
     public abstract void start(int requestCode);
 
@@ -73,6 +74,7 @@ public abstract class ImagePicker {
         this.selectedImages = new ArrayList<>();
         this.folderMode = false;
         this.imageDirectory = activity.getString(R.string.image_directory);
+        this.autoPickFromCamera = true;
     }
 
 
@@ -91,6 +93,11 @@ public abstract class ImagePicker {
 
     public ImagePicker multi() {
         mode = ImagePickerActivity.MODE_MULTIPLE;
+        return this;
+    }
+
+    public ImagePicker autoPickFromCamera(boolean autoPick) {
+        this.autoPickFromCamera = autoPick;
         return this;
     }
 
@@ -140,6 +147,7 @@ public abstract class ImagePicker {
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, folderMode);
         intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, imageDirectory);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_AUTO_PICK_FROM_CAMERA, autoPickFromCamera);
         return intent;
     }
 
