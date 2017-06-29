@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.listeners.OnFolderClickListener;
 import com.nguyenhoanglam.imagepicker.model.Folder;
@@ -43,10 +44,12 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
 
         final Folder folder = folders.get(position);
 
+        RequestOptions options = new RequestOptions();
+        options.placeholder(R.drawable.folder_placeholder);
+        options.error(R.drawable.folder_placeholder);
+
         Glide.with(context)
                 .load(folder.getImages().get(0).getPath())
-                .placeholder(R.drawable.folder_placeholder)
-                .error(R.drawable.folder_placeholder)
                 .into(holder.image);
 
         holder.name.setText(folders.get(position).getFolderName());

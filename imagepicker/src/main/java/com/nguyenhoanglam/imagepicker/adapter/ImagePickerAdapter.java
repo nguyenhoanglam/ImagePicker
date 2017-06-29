@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.listeners.OnImageClickListener;
 import com.nguyenhoanglam.imagepicker.model.Image;
@@ -46,10 +47,12 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
         Image image = images.get(position);
 
+        RequestOptions options = new RequestOptions();
+        options.placeholder(R.drawable.folder_placeholder);
+        options.error(R.drawable.folder_placeholder);
+
         Glide.with(context)
                 .load(image.getPath())
-                .placeholder(R.drawable.image_placeholder)
-                .error(R.drawable.image_placeholder)
                 .into(viewHolder.imageView);
 
         if (isSelected(image)) {
