@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ImagePicker</string>
+
+    <string name="permission_write_external_rationale">请允许访问外部存储以选择图片</string>
+
+    <string name="ok">确定</string>
+    <string name="done">完成</string>
+    <string name="camera">相机</string>
+    <string name="image_directory">Camera</string>
+
+    <string name="title_folder">文件夹</string>
+    <string name="title_select_image">点击选择图片</string>
+    <string name="title_permission_denied">权限被拒绝</string>
+
+    <string name="selected">已选择 %d 项</string>
+    <string name="selected_with_limit">已选择 %1$d/%2$d 项</string>
+
+    <string name="error_create_image_file">无法创建图片文件</string>
+    <string name="error_no_camera">找不到相机</string>
+    <string name="error_null_cursor">啊哦，出错了</string>
+
+    <string name="msg_empty_images">找不到图片</string>
+    <string name="msg_no_write_external_permission">请允许获取存储权限以选择图片</string>
+    <string name="msg_no_camera_permission">请允许获取相机权限以拍摄照片</string>
+    <string name="msg_limit_images">已达到图片数量上限</string>
+
+</resources>
