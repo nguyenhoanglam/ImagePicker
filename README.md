@@ -1,13 +1,13 @@
 ## ImagePicker
-A simple library to select images from the gallery and camera.
+A simple library that allows you to select images from the device library or directly from the camera
 
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 
 ## Screenshot
 
-<img src="https://cloud.githubusercontent.com/assets/4979755/18304733/46cfad58-750e-11e6-9a6c-129ece6cfc7d.png" height="683" width="384">
-<img src="https://cloud.githubusercontent.com/assets/4979755/18304727/44117484-750e-11e6-8ad1-85301a171690.png" height="683" width="384">
+<img src="https://user-images.githubusercontent.com/4979755/29860123-18cdb978-8d8f-11e7-9020-535f9507c993.png" height="683" width="384">
+<img src="https://user-images.githubusercontent.com/4979755/29860122-18c6ed5a-8d8f-11e7-9726-e916c0c4670e.png" height="683" width="384">
 
 ## Download
 Add to your module's build.gradle:
@@ -22,61 +22,45 @@ allprojects {
 and:
 ```java
 dependencies {
-    compile 'com.github.nguyenhoanglam:ImagePicker:1.1.3'
+    compile 'com.github.nguyenhoanglam:ImagePicker:1.2.0'
 }
 ```
 
 ## How to use
-### Start image picker activity
-- Quick call
+
 ```java
-ImagePicker.create(this)
-            .folderMode(true) // folder mode (false by default)
-            .folderTitle("Folder") // folder selection title
-            .imageTitle("Tap to select") // image selection title
-            .single() // single mode
-            .multi() // multi mode (default mode)
-            .limit(10) // max images can be selected (999 by default)
-            .showCamera(true) // show camera or not (true by default)
-            .imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
-            .origin(images) // original selected images, used in multi mode
-            .start(REQUEST_CODE_PICKER); // start image picker activity with request code
-```                
-- If you want to deselect all selected images, do not call origin() method:
-```java
- ImagePicker.create(this)
-                .start(REQUEST_CODE_PICKER);
+ImagePicker.with(this)                         //  Initialize ImagePicker with activity or fragment context
+           .setToolbarColor("#212121")         //  Toolbar color
+           .setStatusBarColor("#000000")       //  StatusBar color (works with SDK >= 21  )
+           .setToolbarTextColor("#FFFFFF")     //  Toolbar text color (Title and Done button)
+           .setToolbarIconColor("#FFFFFF")     //  Toolbar icon color (Back and Camera button)
+           .setProgressBarColor("#4CAF50")     //  ProgressBar color
+           .setBackgroundColor("#212121")      //  Background color
+           .setCameraOnly(false)               //  Camera mode
+           .setMultipleMode(true)              //  Select multiple images or single image
+           .setFolderMode(true)                //  Folder mode
+           .setShowCamera(true)                //  Show camera button
+           .setFolderTitle("Albums")           //  Folder title (works with FolderMode = true)
+           .setImageTitle("Galleries")         //  Image title (works with FolderMode = false)
+           .setDoneTitle("Done")               //  Done button title
+           .setMaxSize(10)                     //  Max images can be selected
+           .setSavePath("ImagePicker")         //  Image capture folder name
+           .setSelectedImages(images)          //  Selected images
+           .start();                           //  Start ImagePicker    
 ```
-- Or use traditional Intent
-```java
-Intent intent = new Intent(this, ImagePickerActivity.class);
 
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, true);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE, "Album");
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE, "Tap to select images");
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, "Camera");
-
-startActivityForResult(intent, REQUEST_CODE_PICKER);
-```        
 ### Receive result
 
 ```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
-        ArrayList<Image> images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
-        // do your logic ....
+    if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
+        ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+        // do your logic here...
     }
+    super.onActivityResult(requestCode, resultCode, data);
 }
 ```
-
-##Thanks
-- Darshan Dorai for [MultipleImageSelect](https://github.com/darsh2/MultipleImageSelect) 
-- [Glide](https://github.com/bumptech/glide) for image loading implementation
 
 ##License
 Copyright 2016 Nguyen Hoang Lam

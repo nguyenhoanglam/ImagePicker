@@ -8,16 +8,31 @@ import android.os.Parcelable;
  */
 public class Image implements Parcelable {
 
+    public static final Creator<Image> CREATOR = new Creator<Image>() {
+        @Override
+        public Image createFromParcel(Parcel source) {
+            return new Image(source);
+        }
+
+        @Override
+        public Image[] newArray(int size) {
+            return new Image[size];
+        }
+    };
     private long id;
     private String name;
     private String path;
-    private boolean isSelected;
 
-    public Image(long id, String name, String path, boolean isSelected) {
+    public Image(long id, String name, String path) {
         this.id = id;
         this.name = name;
         this.path = path;
-        this.isSelected = isSelected;
+    }
+
+    protected Image(Parcel in) {
+        this.id = in.readLong();
+        this.name = in.readString();
+        this.path = in.readString();
     }
 
     public long getId() {
@@ -44,14 +59,14 @@ public class Image implements Parcelable {
         this.path = path;
     }
 
-    public boolean isSelected() {
-        return isSelected;
-    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-    public void setSelected(boolean selected) {
-        isSelected = selected;
+        Image image = (Image) o;
+        return image.getPath().equalsIgnoreCase(getPath());
     }
-
 
     @Override
     public int describeContents() {
@@ -63,25 +78,6 @@ public class Image implements Parcelable {
         dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeString(this.path);
-        dest.writeByte(this.isSelected ? (byte) 1 : (byte) 0);
     }
 
-    protected Image(Parcel in) {
-        this.id = in.readLong();
-        this.name = in.readString();
-        this.path = in.readString();
-        this.isSelected = in.readByte() != 0;
-    }
-
-    public static final Creator<Image> CREATOR = new Creator<Image>() {
-        @Override
-        public Image createFromParcel(Parcel source) {
-            return new Image(source);
-        }
-
-        @Override
-        public Image[] newArray(int size) {
-            return new Image[size];
-        }
-    };
 }

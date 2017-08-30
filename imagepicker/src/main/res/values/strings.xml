@@ -1,27 +1,24 @@
 <resources>
-    <string name="app_name">ImagePicker</string>
 
-    <string name="permission_write_external_rationale">Allow access external storage to select images</string>
+    <string name="imagepicker_action_ok">OK</string>
+    <string name="imagepicker_action_done">DONE</string>
 
-    <string name="ok">OK</string>
-    <string name="done">DONE</string>
-    <string name="camera">CAMERA</string>
-    <string name="image_directory">Camera</string>
+    <string name="imagepicker_title_folder">Albums</string>
+    <string name="imagepicker_title_image">Galleries</string>
 
-    <string name="title_folder">Folder</string>
-    <string name="title_select_image">Tap to select images</string>
-    <string name="title_permission_denied">Permission denied</string>
+    <string name="imagepicker_text_gif">GIF</string>
+    <string name="imagepicker_photo_count_multiple">%d images</string>
+    <string name="imagepicker_photo_count_single">%d image</string>
 
-    <string name="selected">%d selected</string>
-    <string name="selected_with_limit">%1$d/%2$d selected</string>
+    <string name="imagepicker_error_no_camera">No camera found</string>
+    <string name="imagepicker_error_create_image_file">Failed to create image file</string>
+    <string name="imagepicker_error_images_not_exist">Images not exist</string>
+    <string name="imagepicker_error_unknown">Unknown error</string>
 
-    <string name="error_create_image_file">Failed to create image file</string>
-    <string name="error_no_camera">No camera found</string>
-    <string name="error_null_cursor">Oops, something went wrong!</string>
-
-    <string name="msg_empty_images">No images found</string>
-    <string name="msg_no_write_external_permission">Please grant storage permission to select images</string>
-    <string name="msg_no_camera_permission">Please grant camera permission to capture image</string>
-    <string name="msg_limit_images">Image selection limit</string>
+    <string name="imagepicker_msg_no_images">No images</string>
+    <string name="imagepicker_msg_no_write_external_storage_permission">To continue, please give access to your photos</string>
+    <string name="imagepicker_msg_no_camera_permission">To continue, please give access to take pictures</string>
+    <string name="imagepicker_msg_no_write_external_storage_camera_permission">To continue, please give access to take pictures</string>
+    <string name="imagepicker_msg_limit_images">Limit selection to %d images</string>
 
 </resources>

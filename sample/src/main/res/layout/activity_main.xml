@@ -2,25 +2,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:id="@+id/config_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello, world!" />
+        android:layout_alignParentTop="true"
+        android:fillViewport="true"
+        android:padding="@dimen/spacing">
 
-    <Button
-        android:id="@+id/button_pick_image"
-        android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/switch_folder_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing"
+                android:checked="true"
+                android:switchPadding="@dimen/spacing"
+                android:text="Folder Mode" />
+
+            <Switch
+                android:id="@+id/switch_multiple_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing"
+                android:checked="true"
+                android:switchPadding="@dimen/spacing"
+                android:text="Multiple Mode" />
+
+            <Switch
+                android:id="@+id/switch_camera_only"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing"
+                android:switchPadding="@dimen/spacing"
+                android:text="Camera Only" />
+
+
+            <Button
+                android:id="@+id/button_pick_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="PICK IMAGE" />
+
+            <Button
+                android:id="@+id/button_launch_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="LAUNCH FRAGMENT" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:text="PICK IMAGE" />
+        android:layout_below="@+id/config_container"
+        android:padding="@dimen/spacing" />
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

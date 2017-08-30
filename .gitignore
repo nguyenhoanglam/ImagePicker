@@ -1,8 +1,8 @@
-# Built context files
+# Built application files
 *.apk
 *.ap_
 
-# Files for the Dalvik VM
+# Files for the ART/Dalvik VM
 *.dex
 
 # Java class files
@@ -13,7 +13,7 @@ bin/
 gen/
 out/
 
-# Gradle
+# Gradle files
 .gradle/
 build/
 
@@ -33,17 +33,18 @@ proguard/
 captures/
 
 # Intellij
-.idea/
 *.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/dictionaries
+.idea/libraries
 
-# Keystore files
-*.jks
+# External native build folder generated in Android Studio 2.2 and later
+.externalNativeBuild
 
-# OS-specific files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Freeline
+freeline.py
+freeline/
+freeline_project_description.json
+projectFilesBackup/
