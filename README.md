@@ -1,15 +1,20 @@
-## ImagePicker
+ImagePicker
+========
+
 A simple library that allows you to select images from the device library or directly from the camera
 
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 
-## Screenshots
+Screenshots
+--------
 
 <img src="https://user-images.githubusercontent.com/4979755/29860123-18cdb978-8d8f-11e7-9020-535f9507c993.png" height="683" width="384">
 <img src="https://user-images.githubusercontent.com/4979755/29860122-18c6ed5a-8d8f-11e7-9726-e916c0c4670e.png" height="683" width="384">
 
-## Download
+Download
+--------
+
 Add it in your root build.gradle at the end of repositories
 ```java
 allprojects {
@@ -28,8 +33,10 @@ dependencies {
 }
 ```
 
-## How to use
+Usage
+--------
 
+### Start ImagePicker
 ```java
 ImagePicker.with(this)                         //  Initialize ImagePicker with activity or fragment context
            .setToolbarColor("#212121")         //  Toolbar color
@@ -51,7 +58,7 @@ ImagePicker.with(this)                         //  Initialize ImagePicker with a
            .start();                           //  Start ImagePicker    
 ```
 
-### Receive result
+### Receive images
 
 ```java
 @Override
@@ -64,7 +71,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-##License
+License
+========
+
 Copyright 2016 Nguyen Hoang Lam
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
