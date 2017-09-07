@@ -32,71 +32,20 @@ public class ImagePicker {
     }
 
     public static Builder with(Activity activity) {
-        return new ActivityBuilder(activity);
+        return new Builder(activity);
     }
 
     public static Builder with(Fragment fragment) {
-        return new FragmentBuilder(fragment);
+        return new Builder(fragment.getActivity());
     }
 
-    static class ActivityBuilder extends Builder {
-        private Activity activity;
+    public static class Builder extends BaseBuilder {
 
-        public ActivityBuilder(Activity activity) {
+        Activity activity;
+
+        Builder(Activity activity) {
             super(activity);
             this.activity = activity;
-        }
-
-        @Override
-        public void start() {
-            Intent intent;
-            if (!config.isCameraOnly()) {
-                intent = new Intent(activity, ImagePickerActivity.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-                activity.startActivityForResult(intent, Config.RC_PICK_IMAGES);
-            } else {
-                intent = new Intent(activity, CameraActivty.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                activity.overridePendingTransition(0, 0);
-                activity.startActivityForResult(intent, Config.RC_PICK_IMAGES);
-            }
-        }
-    }
-
-    static class FragmentBuilder extends Builder {
-        private Fragment fragment;
-
-        public FragmentBuilder(Fragment fragment) {
-            super(fragment);
-            this.fragment = fragment;
-        }
-
-        @Override
-        public void start() {
-            Intent intent;
-            if (!config.isCameraOnly()) {
-                intent = new Intent(fragment.getActivity(), ImagePickerActivity.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-                fragment.startActivityForResult(intent, Config.RC_PICK_IMAGES);
-            } else {
-                intent = new Intent(fragment.getActivity(), CameraActivty.class);
-                intent.putExtra(Config.EXTRA_CONFIG, config);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                fragment.getActivity().overridePendingTransition(0, 0);
-                fragment.startActivityForResult(intent, Config.RC_PICK_IMAGES);
-            }
-        }
-    }
-
-    public static abstract class Builder extends BaseBuilder {
-
-        public Builder(Activity activity) {
-            super(activity);
-        }
-
-        public Builder(Fragment fragment) {
-            super(fragment.getContext());
         }
 
         public Builder setToolbarColor(String toolbarColor) {
@@ -179,7 +128,26 @@ public class ImagePicker {
             return this;
         }
 
-        public abstract void start();
+        public Intent getIntent() {
+          Intent intent;
+          if (config.isCameraOnly()) {
+            intent = new Intent(activity, CameraActivty.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+          } else {
+            intent = new Intent(activity, ImagePickerActivity.class);
+          }
+
+          intent.putExtra(Config.EXTRA_CONFIG, config);
+
+          return intent;
+        }
+
+        public void start() {
+          if (config.isCameraOnly()) {
+            activity.overridePendingTransition(0, 0);
+          }
+          activity.startActivityForResult(getIntent(), Config.RC_PICK_IMAGES);
+        }
 
     }
 
@@ -187,7 +155,7 @@ public class ImagePicker {
 
         protected Config config;
 
-        public BaseBuilder(Context context) {
+        BaseBuilder(Context context) {
             this.config = new Config();
 
             Resources resources = context.getResources();
@@ -205,4 +173,3 @@ public class ImagePicker {
     }
 
 }
-
