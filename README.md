@@ -1,7 +1,7 @@
 ImagePicker
 ========
 
-A simple library that allows you to select images from the device library or directly from the camera
+A simple library that allows you to select images from the device library or directly from the camera.
 
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
@@ -9,8 +9,7 @@ A simple library that allows you to select images from the device library or dir
 Screenshots
 --------
 
-<img src="https://user-images.githubusercontent.com/4979755/29860123-18cdb978-8d8f-11e7-9020-535f9507c993.png" height="683" width="384">
-<img src="https://user-images.githubusercontent.com/4979755/29860122-18c6ed5a-8d8f-11e7-9726-e916c0c4670e.png" height="683" width="384">
+<img src="https://user-images.githubusercontent.com/4979755/29860123-18cdb978-8d8f-11e7-9020-535f9507c993.png" height="683" width="384"> <img src="https://user-images.githubusercontent.com/4979755/29860122-18c6ed5a-8d8f-11e7-9726-e916c0c4670e.png" height="683" width="384">
 
 Download
 --------
