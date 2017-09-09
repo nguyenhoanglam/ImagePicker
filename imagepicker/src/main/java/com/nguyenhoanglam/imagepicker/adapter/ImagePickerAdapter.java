@@ -3,63 +3,72 @@ package com.nguyenhoanglam.imagepicker.adapter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.nguyenhoanglam.imagepicker.R;
-import com.nguyenhoanglam.imagepicker.listeners.OnImageClickListener;
+import com.nguyenhoanglam.imagepicker.helper.ImageHelper;
+import com.nguyenhoanglam.imagepicker.listener.OnImageClickListener;
+import com.nguyenhoanglam.imagepicker.listener.OnImageSelectionListener;
 import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.ui.common.BaseRecyclerViewAdapter;
+import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by hoanglam on 7/31/16.
  */
-public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.ImageViewHolder> {
+public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapter.ImageViewHolder> {
 
-    private Context context;
-    private LayoutInflater inflater;
-    private List<Image> images;
-    private List<Image> selectedImages;
+    private List<Image> images = new ArrayList<>();
+    private List<Image> selectedImages = new ArrayList<>();
     private OnImageClickListener itemClickListener;
+    private OnImageSelectionListener imageSelectionListener;
 
-    public ImagePickerAdapter(Context context, List<Image> images, List<Image> selectedImages, OnImageClickListener itemClickListener) {
-        this.context = context;
-        this.images = images;
-        this.selectedImages = selectedImages;
+    public ImagePickerAdapter(Context context, ImageLoader imageLoader, List<Image> selectedImages, OnImageClickListener itemClickListener) {
+        super(context, imageLoader);
         this.itemClickListener = itemClickListener;
-        inflater = LayoutInflater.from(this.context);
+
+        if (selectedImages != null && !selectedImages.isEmpty()) {
+            this.selectedImages.addAll(selectedImages);
+        }
     }
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.item_image, parent, false);
-        return new ImageViewHolder(itemView, itemClickListener);
+        View itemView = getInflater().inflate(R.layout.imagepicker_item_image, parent, false);
+        return new ImageViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ImageViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ImageViewHolder viewHolder, final int position) {
 
-        Image image = images.get(position);
+        final Image image = images.get(position);
+        final boolean isSelected = isSelected(image);
 
-        Glide.with(context)
-                .load(image.getPath())
-                .placeholder(R.drawable.image_placeholder)
-                .error(R.drawable.image_placeholder)
-                .into(viewHolder.imageView);
+        getImageLoader().loadImage(image.getPath(), viewHolder.image);
 
-        if (isSelected(image)) {
-            viewHolder.alphaView.setAlpha(0.5f);
-            ((FrameLayout) viewHolder.itemView).setForeground(ContextCompat.getDrawable(context, R.drawable.ic_done_white));
-        } else {
-            viewHolder.alphaView.setAlpha(0.0f);
-            ((FrameLayout) viewHolder.itemView).setForeground(null);
-        }
+        viewHolder.gifIndicator.setVisibility(ImageHelper.isGifFormat(image) ? View.VISIBLE : View.GONE);
+        viewHolder.alphaView.setAlpha(isSelected ? 0.5f : 0.0f);
+        viewHolder.container.setForeground(isSelected
+                ? ContextCompat.getDrawable(getContext(), R.drawable.imagepicker_ic_selected)
+                : null);
 
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean shouldSelect = itemClickListener.onImageClick(view, viewHolder.getAdapterPosition(), !isSelected);
+                if (isSelected) {
+                    removeSelected(image, position);
+                } else if (shouldSelect) {
+                    addSelected(image, position);
+                }
+            }
+        });
     }
 
     private boolean isSelected(Image image) {
@@ -68,8 +77,11 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                 return true;
             }
         }
-
         return false;
+    }
+
+    public void setOnImageSelectionListener(OnImageSelectionListener imageSelectedListener) {
+        this.imageSelectionListener = imageSelectedListener;
     }
 
     @Override
@@ -79,57 +91,57 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
 
     public void setData(List<Image> images) {
-        this.images.clear();
-        this.images.addAll(images);
-    }
-
-    public void addAll(List<Image> images) {
-        int startIndex = this.images.size();
-        this.images.addAll(startIndex, images);
-        notifyItemRangeInserted(startIndex, images.size());
-    }
-
-    public void addSelected(Image image) {
-        selectedImages.add(image);
-        notifyItemChanged(images.indexOf(image));
-    }
-
-    public void removeSelectedImage(Image image) {
-        selectedImages.remove(image);
-        notifyItemChanged(images.indexOf(image));
-    }
-
-    public void removeSelectedPosition(int position, int clickPosition) {
-        selectedImages.remove(position);
-        notifyItemChanged(clickPosition);
-    }
-
-    public void removeAllSelectedSingleClick() {
-        selectedImages.clear();
+        if (images != null) {
+            this.images.clear();
+            this.images.addAll(images);
+        }
         notifyDataSetChanged();
     }
 
+    public void addSelected(Image image, int position) {
+        selectedImages.add(image);
+        notifyItemChanged(position);
+        notifySelectionChanged();
+    }
 
-    public static class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public void removeSelected(Image image, int position) {
+        selectedImages.remove(image);
+        notifyItemChanged(position);
+        notifySelectionChanged();
+    }
 
-        private ImageView imageView;
-        private View alphaView;
-        private final OnImageClickListener itemClickListener;
+    public void removeAllSelected() {
+        selectedImages.clear();
+        notifyDataSetChanged();
+        notifySelectionChanged();
+    }
 
-        public ImageViewHolder(View itemView, OnImageClickListener itemClickListener) {
-            super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.image_view);
-            alphaView = itemView.findViewById(R.id.view_alpha);
-            this.itemClickListener = itemClickListener;
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            view.setSelected(true);
-            itemClickListener.onClick(view, getAdapterPosition());
+    private void notifySelectionChanged() {
+        if (imageSelectionListener != null) {
+            imageSelectionListener.onSelectionUpdate(selectedImages);
         }
     }
 
+    public List<Image> getSelectedImages() {
+        return selectedImages;
+    }
+
+    static class ImageViewHolder extends RecyclerView.ViewHolder {
+
+        private FrameLayout container;
+        private ImageView image;
+        private View alphaView;
+        private View gifIndicator;
+
+        public ImageViewHolder(View itemView) {
+            super(itemView);
+            container = (FrameLayout) itemView;
+            image = itemView.findViewById(R.id.image_thumbnail);
+            alphaView = itemView.findViewById(R.id.view_alpha);
+            gifIndicator = itemView.findViewById(R.id.gif_indicator);
+
+        }
+
+    }
 
 }

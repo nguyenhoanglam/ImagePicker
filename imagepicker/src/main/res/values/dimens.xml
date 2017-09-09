@@ -1,14 +1,15 @@
 <resources>
-    <dimen name="item_padding">1dp</dimen>
 
-    <dimen name="padding_small">5dp</dimen>
-    <dimen name="padding_medium">10dp</dimen>
-    <dimen name="padding_large">15dp</dimen>
+    <dimen name="imagepicker_item_padding">1dp</dimen>
 
-    <dimen name="margin_small">5dp</dimen>
-    <dimen name="margin_medium">10dp</dimen>
-    <dimen name="margin_large">15dp</dimen>
+    <dimen name="imagepicker_padding_small">4dp</dimen>
+    <dimen name="imagepicker_padding_medium">8dp</dimen>
+    <dimen name="imagepicker_padding_large">16dp</dimen>
 
-    <dimen name="font_small">12sp</dimen>
-    <dimen name="font_medium">16sp</dimen>
+    <dimen name="imagepicker_margin_small">4dp</dimen>
+    <dimen name="imagepicker_margin_medium">8dp</dimen>
+    <dimen name="imagepicker_margin_large">16dp</dimen>
+
+    <dimen name="imagepicker_size_toolbar_icon">24dp</dimen>
+
 </resources>
