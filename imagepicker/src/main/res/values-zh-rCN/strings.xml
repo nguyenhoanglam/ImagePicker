@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="imagepicker_action_ok">确定</string>
+    <string name="imagepicker_action_done">完成</string>
+
+    <string name="imagepicker_title_folder">相册</string>
+    <string name="imagepicker_title_image">图库</string>
+
+    <string name="imagepicker_text_gif">GIF</string>
+    <string name="imagepicker_photo_count_multiple">%d 张图片</string>
+    <string name="imagepicker_photo_count_single">%d 张图片</string>
+
+    <string name="imagepicker_error_no_camera">找不到相机</string>
+    <string name="imagepicker_error_create_image_file">无法创建图片文件</string>
+    <string name="imagepicker_error_images_not_exist">图片不存在</string>
+    <string name="imagepicker_error_unknown">未知错误</string>
+
+    <string name="imagepicker_msg_no_images">无图片</string>
+    <string name="imagepicker_msg_no_write_external_storage_permission">要继续使用，请授予访问图片的权限</string>
+    <string name="imagepicker_msg_no_camera_permission">要继续使用，请授予拍摄照片的权限</string>
+    <string name="imagepicker_msg_no_write_external_storage_camera_permission">要继续使用，请授予拍摄照片的权限</string>
+    <string name="imagepicker_msg_limit_images">最多可选择 %d 张图片</string>
+
+</resources>
