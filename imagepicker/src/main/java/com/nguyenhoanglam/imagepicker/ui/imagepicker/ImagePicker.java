@@ -49,18 +49,27 @@ public class ImagePicker {
 
         @Override
         public void start() {
+            Intent intent = getIntent();
+            if (!config.isCameraOnly()) {
+                activity.startActivityForResult(intent, Config.RC_PICK_IMAGES);
+            } else {
+                activity.overridePendingTransition(0, 0);
+                activity.startActivityForResult(intent, Config.RC_PICK_IMAGES);
+            }
+        }
+
+        @Override
+        public Intent getIntent() {
             Intent intent;
             if (!config.isCameraOnly()) {
                 intent = new Intent(activity, ImagePickerActivity.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
-                activity.startActivityForResult(intent, Config.RC_PICK_IMAGES);
             } else {
                 intent = new Intent(activity, CameraActivty.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                activity.overridePendingTransition(0, 0);
-                activity.startActivityForResult(intent, Config.RC_PICK_IMAGES);
             }
+            return intent;
         }
     }
 
@@ -74,18 +83,27 @@ public class ImagePicker {
 
         @Override
         public void start() {
+            Intent intent = getIntent();
+            if (!config.isCameraOnly()) {
+                fragment.startActivityForResult(intent, Config.RC_PICK_IMAGES);
+            } else {
+                fragment.getActivity().overridePendingTransition(0, 0);
+                fragment.startActivityForResult(intent, Config.RC_PICK_IMAGES);
+            }
+        }
+
+        @Override
+        public Intent getIntent() {
             Intent intent;
             if (!config.isCameraOnly()) {
                 intent = new Intent(fragment.getActivity(), ImagePickerActivity.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
-                fragment.startActivityForResult(intent, Config.RC_PICK_IMAGES);
             } else {
                 intent = new Intent(fragment.getActivity(), CameraActivty.class);
                 intent.putExtra(Config.EXTRA_CONFIG, config);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                fragment.getActivity().overridePendingTransition(0, 0);
-                fragment.startActivityForResult(intent, Config.RC_PICK_IMAGES);
             }
+            return intent;
         }
     }
 
@@ -169,8 +187,18 @@ public class ImagePicker {
             return this;
         }
 
+        public Builder setLimitMessage(String message){
+            config.setLimitMessage(message);
+            return this;
+        }
+
         public Builder setSavePath(String path) {
             config.setSavePath(new SavePath(path, false));
+            return this;
+        }
+
+        public Builder setKeepScreenOn(boolean keepScreenOn) {
+            config.setKeepScreenOn(keepScreenOn);
             return this;
         }
 
@@ -180,6 +208,8 @@ public class ImagePicker {
         }
 
         public abstract void start();
+
+        public abstract Intent getIntent();
 
     }
 
@@ -199,7 +229,9 @@ public class ImagePicker {
             config.setDoneTitle(resources.getString(R.string.imagepicker_action_done));
             config.setFolderTitle(resources.getString(R.string.imagepicker_title_folder));
             config.setImageTitle(resources.getString(R.string.imagepicker_title_image));
+            config.setLimitMessage(resources.getString(R.string.imagepicker_msg_limit_images));
             config.setSavePath(SavePath.DEFAULT);
+            config.setKeepScreenOn(false);
             config.setSelectedImages(new ArrayList<Image>());
         }
     }

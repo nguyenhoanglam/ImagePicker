@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:override="true">
-    <color name="imagepicker_colorPrimary">#3F51B5</color>
-    <color name="imagepicker_colorPrimaryDark">#303F9F</color>
-    <color name="imagepicker_colorAccent">#E91E63</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#E91E63</color>
 
     <color name="imagepicker_white">#FFFFFF</color>
     <color name="imagepicker_black">#000000</color>

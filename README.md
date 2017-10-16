@@ -51,9 +51,11 @@ ImagePicker.with(this)                         //  Initialize ImagePicker with a
            .setFolderTitle("Albums")           //  Folder title (works with FolderMode = true)
            .setImageTitle("Galleries")         //  Image title (works with FolderMode = false)
            .setDoneTitle("Done")               //  Done button title
+           .setLimitMessage("You have reached selection limit")    // Selection limit message
            .setMaxSize(10)                     //  Max images can be selected
            .setSavePath("ImagePicker")         //  Image capture folder name
            .setSelectedImages(images)          //  Selected images
+           .setKeepScreenOn(true)              //  Keep screen on when selecting images
            .start();                           //  Start ImagePicker    
 ```
 
@@ -66,9 +68,18 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
         // do your logic here...
     }
-    super.onActivityResult(requestCode, resultCode, data);
+    super.onActivityResult(requestCode, resultCode, data);  // THIS METHOD SHOULD BE HERE so that ImagePicker works with fragment
 }
 ```
+
+What's New
+--------
+
+- Auto select image after capturing from camera.
+- Add additional method ```getIntent()``` that return an ImagePicker intent so we can start ImagePicker manually.
+- Set custom seletion limit message.
+- Set keep screen on when selecting images.
+
 
 License
 ========

@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMultipleMode(multipleMode)
                 .setSelectedImages(images)
                 .setMaxSize(10)
+                .setKeepScreenOn(true)
                 .start();
 
     }

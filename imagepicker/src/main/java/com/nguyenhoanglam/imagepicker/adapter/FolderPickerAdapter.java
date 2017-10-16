@@ -45,10 +45,7 @@ public class FolderPickerAdapter extends BaseRecyclerViewAdapter<FolderPickerAda
         holder.name.setText(folder.getFolderName());
 
         final int count = folder.getImages().size();
-        holder.count.setText(String.format(count > 1
-                        ? getContext().getString(R.string.imagepicker_photo_count_multiple)
-                        : getContext().getString(R.string.imagepicker_photo_count_single)
-                , count));
+        holder.count.setText("" + count);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

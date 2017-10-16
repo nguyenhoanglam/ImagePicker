@@ -31,7 +31,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
             Context appContext = context.getApplicationContext();
             String providerName = String.format(Locale.ENGLISH, "%s%s", appContext.getPackageName(), ".fileprovider");
             Uri uri = FileProvider.getUriForFile(appContext, providerName, imageFile);
-            imagePath = "file:" + imageFile.getAbsolutePath();
+            imagePath = imageFile.getAbsolutePath();
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             ImageHelper.grantAppPermission(context, intent, uri);
             return intent;
@@ -50,7 +50,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
             return;
         }
 
-        final Uri imageUri = Uri.parse(imagePath);
+        final Uri imageUri = Uri.parse(new File(imagePath).toString());
         if (imageUri != null) {
             MediaScannerConnection.scanFile(context.getApplicationContext(), new String[]{imageUri.getPath()}
                     , null

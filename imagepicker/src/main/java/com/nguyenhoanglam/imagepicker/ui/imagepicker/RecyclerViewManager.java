@@ -110,6 +110,10 @@ public class RecyclerViewManager {
         return imageAdapter.getSelectedImages();
     }
 
+    public void addSelectedImages(List<Image> images) {
+        imageAdapter.addSelected(images);
+    }
+
     private void checkAdapterIsInitialized() {
         if (imageAdapter == null) {
             throw new IllegalStateException("Must call setupAdapters first!");
@@ -119,7 +123,7 @@ public class RecyclerViewManager {
     public boolean selectImage() {
         if (config.isMultipleMode()) {
             if (imageAdapter.getSelectedImages().size() >= config.getMaxSize()) {
-                String message = String.format(context.getString(R.string.imagepicker_msg_limit_images), config.getMaxSize());
+                String message = String.format(config.getLimitMessage(), config.getMaxSize());
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 return false;
             }

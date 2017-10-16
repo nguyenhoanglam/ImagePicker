@@ -98,6 +98,11 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
         notifyDataSetChanged();
     }
 
+    public void addSelected(List<Image> images) {
+        selectedImages.addAll(images);
+        notifySelectionChanged();
+    }
+
     public void addSelected(Image image, int position) {
         selectedImages.add(image);
         notifyItemChanged(position);
