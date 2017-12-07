@@ -1,6 +1,8 @@
 ImagePicker
 ========
 
+[![Join the chat at https://gitter.im/ImagePicker/Lobby](https://badges.gitter.im/ImagePicker/Lobby.svg)](https://gitter.im/ImagePicker/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A simple library that allows you to select images from the device library or directly from the camera.
 
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
