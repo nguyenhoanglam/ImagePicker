@@ -92,7 +92,7 @@ public class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
                 if (!config.isMultipleMode()) {
                     getView().finishPickImages(images);
                 } else {
-                    getView().showCapturedImage();
+                    getView().showCapturedImage(images);
                 }
             }
         });

@@ -25,7 +25,7 @@ public class Config implements Parcelable {
 
 
     public static final int MAX_SIZE = Integer.MAX_VALUE;
-    public static final Creator<Config> CREATOR = new Creator<Config>() {
+    public static final Parcelable.Creator<Config> CREATOR = new Parcelable.Creator<Config>() {
         @Override
         public Config createFromParcel(Parcel source) {
             return new Config(source);
@@ -50,7 +50,9 @@ public class Config implements Parcelable {
     private String doneTitle;
     private String folderTitle;
     private String imageTitle;
+    private String limitMessage;
     private SavePath savePath;
+    private boolean isKeepScreenOn;
     private ArrayList<Image> selectedImages;
 
 
@@ -72,7 +74,9 @@ public class Config implements Parcelable {
         this.doneTitle = in.readString();
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
+        this.limitMessage = in.readString();
         this.savePath = in.readParcelable(SavePath.class.getClassLoader());
+        this.isKeepScreenOn = in.readByte() != 0;
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
     }
 
@@ -206,12 +210,28 @@ public class Config implements Parcelable {
         this.imageTitle = imageTitle;
     }
 
+    public String getLimitMessage() {
+        return limitMessage;
+    }
+
+    public void setLimitMessage(String limitMessage) {
+        this.limitMessage = limitMessage;
+    }
+
     public SavePath getSavePath() {
         return savePath;
     }
 
     public void setSavePath(SavePath savePath) {
         this.savePath = savePath;
+    }
+
+    public boolean isKeepScreenOn() {
+        return isKeepScreenOn;
+    }
+
+    public void setKeepScreenOn(boolean keepScreenOn) {
+        isKeepScreenOn = keepScreenOn;
     }
 
     public ArrayList<Image> getSelectedImages() {
@@ -243,7 +263,9 @@ public class Config implements Parcelable {
         dest.writeString(this.doneTitle);
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
+        dest.writeString(this.limitMessage);
         dest.writeParcelable(this.savePath, flags);
+        dest.writeByte(this.isKeepScreenOn ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.selectedImages);
     }
 }

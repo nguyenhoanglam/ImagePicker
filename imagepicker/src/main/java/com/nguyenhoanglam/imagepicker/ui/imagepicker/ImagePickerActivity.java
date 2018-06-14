@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
@@ -100,6 +101,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
 
         config = intent.getParcelableExtra(Config.EXTRA_CONFIG);
+        if (config.isKeepScreenOn()) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
 
         setContentView(R.layout.imagepicker_activity_picker);
 
@@ -394,7 +398,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     @Override
-    public void showCapturedImage() {
+    public void showCapturedImage(List<Image> images) {
+        boolean shouldSelect = recyclerViewManager.selectImage();
+        if (shouldSelect) {
+            recyclerViewManager.addSelectedImages(images);
+        }
         getDataWithPermission();
     }
 

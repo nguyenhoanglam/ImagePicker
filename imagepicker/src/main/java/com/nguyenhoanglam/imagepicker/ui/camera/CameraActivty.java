@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.CameraHelper;
@@ -47,6 +48,9 @@ public class CameraActivty extends AppCompatActivity implements CameraView {
         }
 
         config = intent.getParcelableExtra(Config.EXTRA_CONFIG);
+        if (config.isKeepScreenOn()) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
 
         setContentView(R.layout.imagepicker_activity_camera);
         snackBar = findViewById(R.id.snackbar);
