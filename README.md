@@ -3,7 +3,7 @@ ImagePicker
 
 A simple library that allows you to select images from the device library or directly from the camera.
 
-[![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
+[![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://jitpack.io/#nguyenhoanglam/ImagePicker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 [![Join the chat at https://gitter.im/ImagePicker/BugAndFeature](https://badges.gitter.im/ImagePicker/Lobby.svg)](https://gitter.im/ImagePicker/BugAndFeature?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -29,7 +29,7 @@ allprojects {
 Add the dependency
 ```java
 dependencies {
-    compile 'com.github.nguyenhoanglam:ImagePicker:1.2.2'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.2.2'
 }
 ```
 
