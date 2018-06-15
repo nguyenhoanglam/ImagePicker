@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 .setMultipleMode(multipleMode)
                 .setSelectedImages(images)
                 .setMaxSize(10)
+                .setBackgroundColor("#212121")
+                .setAlwaysShowDoneButton(true)
                 .setKeepScreenOn(true)
                 .start();
 

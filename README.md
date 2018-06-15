@@ -5,6 +5,7 @@ A simple library that allows you to select images from the device library or dir
 
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://www.jitpack.io/#nguyenhoanglam/ImagePicker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
+[![Join the chat at https://gitter.im/ImagePicker/BugAndFeature](https://badges.gitter.im/ImagePicker/Lobby.svg)](https://gitter.im/ImagePicker/BugAndFeature?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Screenshots
 --------
@@ -28,7 +29,7 @@ allprojects {
 Add the dependency
 ```java
 dependencies {
-    compile 'com.github.nguyenhoanglam:ImagePicker:1.2.1'
+    compile 'com.github.nguyenhoanglam:ImagePicker:1.2.2'
 }
 ```
 
@@ -55,6 +56,7 @@ ImagePicker.with(this)                         //  Initialize ImagePicker with a
            .setMaxSize(10)                     //  Max images can be selected
            .setSavePath("ImagePicker")         //  Image capture folder name
            .setSelectedImages(images)          //  Selected images
+           .setAlwaysShowDoneButton(true)      //  Set always show done button in multiple mode
            .setKeepScreenOn(true)              //  Keep screen on when selecting images
            .start();                           //  Start ImagePicker    
 ```
@@ -68,17 +70,14 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
         // do your logic here...
     }
-    super.onActivityResult(requestCode, resultCode, data);  // THIS METHOD SHOULD BE HERE so that ImagePicker works with fragment
+    super.onActivityResult(requestCode, resultCode, data);  // You MUST include this line here so that ImagePicker could works with fragment
 }
 ```
 
 What's New
 --------
 
-- Auto select image after capturing from camera.
-- Add additional method ```getIntent()``` that return an ImagePicker intent so we can start ImagePicker manually.
-- Set custom seletion limit message.
-- Set keep screen on when selecting images.
+- Fix bug when using Glide 4.x
 
 
 License

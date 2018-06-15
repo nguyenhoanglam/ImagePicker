@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -23,13 +21,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     private Context context;
     private List<Image> images;
     private LayoutInflater inflater;
-    private RequestOptions options;
 
     public ImageAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         images = new ArrayList<>();
-        options = new RequestOptions().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder);
     }
 
     @Override
@@ -41,9 +37,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         final Image image = images.get(position);
 
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(image.getPath())
-                .apply(options)
+                .centerCrop()
+                .placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.image_placeholder)
                 .into(holder.imageView);
     }
 

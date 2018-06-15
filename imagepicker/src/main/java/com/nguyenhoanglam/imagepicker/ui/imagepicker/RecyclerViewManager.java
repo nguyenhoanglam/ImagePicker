@@ -175,6 +175,6 @@ public class RecyclerViewManager {
     }
 
     public boolean isShowDoneButton() {
-        return config.isMultipleMode() && imageAdapter.getSelectedImages().size() > 0;
+        return config.isMultipleMode() && (config.isAlwaysShowDoneButton() || imageAdapter.getSelectedImages().size() > 0);
     }
 }

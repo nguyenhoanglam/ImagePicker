@@ -197,6 +197,11 @@ public class ImagePicker {
             return this;
         }
 
+        public Builder setAlwaysShowDoneButton(boolean isAlwaysShowDoneButton) {
+            config.setAlwaysShowDoneButton(isAlwaysShowDoneButton);
+            return this;
+        }
+
         public Builder setKeepScreenOn(boolean keepScreenOn) {
             config.setKeepScreenOn(keepScreenOn);
             return this;
@@ -231,6 +236,7 @@ public class ImagePicker {
             config.setImageTitle(resources.getString(R.string.imagepicker_title_image));
             config.setLimitMessage(resources.getString(R.string.imagepicker_msg_limit_images));
             config.setSavePath(SavePath.DEFAULT);
+            config.setAlwaysShowDoneButton(false);
             config.setKeepScreenOn(false);
             config.setSelectedImages(new ArrayList<Image>());
         }

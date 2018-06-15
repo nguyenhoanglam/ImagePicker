@@ -52,6 +52,7 @@ public class Config implements Parcelable {
     private String imageTitle;
     private String limitMessage;
     private SavePath savePath;
+    private boolean isAlwaysShowDoneButton;
     private boolean isKeepScreenOn;
     private ArrayList<Image> selectedImages;
 
@@ -76,6 +77,7 @@ public class Config implements Parcelable {
         this.imageTitle = in.readString();
         this.limitMessage = in.readString();
         this.savePath = in.readParcelable(SavePath.class.getClassLoader());
+        this.isAlwaysShowDoneButton = in.readByte() != 0;
         this.isKeepScreenOn = in.readByte() != 0;
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
     }
@@ -137,7 +139,7 @@ public class Config implements Parcelable {
 
     public int getBackgroundColor() {
         if (TextUtils.isEmpty(backgroundColor)) {
-            return Color.parseColor("#FFFFFF");
+            return Color.parseColor("#212121");
         }
         return Color.parseColor(backgroundColor);
     }
@@ -226,6 +228,14 @@ public class Config implements Parcelable {
         this.savePath = savePath;
     }
 
+    public boolean isAlwaysShowDoneButton() {
+        return isAlwaysShowDoneButton;
+    }
+
+    public void setAlwaysShowDoneButton(boolean isAlwaysShowDoneButton) {
+        this.isAlwaysShowDoneButton = isAlwaysShowDoneButton;
+    }
+
     public boolean isKeepScreenOn() {
         return isKeepScreenOn;
     }
@@ -265,6 +275,7 @@ public class Config implements Parcelable {
         dest.writeString(this.imageTitle);
         dest.writeString(this.limitMessage);
         dest.writeParcelable(this.savePath, flags);
+        dest.writeByte(this.isAlwaysShowDoneButton ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isKeepScreenOn ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.selectedImages);
     }
