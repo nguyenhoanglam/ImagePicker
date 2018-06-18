@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -36,13 +38,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         final Image image = images.get(position);
-
-        GlideApp.with(context)
+        Glide.with(context)
                 .load(image.getPath())
-                .centerCrop()
-                .placeholder(R.drawable.image_placeholder)
-                .error(R.drawable.image_placeholder)
+                .apply(new RequestOptions().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder))
                 .into(holder.imageView);
+
     }
 
     @Override
