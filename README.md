@@ -29,7 +29,7 @@ allprojects {
 Add the dependency
 ```java
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.2.2'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.0'
 }
 ```
 
@@ -70,14 +70,15 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
         // do your logic here...
     }
-    super.onActivityResult(requestCode, resultCode, data);  // You MUST include this line here so that ImagePicker could works with fragment
+    super.onActivityResult(requestCode, resultCode, data);  // You MUST have this line to be here
+                                                            // so ImagePicker can work with fragment mode
 }
 ```
 
 What's New
 --------
 
-- Fix bug when using Glide 4.x
+- Support Glide 4.7.1
 
 
 License
