@@ -10,7 +10,7 @@ A simple library that allows you to select images from the device library or dir
 Screenshots
 --------
 
-<img src="https://user-images.githubusercontent.com/4979755/29860123-18cdb978-8d8f-11e7-9020-535f9507c993.png" height="683" width="384"> <img src="https://user-images.githubusercontent.com/4979755/29860122-18c6ed5a-8d8f-11e7-9726-e916c0c4670e.png" height="683" width="384">
+<img src="https://user-images.githubusercontent.com/4979755/41592707-a8c7b4b8-73e7-11e8-9273-ba4900f69f87.png" height="683" width="384"> <img src="https://user-images.githubusercontent.com/4979755/41592708-a906efde-73e7-11e8-9681-dfa8047ccacd.png" height="683" width="384">
 
 Download
 --------
@@ -30,6 +30,8 @@ Add the dependency
 ```java
 dependencies {
     implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.0'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 }
 ```
 
