@@ -54,6 +54,7 @@ public class Config implements Parcelable {
     private SavePath savePath;
     private boolean isAlwaysShowDoneButton;
     private boolean isKeepScreenOn;
+    private int requestCode;
     private ArrayList<Image> selectedImages;
 
 
@@ -79,6 +80,7 @@ public class Config implements Parcelable {
         this.savePath = in.readParcelable(SavePath.class.getClassLoader());
         this.isAlwaysShowDoneButton = in.readByte() != 0;
         this.isKeepScreenOn = in.readByte() != 0;
+        this.requestCode = in.readInt();
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
     }
 
@@ -244,6 +246,14 @@ public class Config implements Parcelable {
         isKeepScreenOn = keepScreenOn;
     }
 
+    public int getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(int requestCode) {
+        this.requestCode = requestCode;
+    }
+
     public ArrayList<Image> getSelectedImages() {
         return selectedImages;
     }
@@ -277,6 +287,7 @@ public class Config implements Parcelable {
         dest.writeParcelable(this.savePath, flags);
         dest.writeByte(this.isAlwaysShowDoneButton ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isKeepScreenOn ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.requestCode);
         dest.writeTypedList(this.selectedImages);
     }
 }
