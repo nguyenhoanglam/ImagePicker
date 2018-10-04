@@ -9,7 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.model.Config;
@@ -50,11 +50,12 @@ public class ImagePicker {
         @Override
         public void start() {
             Intent intent = getIntent();
+            int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_IMAGES;
             if (!config.isCameraOnly()) {
-                activity.startActivityForResult(intent, Config.RC_PICK_IMAGES);
+                activity.startActivityForResult(intent, requestCode);
             } else {
                 activity.overridePendingTransition(0, 0);
-                activity.startActivityForResult(intent, Config.RC_PICK_IMAGES);
+                activity.startActivityForResult(intent, requestCode);
             }
         }
 
@@ -84,11 +85,12 @@ public class ImagePicker {
         @Override
         public void start() {
             Intent intent = getIntent();
+            int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_IMAGES;
             if (!config.isCameraOnly()) {
-                fragment.startActivityForResult(intent, Config.RC_PICK_IMAGES);
+                fragment.startActivityForResult(intent, requestCode);
             } else {
                 fragment.getActivity().overridePendingTransition(0, 0);
-                fragment.startActivityForResult(intent, Config.RC_PICK_IMAGES);
+                fragment.startActivityForResult(intent, requestCode);
             }
         }
 
@@ -187,7 +189,7 @@ public class ImagePicker {
             return this;
         }
 
-        public Builder setLimitMessage(String message){
+        public Builder setLimitMessage(String message) {
             config.setLimitMessage(message);
             return this;
         }
@@ -209,6 +211,11 @@ public class ImagePicker {
 
         public Builder setSelectedImages(ArrayList<Image> selectedImages) {
             config.setSelectedImages(selectedImages);
+            return this;
+        }
+
+        public Builder setRequestCode(int requestCode) {
+            config.setRequestCode(requestCode);
             return this;
         }
 

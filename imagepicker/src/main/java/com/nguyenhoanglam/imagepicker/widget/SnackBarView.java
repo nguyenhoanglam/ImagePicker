@@ -2,11 +2,11 @@ package com.nguyenhoanglam.imagepicker.widget;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
+import androidx.annotation.AttrRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;

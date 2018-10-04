@@ -29,9 +29,9 @@ allprojects {
 Add the dependency
 ```java
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.0'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.1'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 }
 ```
 
@@ -59,6 +59,7 @@ ImagePicker.with(this)                         //  Initialize ImagePicker with a
            .setSavePath("ImagePicker")         //  Image capture folder name
            .setSelectedImages(images)          //  Selected images
            .setAlwaysShowDoneButton(true)      //  Set always show done button in multiple mode
+           .setRequestCode(100)                //  Set request code, default Config.RC_PICK_IMAGES
            .setKeepScreenOn(true)              //  Keep screen on when selecting images
            .start();                           //  Start ImagePicker    
 ```
@@ -80,7 +81,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 What's New
 --------
 
-- Support Glide 4.7.1
+- Allow to set request code
+- Migrate to AndroidX
+- Support Glide 4.8.0
 
 
 License

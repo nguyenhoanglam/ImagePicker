@@ -7,11 +7,11 @@ package com.nguyenhoanglam.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMaxSize(10)
                 .setBackgroundColor("#212121")
                 .setAlwaysShowDoneButton(true)
+                .setRequestCode(100)
                 .setKeepScreenOn(true)
                 .start();
 

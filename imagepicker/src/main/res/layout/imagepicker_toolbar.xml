@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_toolbar_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
         android:textColor="@color/imagepicker_white" />
 
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_toolbar_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
