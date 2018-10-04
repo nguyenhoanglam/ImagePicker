@@ -30,9 +30,13 @@ Add the dependency
 ```java
 dependencies {
     implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.1'
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 }
+```
+
+You NEED to migrate your project to support AndroidX by add following lines on gradle.properties file:
+```java
+android.useAndroidX=true
+android.enableJetifier=true
 ```
 
 Usage
@@ -81,8 +85,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 What's New
 --------
 
-- Allow to set request code
 - Migrate to AndroidX
+- Allow to set request code
 - Support Glide 4.8.0
 
 
