@@ -30,8 +30,8 @@ Add the dependency
 ```java
 dependencies {
     implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.0'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 }
 ```
 
