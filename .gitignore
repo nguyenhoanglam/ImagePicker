@@ -1,5 +1,6 @@
 
 # Created by https://www.gitignore.io/api/androidstudio
+# Edit at https://www.gitignore.io/?templates=androidstudio
 
 ### AndroidStudio ###
 # Covers files to be ignored for android development using Android Studio.
@@ -83,6 +84,7 @@ obj/
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/uiDesigner.xml
+.idea/assetWizardSettings.xml
 
 # OS-specific files
 .DS_Store
@@ -130,6 +132,4 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-
 # End of https://www.gitignore.io/api/androidstudio
-.idea/codeStyles/
