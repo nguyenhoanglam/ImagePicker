@@ -29,7 +29,7 @@ allprojects {
 Add the dependency
 ```java
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.1'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.2'
 }
 ```
 
