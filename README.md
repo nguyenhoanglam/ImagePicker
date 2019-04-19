@@ -85,9 +85,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 What's New
 --------
 
-- Migrate to AndroidX
-- Allow to set request code
-- Support Glide 4.8.0
+- Support Glide 4.9.0
 
 
 License
