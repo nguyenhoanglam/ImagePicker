@@ -89,11 +89,11 @@ public class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         cameraModule.getImage(context, data, new OnImageReadyListener() {
             @Override
             public void onImageReady(List<Image> images) {
-                if (!config.isMultipleMode()) {
+//                 if (!config.isMultipleMode()) {
                     getView().finishPickImages(images);
-                } else {
-                    getView().showCapturedImage(images);
-                }
+//                 } else {
+//                     getView().showCapturedImage(images);
+//                 }
             }
         });
     }
