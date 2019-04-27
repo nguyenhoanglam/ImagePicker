@@ -42,6 +42,7 @@ public class Config implements Parcelable {
     private String toolbarIconColor;
     private String progressBarColor;
     private String backgroundColor;
+    private String navigationBarColor;
     private boolean isCameraOnly;
     private boolean isMultipleMode;
     private boolean isFolderMode;
@@ -68,6 +69,7 @@ public class Config implements Parcelable {
         this.toolbarIconColor = in.readString();
         this.progressBarColor = in.readString();
         this.backgroundColor = in.readString();
+        this.navigationBarColor = in.readString();
         this.isCameraOnly = in.readByte() != 0;
         this.isMultipleMode = in.readByte() != 0;
         this.isFolderMode = in.readByte() != 0;
@@ -104,6 +106,17 @@ public class Config implements Parcelable {
 
     public void setStatusBarColor(String statusBarColor) {
         this.statusBarColor = statusBarColor;
+    }
+
+    public int getNavigationBarColor() {
+        if (TextUtils.isEmpty(navigationBarColor)) {
+            return Color.parseColor("#000000");
+        }
+        return Color.parseColor(statusBarColor);
+    }
+
+    public void setNavigationBarColor(String navigationBarColor) {
+        this.navigationBarColor = navigationBarColor;
     }
 
     public int getToolbarTextColor() {
@@ -291,4 +304,3 @@ public class Config implements Parcelable {
         dest.writeTypedList(this.selectedImages);
     }
 }
-

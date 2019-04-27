@@ -129,6 +129,11 @@ public class ImagePicker {
             return this;
         }
 
+        public Builder setNavigationBarColor(String statusBarColor) {
+            config.setNavigationBarColor(statusBarColor);
+            return this;
+        }
+
         public Builder setToolbarTextColor(String toolbarTextColor) {
             config.setToolbarTextColor(toolbarTextColor);
             return this;
@@ -250,4 +255,3 @@ public class ImagePicker {
     }
 
 }
-

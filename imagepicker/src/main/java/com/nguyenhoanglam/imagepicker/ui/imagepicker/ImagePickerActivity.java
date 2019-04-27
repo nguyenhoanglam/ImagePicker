@@ -125,6 +125,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             window.setStatusBarColor(config.getStatusBarColor());
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setNavigationBarColor(config.getNavigationBarColor());
+        }
+
         progressWheel.setBarColor(config.getProgressBarColor());
         findViewById(R.id.container).setBackgroundColor(config.getBackgroundColor());
 
