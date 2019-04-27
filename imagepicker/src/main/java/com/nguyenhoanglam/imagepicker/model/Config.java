@@ -112,7 +112,7 @@ public class Config implements Parcelable {
         if (TextUtils.isEmpty(navigationBarColor)) {
             return Color.parseColor("#000000");
         }
-        return Color.parseColor(statusBarColor);
+        return Color.parseColor(navigationBarColor);
     }
 
     public void setNavigationBarColor(String navigationBarColor) {
@@ -288,6 +288,7 @@ public class Config implements Parcelable {
         dest.writeString(this.toolbarIconColor);
         dest.writeString(this.progressBarColor);
         dest.writeString(this.backgroundColor);
+        dest.writeString(this.navigationBarColor);
         dest.writeByte(this.isCameraOnly ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isMultipleMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFolderMode ? (byte) 1 : (byte) 0);
