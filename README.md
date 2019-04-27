@@ -51,7 +51,7 @@ ImagePicker.with(this)                         //  Initialize ImagePicker with a
            .setToolbarIconColor("#FFFFFF")     //  Toolbar icon color (Back and Camera button)
            .setProgressBarColor("#4CAF50")     //  ProgressBar color
            .setBackgroundColor("#212121")      //  Background color
-           .setNavigationBarColor("#6699FF")   //  NavigationBar color
+           .setNavigationBarColor("#000000")   //  NavigationBar color
            .setCameraOnly(false)               //  Camera mode
            .setMultipleMode(true)              //  Select multiple images or single image
            .setFolderMode(true)                //  Folder mode
