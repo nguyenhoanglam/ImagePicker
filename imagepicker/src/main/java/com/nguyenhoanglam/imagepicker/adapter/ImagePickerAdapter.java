@@ -110,7 +110,14 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
     }
 
     public void removeSelected(Image image, int position) {
-        selectedImages.remove(image);
+        Iterator<Image> itr = selectedImages.iterator();
+        while (itr.hasNext()) {
+            Image itrImage = itr.next();
+            if (itrImage.getId() == image.getId()) {
+                itr.remove();
+                break;
+            }
+        }
         notifyItemChanged(position);
         notifySelectionChanged();
     }
