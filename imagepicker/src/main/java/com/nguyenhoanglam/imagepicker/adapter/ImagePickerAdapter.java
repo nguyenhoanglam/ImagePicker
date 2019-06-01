@@ -17,6 +17,7 @@ import com.nguyenhoanglam.imagepicker.ui.common.BaseRecyclerViewAdapter;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**

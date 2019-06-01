@@ -29,7 +29,7 @@ allprojects {
 Add the dependency
 ```java
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.2'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.3'
 }
 ```
 
@@ -85,7 +85,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 What's New
 --------
 
-- Support Glide 4.9.0
+- Fix selected images can not be unselected after restart ImagePicker.
 
 
 License
