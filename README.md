@@ -7,11 +7,6 @@ A simple library that allows you to select images from the device library or dir
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 [![Join the chat at https://gitter.im/ImagePicker/BugAndFeature](https://badges.gitter.im/ImagePicker/Lobby.svg)](https://gitter.im/ImagePicker/BugAndFeature?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Screenshots
---------
-
-<img src="https://user-images.githubusercontent.com/4979755/41592707-a8c7b4b8-73e7-11e8-9273-ba4900f69f87.png" height="683" width="384"> <img src="https://user-images.githubusercontent.com/4979755/41592708-a906efde-73e7-11e8-9681-dfa8047ccacd.png" height="683" width="384">
-
 Download
 --------
 
