@@ -7,17 +7,20 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.nguyenhoanglam.imagepicker.R;
+import com.nguyenhoanglam.imagepicker.model.Asset;
+import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.model.Video;
 
 
 /**
  * Created by hoanglam on 8/17/17.
  */
 
-public class ImageLoader {
+public class AssetLoader {
 
     private RequestOptions options;
 
-    public ImageLoader() {
+    public AssetLoader() {
         options = new RequestOptions()
                 .placeholder(R.drawable.imagepicker_image_placeholder)
                 .error(R.drawable.imagepicker_image_placeholder)
@@ -25,7 +28,9 @@ public class ImageLoader {
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
     }
 
-    public void loadImage(String path, ImageView imageView) {
+    public void loadAsset(Asset asset, ImageView imageView) {
+        String path = asset instanceof Image ? asset.getPath() : ((Video)asset).getThumbnailPath();
+
         Glide.with(imageView.getContext())
                 .load(path)
                 .apply(options)

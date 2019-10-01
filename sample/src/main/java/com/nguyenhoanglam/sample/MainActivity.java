@@ -16,10 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Config;
-import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.model.SavePath;
-import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
+import com.nguyenhoanglam.imagepicker.ui.imagepicker.AssetPicker;
 
 import java.util.ArrayList;
 
@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private Button launchFragmentButton;
     private RecyclerView recyclerView;
 
-    private ImageAdapter adapter;
-    private ArrayList<Image> images = new ArrayList<>();
+    private AssetAdapter adapter;
+    private ArrayList<Asset> images = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new ImageAdapter(this);
+        adapter = new AssetAdapter(this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         boolean multipleMode = multipleModeSwitch.isChecked();
         boolean cameraOnly = cameraOnlySwitch.isChecked();
 
-        ImagePicker.with(this)
+        AssetPicker.with(this)
                 .setFolderMode(folderMode)
                 .setCameraOnly(cameraOnly)
                 .setFolderTitle("Album")
@@ -99,13 +99,14 @@ public class MainActivity extends AppCompatActivity {
         config.setCameraOnly(cameraOnly);
         config.setMultipleMode(multipleMode);
         config.setFolderMode(folderMode);
+        config.setIncludeVideos(true);
         config.setShowCamera(true);
         config.setMaxSize(Config.MAX_SIZE);
         config.setDoneTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_action_done));
         config.setFolderTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_folder));
         config.setImageTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_image));
         config.setSavePath(SavePath.DEFAULT);
-        config.setSelectedImages(new ArrayList<Image>());
+        config.setSelectedAssets(new ArrayList<Asset>());
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -115,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
-            images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+        if (requestCode == Config.RC_PICK_ASSETS && resultCode == RESULT_OK && data != null) {
+            images = data.getParcelableArrayListExtra(Config.EXTRA_ASSETS);
             adapter.setData(images);
         }
         super.onActivityResult(requestCode, resultCode, data);

@@ -15,8 +15,8 @@ import com.nguyenhoanglam.imagepicker.helper.CameraHelper;
 import com.nguyenhoanglam.imagepicker.helper.LogHelper;
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper;
 import com.nguyenhoanglam.imagepicker.helper.PreferenceHelper;
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Config;
-import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.widget.SnackBarView;
 
 import java.util.ArrayList;
@@ -185,7 +185,7 @@ public class CameraActivty extends AppCompatActivity implements CameraView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Config.RC_CAPTURE_IMAGE && resultCode == RESULT_OK) {
-            presenter.finishCaptureImage(this, data, config);
+            presenter.finishCaptureAsset(this, data, config);
         } else {
             setResult(RESULT_CANCELED, new Intent());
             finish();
@@ -214,9 +214,9 @@ public class CameraActivty extends AppCompatActivity implements CameraView {
     }
 
     @Override
-    public void finishPickImages(List<Image> images) {
+    public void finishPickAssets(List<Asset> assets) {
         Intent data = new Intent();
-        data.putParcelableArrayListExtra(Config.EXTRA_IMAGES, (ArrayList<? extends Parcelable>) images);
+        data.putParcelableArrayListExtra(Config.EXTRA_ASSETS, (ArrayList<? extends Parcelable>) assets);
         setResult(RESULT_OK, data);
         finish();
     }

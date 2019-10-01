@@ -11,7 +11,7 @@ import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener;
 import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.ui.common.BaseRecyclerViewAdapter;
-import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
+import com.nguyenhoanglam.imagepicker.ui.imagepicker.AssetLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ public class FolderPickerAdapter extends BaseRecyclerViewAdapter<FolderPickerAda
     private List<Folder> folders = new ArrayList<>();
     private OnFolderClickListener itemClickListener;
 
-    public FolderPickerAdapter(Context context, ImageLoader imageLoader, OnFolderClickListener itemClickListener) {
-        super(context, imageLoader);
+    public FolderPickerAdapter(Context context, AssetLoader assetLoader, OnFolderClickListener itemClickListener) {
+        super(context, assetLoader);
         this.itemClickListener = itemClickListener;
     }
 
@@ -40,7 +40,7 @@ public class FolderPickerAdapter extends BaseRecyclerViewAdapter<FolderPickerAda
 
         final Folder folder = folders.get(position);
 
-        getImageLoader().loadImage(folder.getImages().get(0).getPath(), holder.image);
+        getAssetLoader().loadAsset(folder.getImages().get(0), holder.image);
 
         holder.name.setText(folder.getFolderName());
 

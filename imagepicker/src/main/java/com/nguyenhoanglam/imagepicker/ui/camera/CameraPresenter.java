@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Config;
-import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.common.BasePresenter;
 
 import java.util.List;
@@ -34,11 +34,11 @@ public class CameraPresenter extends BasePresenter<CameraView> {
         activity.startActivityForResult(intent, requestCode);
     }
 
-    public void finishCaptureImage(Context context, Intent data, final Config config) {
-        cameraModule.getImage(context, data, new OnImageReadyListener() {
+    public void finishCaptureAsset(Context context, Intent data, final Config config) {
+        cameraModule.getImage(context, data, new OnAssetReadyListener() {
             @Override
-            public void onImageReady(List<Image> images) {
-                getView().finishPickImages(images);
+            public void onAssetReady(List<Asset> assets) {
+                getView().finishPickAssets(assets);
             }
         });
     }

@@ -2,11 +2,15 @@ package com.nguyenhoanglam.imagepicker.ui.imagepicker;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.nguyenhoanglam.imagepicker.listener.OnImageLoaderListener;
+import com.nguyenhoanglam.imagepicker.listener.OnAssetLoaderListener;
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Folder;
 import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.model.Video;
+import com.nguyenhoanglam.imagepicker.util.Extensions_FileKt;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,17 +24,19 @@ import java.util.concurrent.Executors;
  * Created by hoanglam on 8/17/17.
  */
 
-public class ImageFileLoader {
+public class AssetFileLoader {
 
-    private final String[] projection = new String[]{MediaStore.Images.Media._ID
-            , MediaStore.Images.Media.DISPLAY_NAME
-            , MediaStore.Images.Media.DATA
-            , MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+    private final String[] projection = {
+            MediaStore.Files.FileColumns._ID,
+            MediaStore.Files.FileColumns.DISPLAY_NAME,
+            MediaStore.Files.FileColumns.DATA,
+            MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME
+    };
 
     private Context context;
     private ExecutorService executorService;
 
-    public ImageFileLoader(Context context) {
+    public AssetFileLoader(Context context) {
         this.context = context;
     }
 
@@ -45,11 +51,11 @@ public class ImageFileLoader {
         }
     }
 
-    public void loadDeviceImages(boolean isFolderMode, OnImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, listener));
+    public void loadDeviceAssets(boolean includeVideos, boolean isFolderMode, OnAssetLoaderListener listener) {
+        getExecutorService().execute(new AssetLoadRunnable(includeVideos, isFolderMode, listener));
     }
 
-    public void abortLoadImages() {
+    public void abortLoadAssets() {
         if (executorService != null) {
             executorService.shutdown();
             executorService = null;
@@ -63,27 +69,45 @@ public class ImageFileLoader {
         return executorService;
     }
 
-    private class ImageLoadRunnable implements Runnable {
+    private class AssetLoadRunnable implements Runnable {
 
         private boolean isFolderMode;
-        private OnImageLoaderListener listener;
+        private boolean includeVideos;
+        private OnAssetLoaderListener listener;
 
-        public ImageLoadRunnable(boolean isFolderMode, OnImageLoaderListener listener) {
+        public AssetLoadRunnable(boolean includeVideos, boolean isFolderMode, OnAssetLoaderListener listener) {
+            this.includeVideos = includeVideos;
             this.isFolderMode = isFolderMode;
             this.listener = listener;
         }
 
         @Override
         public void run() {
-            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-                    null, null, MediaStore.Images.Media.DATE_ADDED);
+            String selectionImages = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+
+            String selectionImagesAndVideo = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+                    + " OR "
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+
+            Uri queryUri = MediaStore.Files.getContentUri("external");
+
+            Cursor cursor = context.getContentResolver().query(
+                    queryUri,
+                    projection,
+                    includeVideos ? selectionImagesAndVideo : selectionImages,
+                    null,
+                    MediaStore.Files.FileColumns.DATE_ADDED
+            );
 
             if (cursor == null) {
                 listener.onFailed(new NullPointerException());
                 return;
             }
 
-            List<Image> images = new ArrayList<>(cursor.getCount());
+            List<Asset> assets = new ArrayList<>(cursor.getCount());
             Map<String, Folder> folderMap = isFolderMode ? new LinkedHashMap<String, Folder>() : null;
 
             if (cursor.moveToLast()) {
@@ -95,8 +119,16 @@ public class ImageFileLoader {
 
                     File file = makeSafeFile(path);
                     if (file != null && file.exists()) {
-                        Image image = new Image(id, name, path);
-                        images.add(image);
+
+                        // Check if file is an image or a video
+                        Asset asset = null;
+                        if (Extensions_FileKt.isImageFile(file)) { // If file is an Image
+                            asset = new Image(id, name, path);
+                            assets.add(asset);
+                        } else if (Extensions_FileKt.isVideoFile(file)) { // If file is a Video
+                            asset = new Video(id, name, path);
+                            assets.add(asset);
+                        }
 
                         if (folderMap != null) {
                             Folder folder = folderMap.get(bucket);
@@ -104,7 +136,7 @@ public class ImageFileLoader {
                                 folder = new Folder(bucket);
                                 folderMap.put(bucket, folder);
                             }
-                            folder.getImages().add(image);
+                            folder.getImages().add(asset);
                         }
                     }
 
@@ -118,7 +150,7 @@ public class ImageFileLoader {
                 folders = new ArrayList<>(folderMap.values());
             }
 
-            listener.onImageLoaded(images, folders);
+            listener.onAssetLoaded(assets, folders);
         }
     }
 }

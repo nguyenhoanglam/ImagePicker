@@ -40,13 +40,13 @@ public class DefaultCameraModule implements CameraModule, Serializable {
     }
 
     @Override
-    public void getImage(final Context context, Intent intent, final OnImageReadyListener imageReadyListener) {
+    public void getImage(final Context context, Intent intent, final OnAssetReadyListener imageReadyListener) {
         if (imageReadyListener == null) {
-            throw new IllegalStateException("OnImageReadyListener must not be null");
+            throw new IllegalStateException("OnAssetReadyListener must not be null");
         }
 
         if (imagePath == null) {
-            imageReadyListener.onImageReady(null);
+            imageReadyListener.onAssetReady(null);
             return;
         }
 
@@ -60,7 +60,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
                             if (path != null) {
                                 path = imagePath;
                             }
-                            imageReadyListener.onImageReady(ImageHelper.singleListFromPath(path));
+                            imageReadyListener.onAssetReady(ImageHelper.singleListFromPath(path));
                             ImageHelper.revokeAppPermission(context, imageUri);
                         }
                     });

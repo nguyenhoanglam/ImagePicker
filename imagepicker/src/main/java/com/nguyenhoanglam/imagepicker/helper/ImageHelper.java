@@ -8,8 +8,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.model.SavePath;
+import com.nguyenhoanglam.imagepicker.model.Video;
+import com.nguyenhoanglam.imagepicker.util.Extensions_FileKt;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,10 +78,15 @@ public class ImageHelper {
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
     }
 
-    public static List<Image> singleListFromPath(String path) {
-        List<Image> images = new ArrayList<>();
-        images.add(new Image(0, getNameFromFilePath(path), path));
-        return images;
+    public static List<Asset> singleListFromPath(String path) {
+        List<Asset> assets = new ArrayList<>();
+        File f = new File(path);
+        if (Extensions_FileKt.isImageFile(f)) {
+            assets.add(new Image(0, getNameFromFilePath(path), path));
+        } else if (Extensions_FileKt.isVideoFile(f)) {
+            assets.add(new Video(0, getNameFromFilePath(path), path));
+        }
+        return assets;
     }
 
     public static boolean isGifFormat(Image image) {

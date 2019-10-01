@@ -1,32 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.nguyenhoanglam.imagepicker.widget.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.nguyenhoanglam.imagepicker.widget.SquareFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foregroundGravity="center"
-    tools:override="false">
+    tools:override="false"
+    >
 
     <ImageView
         android:id="@+id/image_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
     <View
         android:id="@+id/view_alpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/imagepicker_black" />
+        android:background="@color/imagepicker_black"
+        />
 
     <TextView
         android:id="@+id/gif_indicator"
         style="@style/imagepicker_TextSmall"
         android:layout_gravity="bottom"
         android:background="@color/imagepicker_black_alpha_50"
-        android:paddingBottom="@dimen/imagepicker_padding_small"
         android:paddingLeft="@dimen/imagepicker_padding_large"
-        android:paddingRight="@dimen/imagepicker_padding_large"
         android:paddingTop="@dimen/imagepicker_padding_small"
+        android:paddingRight="@dimen/imagepicker_padding_large"
+        android:paddingBottom="@dimen/imagepicker_padding_small"
         android:text="@string/imagepicker_text_gif"
         android:textColor="@color/imagepicker_white"
-        android:visibility="visible" />
+        android:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/image_video_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:contentDescription="Video"
+        android:src="@drawable/ic_video"
+        android:tint="@android:color/white"
+        />
+
 </com.nguyenhoanglam.imagepicker.widget.SquareFrameLayout>
