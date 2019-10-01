@@ -30,7 +30,8 @@ public class AssetLoader {
 
     public void loadAsset(Asset asset, ImageView imageView) {
         Glide.with(imageView.getContext())
-                .load(asset instanceof Image ? asset.getPath() : ((Video)asset).getThumbnail())
+                .load(asset instanceof Image ? asset.getPath() : ((Video)asset).getThumbnailUri())
+                .override(imageView.getWidth(), imageView.getHeight())
                 .apply(options)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);

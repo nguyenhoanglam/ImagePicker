@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import com.nguyenhoanglam.imagepicker.model.Asset;
@@ -80,7 +78,7 @@ public class ImageHelper {
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
     }
 
-    public static List<Asset> singleListFromPath(String path) {
+    public static List<Asset> singleListFromPath(String path, Context context) {
         List<Asset> assets = new ArrayList<>();
         File f = new File(path);
         if (Extensions_FileKt.isImageFile(f)) {

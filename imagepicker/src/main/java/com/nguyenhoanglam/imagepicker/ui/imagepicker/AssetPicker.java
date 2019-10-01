@@ -169,6 +169,11 @@ public class AssetPicker {
             return this;
         }
 
+        public Builder setVideoOrImagePickerTitle(String title) {
+            config.setVideoOrImagePickerTitle(title);
+            return this;
+        }
+
         public Builder setShowCamera(boolean isShowCamera) {
             config.setShowCamera(isShowCamera);
             return this;

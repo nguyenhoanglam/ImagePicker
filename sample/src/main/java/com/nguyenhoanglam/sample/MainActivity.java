@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private Switch folderModeSwitch;
     private Switch multipleModeSwitch;
     private Switch cameraOnlySwitch;
+    private Switch includeVideosSwitch;
     private Button pickImageButton;
     private Button launchFragmentButton;
     private RecyclerView recyclerView;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         folderModeSwitch = findViewById(R.id.switch_folder_mode);
         multipleModeSwitch = findViewById(R.id.switch_multiple_mode);
         cameraOnlySwitch = findViewById(R.id.switch_camera_only);
+        includeVideosSwitch = findViewById(R.id.switch_include_videos);
         pickImageButton = findViewById(R.id.button_pick_image);
         launchFragmentButton = findViewById(R.id.button_launch_fragment);
         recyclerView = findViewById(R.id.recyclerView);
@@ -74,10 +76,12 @@ public class MainActivity extends AppCompatActivity {
         boolean folderMode = folderModeSwitch.isChecked();
         boolean multipleMode = multipleModeSwitch.isChecked();
         boolean cameraOnly = cameraOnlySwitch.isChecked();
+        boolean includeVideos = includeVideosSwitch.isChecked();
 
         AssetPicker.with(this)
                 .setFolderMode(folderMode)
-                .setIncludeVideos(true)
+                .setIncludeVideos(includeVideos)
+                .setVideoOrImagePickerTitle("Capture image or video")
                 .setCameraOnly(cameraOnly)
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
@@ -95,12 +99,14 @@ public class MainActivity extends AppCompatActivity {
         boolean folderMode = folderModeSwitch.isChecked();
         boolean multipleMode = multipleModeSwitch.isChecked();
         boolean cameraOnly = cameraOnlySwitch.isChecked();
+        boolean includeVideos = includeVideosSwitch.isChecked();
 
         Config config = new Config();
         config.setCameraOnly(cameraOnly);
         config.setMultipleMode(multipleMode);
         config.setFolderMode(folderMode);
-        config.setIncludeVideos(true);
+        config.setIncludeVideos(includeVideos);
+        config.setVideoOrImagePickerTitle("Capture image or video");
         config.setShowCamera(true);
         config.setMaxSize(Config.MAX_SIZE);
         config.setDoneTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_action_done));

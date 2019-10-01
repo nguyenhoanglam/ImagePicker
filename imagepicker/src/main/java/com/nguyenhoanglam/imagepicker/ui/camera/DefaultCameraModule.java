@@ -31,7 +31,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
         if (config.isIncludeVideos()) {
             Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             Intent imgIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent = Intent.createChooser(imgIntent, "Campture Image or Video");
+            intent = Intent.createChooser(imgIntent, config.getVideoOrImagePickerTitle());
             intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{videoIntent});
         } else {
             intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -68,7 +68,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
                             if (path == null) {
                                 path = imagePath;
                             }
-                            imageReadyListener.onAssetReady(ImageHelper.singleListFromPath(path));
+                            imageReadyListener.onAssetReady(ImageHelper.singleListFromPath(path, context));
                             ImageHelper.revokeAppPermission(context, imageUri);
                         }
                     });

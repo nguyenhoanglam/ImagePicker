@@ -1,9 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
 
     <ScrollView
         android:id="@+id/config_container"
@@ -11,12 +13,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:fillViewport="true"
-        android:padding="@dimen/spacing">
+        android:padding="@dimen/spacing"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <Switch
                 android:id="@+id/switch_folder_mode"
@@ -25,7 +29,8 @@
                 android:layout_marginBottom="@dimen/spacing"
                 android:checked="true"
                 android:switchPadding="@dimen/spacing"
-                android:text="Folder Mode" />
+                android:text="Folder Mode"
+                />
 
             <Switch
                 android:id="@+id/switch_multiple_mode"
@@ -34,7 +39,8 @@
                 android:layout_marginBottom="@dimen/spacing"
                 android:checked="true"
                 android:switchPadding="@dimen/spacing"
-                android:text="Multiple Mode" />
+                android:text="Multiple Mode"
+                />
 
             <Switch
                 android:id="@+id/switch_camera_only"
@@ -42,7 +48,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing"
                 android:switchPadding="@dimen/spacing"
-                android:text="Camera Only" />
+                android:text="Camera Only"
+                />
+
+            <Switch
+                android:id="@+id/switch_include_videos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing"
+                android:switchPadding="@dimen/spacing"
+                android:text="Include videos"
+                />
 
 
             <Button
@@ -50,14 +66,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="PICK IMAGE" />
+                android:text="PICK IMAGE"
+                />
 
             <Button
                 android:id="@+id/button_launch_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="LAUNCH FRAGMENT" />
+                android:text="LAUNCH FRAGMENT"
+                />
 
         </LinearLayout>
     </ScrollView>
@@ -67,10 +85,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/config_container"
-        android:padding="@dimen/spacing" />
+        android:padding="@dimen/spacing"
+        />
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 </RelativeLayout>

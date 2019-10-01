@@ -41,7 +41,8 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.ImageViewHol
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         final Asset asset = assets.get(position);
         Glide.with(context)
-                .load(asset instanceof Image ? asset.getPath(): ((Video)asset).getThumbnail())
+                .load(asset instanceof Image ? asset.getPath(): ((Video)asset).getThumbnailUri())
+                .override(holder.imageView.getWidth(), holder.imageView.getHeight())
                 .apply(new RequestOptions().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder))
                 .into(holder.imageView);
 

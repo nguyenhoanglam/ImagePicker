@@ -65,7 +65,8 @@ public class AssetFileLoader {
 
     private ExecutorService getExecutorService() {
         if (executorService == null) {
-            executorService = Executors.newSingleThreadExecutor();
+            executorService = Executors.newFixedThreadPool(5);
+//            executorService = Executors.newSingleThreadExecutor();
         }
         return executorService;
     }
