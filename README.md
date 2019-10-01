@@ -16,7 +16,7 @@ Download
 --------
 
 Add it in your root build.gradle at the end of repositories
-```
+```java
 allprojects {
     repositories {
         ...
@@ -27,7 +27,7 @@ allprojects {
 ```
 
 Add the dependency
-```
+```java
 dependencies {
     implementation 'com.github.nguyenhoanglam:ImagePicker:2.0.0'
 }
@@ -43,7 +43,7 @@ Usage
 --------
 
 ### Start ImagePicker
-```
+```java
 ImagePicker.with(this)                         //  Initialize ImagePicker with activity or fragment context
            .setToolbarColor("#212121")         //  Toolbar color
            .setStatusBarColor("#000000")       //  StatusBar color (works with SDK >= 21  )
@@ -71,7 +71,7 @@ ImagePicker.with(this)                         //  Initialize ImagePicker with a
 
 ### Receive images
 
-```
+```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == Config.RC_PICK_ASSETS && resultCode == RESULT_OK && data != null) {
