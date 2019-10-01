@@ -44,7 +44,7 @@ Usage
 
 ### Start ImagePicker
 ```java
-ImagePicker.with(this)                         //  Initialize ImagePicker with activity or fragment context
+AssetPicker.with(this)                         //  Initialize ImagePicker with activity or fragment context
            .setToolbarColor("#212121")         //  Toolbar color
            .setStatusBarColor("#000000")       //  StatusBar color (works with SDK >= 21  )
            .setToolbarTextColor("#FFFFFF")     //  Toolbar text color (Title and Done button)
@@ -69,7 +69,7 @@ ImagePicker.with(this)                         //  Initialize ImagePicker with a
            .start();                           //  Start ImagePicker    
 ```
 
-### Receive images
+### Receive assets (Video or Image)
 
 ```java
 @Override
@@ -87,7 +87,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 What's New
 --------
 
-- Fix selected images can not be unselected after restart ImagePicker.
+- Now supports Videos and Images.
 
 
 License
