@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.nguyenhoanglam.imagepicker.model.Asset;
@@ -28,12 +30,12 @@ public class ImageHelper {
 
     private static final String TAG = "ImageHelper";
 
-    public static File createImageFile(SavePath savePath) {
+    public static File createAssetFile(boolean isVideoFile, SavePath savePath) {
         // External sdcard location
         final String path = savePath.getPath();
         File mediaStorageDir = savePath.isFullPath()
                 ? new File(path)
-                : new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), path);
+                : new File(isVideoFile ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) : Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), path);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -44,15 +46,15 @@ public class ImageHelper {
         }
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "IMG_" + timeStamp;
+        String fileName = (isVideoFile ? "VIDEO_" : "IMG_") + timeStamp;
 
-        File imageFile = null;
+        File file = null;
         try {
-            imageFile = File.createTempFile(imageFileName, ".jpg", mediaStorageDir);
+            file = File.createTempFile(fileName, isVideoFile ? ".mp4" : ".jpg", mediaStorageDir);
         } catch (IOException e) {
-            Log.d(TAG, "Oops! Failed create " + imageFileName + " file");
+            Log.d(TAG, "Oops! Failed create " + fileName + " file");
         }
-        return imageFile;
+        return file;
     }
 
     public static String getNameFromFilePath(String path) {

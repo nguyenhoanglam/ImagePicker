@@ -1,6 +1,10 @@
 package com.nguyenhoanglam.imagepicker.model
 
+import android.graphics.Bitmap
+import android.media.ThumbnailUtils
 import android.os.Parcelable
+import android.provider.MediaStore
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -9,9 +13,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Video(override val id: Long, override val name: String, override val path: String): Asset, Parcelable {
 
-    val thumbnailPath: String get() {
-        // Use the video path to get a thumbnail for the video.
-        return "https://picsum.photos/200"
-    }
+    @IgnoredOnParcel
+    val thumbnail: Bitmap by lazy { ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND) }
 
 }

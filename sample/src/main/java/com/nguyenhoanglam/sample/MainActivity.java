@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private AssetAdapter adapter;
-    private ArrayList<Asset> images = new ArrayList<>();
+    private ArrayList<Asset> assets = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +77,11 @@ public class MainActivity extends AppCompatActivity {
 
         AssetPicker.with(this)
                 .setFolderMode(folderMode)
+                .setIncludeVideos(true)
                 .setCameraOnly(cameraOnly)
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
-                .setSelectedImages(images)
+                .setSelectedImages(assets)
                 .setMaxSize(10)
                 .setBackgroundColor("#212121")
                 .setAlwaysShowDoneButton(true)
@@ -117,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Config.RC_PICK_ASSETS && resultCode == RESULT_OK && data != null) {
-            images = data.getParcelableArrayListExtra(Config.EXTRA_ASSETS);
-            adapter.setData(images);
+            assets = data.getParcelableArrayListExtra(Config.EXTRA_ASSETS);
+            adapter.setData(assets);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
