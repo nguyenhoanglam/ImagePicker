@@ -12,8 +12,8 @@ import android.content.res.Resources;
 import androidx.fragment.app.Fragment;
 
 import com.nguyenhoanglam.imagepicker.R;
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Config;
-import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.model.SavePath;
 import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivty;
 
@@ -22,12 +22,12 @@ import java.util.ArrayList;
 /**
  * Created by hoanglam on 8/4/16.
  */
-public class ImagePicker {
+public class AssetPicker {
 
     protected Config config;
 
 
-    public ImagePicker(Builder builder) {
+    public AssetPicker(Builder builder) {
         config = builder.config;
     }
 
@@ -50,7 +50,7 @@ public class ImagePicker {
         @Override
         public void start() {
             Intent intent = getIntent();
-            int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_IMAGES;
+            int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_ASSETS;
             if (!config.isCameraOnly()) {
                 activity.startActivityForResult(intent, requestCode);
             } else {
@@ -85,7 +85,7 @@ public class ImagePicker {
         @Override
         public void start() {
             Intent intent = getIntent();
-            int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_IMAGES;
+            int requestCode = config.getRequestCode() != 0 ? config.getRequestCode() : Config.RC_PICK_ASSETS;
             if (!config.isCameraOnly()) {
                 fragment.startActivityForResult(intent, requestCode);
             } else {
@@ -164,6 +164,16 @@ public class ImagePicker {
             return this;
         }
 
+        public Builder setIncludeVideos(boolean includeVideos) {
+            config.setIncludeVideos(includeVideos);
+            return this;
+        }
+
+        public Builder setVideoOrImagePickerTitle(String title) {
+            config.setVideoOrImagePickerTitle(title);
+            return this;
+        }
+
         public Builder setShowCamera(boolean isShowCamera) {
             config.setShowCamera(isShowCamera);
             return this;
@@ -209,8 +219,8 @@ public class ImagePicker {
             return this;
         }
 
-        public Builder setSelectedImages(ArrayList<Image> selectedImages) {
-            config.setSelectedImages(selectedImages);
+        public Builder setSelectedImages(ArrayList<Asset> selectedAssets) {
+            config.setSelectedAssets(selectedAssets);
             return this;
         }
 
@@ -236,6 +246,7 @@ public class ImagePicker {
             config.setCameraOnly(false);
             config.setMultipleMode(true);
             config.setFolderMode(true);
+            config.setIncludeVideos(false);
             config.setShowCamera(true);
             config.setMaxSize(Config.MAX_SIZE);
             config.setDoneTitle(resources.getString(R.string.imagepicker_action_done));
@@ -245,7 +256,7 @@ public class ImagePicker {
             config.setSavePath(SavePath.DEFAULT);
             config.setAlwaysShowDoneButton(false);
             config.setKeepScreenOn(false);
-            config.setSelectedImages(new ArrayList<Image>());
+            config.setSelectedAssets(new ArrayList<Asset>());
         }
     }
 

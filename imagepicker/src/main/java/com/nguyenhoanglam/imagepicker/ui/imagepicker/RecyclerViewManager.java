@@ -9,14 +9,14 @@ import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.adapter.FolderPickerAdapter;
-import com.nguyenhoanglam.imagepicker.adapter.ImagePickerAdapter;
+import com.nguyenhoanglam.imagepicker.adapter.AssetPickerAdapter;
 import com.nguyenhoanglam.imagepicker.listener.OnBackAction;
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener;
-import com.nguyenhoanglam.imagepicker.listener.OnImageClickListener;
-import com.nguyenhoanglam.imagepicker.listener.OnImageSelectionListener;
+import com.nguyenhoanglam.imagepicker.listener.OnAssetClickListener;
+import com.nguyenhoanglam.imagepicker.listener.OnAssetSelectionListener;
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Folder;
-import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.widget.GridSpacingItemDecoration;
 
 import java.util.ArrayList;
@@ -35,13 +35,13 @@ public class RecyclerViewManager {
     private GridLayoutManager layoutManager;
     private GridSpacingItemDecoration itemOffsetDecoration;
 
-    private ImagePickerAdapter imageAdapter;
+    private AssetPickerAdapter assetAdapter;
     private FolderPickerAdapter folderAdapter;
 
-    private int imageColumns;
+    private int assetsColumns;
     private int folderColumns;
 
-    private ImageLoader imageLoader;
+    private AssetLoader mAssetLoader;
 
     private Parcelable foldersState;
     private String title;
@@ -53,18 +53,18 @@ public class RecyclerViewManager {
         this.config = config;
         context = recyclerView.getContext();
         changeOrientation(orientation);
-        imageLoader = new ImageLoader();
+        mAssetLoader = new AssetLoader();
         isShowingFolder = config.isFolderMode();
     }
 
-    public void setupAdapters(OnImageClickListener imageClickListener, final OnFolderClickListener folderClickListener) {
-        ArrayList<Image> selectedImages = null;
-        if (config.isMultipleMode() && !config.getSelectedImages().isEmpty()) {
-            selectedImages = config.getSelectedImages();
+    public void setupAdapters(OnAssetClickListener imageClickListener, final OnFolderClickListener folderClickListener) {
+        ArrayList<Asset> selectedAssets = null;
+        if (config.isMultipleMode() && !config.getSelectedAssets().isEmpty()) {
+            selectedAssets = config.getSelectedAssets();
         }
 
-        imageAdapter = new ImagePickerAdapter(context, imageLoader, selectedImages, imageClickListener);
-        folderAdapter = new FolderPickerAdapter(context, imageLoader, new OnFolderClickListener() {
+        assetAdapter = new AssetPickerAdapter(context, mAssetLoader, selectedAssets, imageClickListener);
+        folderAdapter = new FolderPickerAdapter(context, mAssetLoader, new OnFolderClickListener() {
             @Override
             public void onFolderClick(Folder folder) {
                 foldersState = recyclerView.getLayoutManager().onSaveInstanceState();
@@ -77,10 +77,10 @@ public class RecyclerViewManager {
      * Set item size, column size base on the screen orientation
      */
     public void changeOrientation(int orientation) {
-        imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
+        assetsColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
         folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
 
-        int columns = isShowingFolder ? folderColumns : imageColumns;
+        int columns = isShowingFolder ? folderColumns : assetsColumns;
         layoutManager = new GridLayoutManager(context, columns);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -100,36 +100,36 @@ public class RecyclerViewManager {
     }
 
 
-    public void setOnImageSelectionListener(OnImageSelectionListener imageSelectionListener) {
+    public void setOnImageSelectionListener(OnAssetSelectionListener imageSelectionListener) {
         checkAdapterIsInitialized();
-        imageAdapter.setOnImageSelectionListener(imageSelectionListener);
+        assetAdapter.setOnImageSelectionListener(imageSelectionListener);
     }
 
-    public List<Image> getSelectedImages() {
+    public List<Asset> getSelectedAssets() {
         checkAdapterIsInitialized();
-        return imageAdapter.getSelectedImages();
+        return assetAdapter.getSelectedAssets();
     }
 
-    public void addSelectedImages(List<Image> images) {
-        imageAdapter.addSelected(images);
+    public void addSelectedAssets(List<Asset> assets) {
+        assetAdapter.addSelected(assets);
     }
 
     private void checkAdapterIsInitialized() {
-        if (imageAdapter == null) {
+        if (assetAdapter == null) {
             throw new IllegalStateException("Must call setupAdapters first!");
         }
     }
 
     public boolean selectImage() {
         if (config.isMultipleMode()) {
-            if (imageAdapter.getSelectedImages().size() >= config.getMaxSize()) {
+            if (assetAdapter.getSelectedAssets().size() >= config.getMaxSize()) {
                 String message = String.format(config.getLimitMessage(), config.getMaxSize());
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 return false;
             }
         } else {
-            if (imageAdapter.getItemCount() > 0) {
-                imageAdapter.removeAllSelected();
+            if (assetAdapter.getItemCount() > 0) {
+                assetAdapter.removeAllSelected();
             }
         }
         return true;
@@ -144,10 +144,10 @@ public class RecyclerViewManager {
         action.onFinishImagePicker();
     }
 
-    public void setImageAdapter(List<Image> images, String title) {
-        imageAdapter.setData(images);
-        setItemDecoration(imageColumns);
-        recyclerView.setAdapter(imageAdapter);
+    public void setAssetAdapter(List<Asset> assets, String title) {
+        assetAdapter.setData(assets);
+        setItemDecoration(assetsColumns);
+        recyclerView.setAdapter(assetAdapter);
         this.title = title;
         isShowingFolder = false;
     }
@@ -175,6 +175,6 @@ public class RecyclerViewManager {
     }
 
     public boolean isShowDoneButton() {
-        return config.isMultipleMode() && (config.isAlwaysShowDoneButton() || imageAdapter.getSelectedImages().size() > 0);
+        return config.isMultipleMode() && (config.isAlwaysShowDoneButton() || assetAdapter.getSelectedAssets().size() > 0);
     }
 }

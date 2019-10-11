@@ -4,7 +4,7 @@ import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 
-import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
+import com.nguyenhoanglam.imagepicker.ui.imagepicker.AssetLoader;
 
 /**
  * Created by hoanglam on 8/17/17.
@@ -13,16 +13,16 @@ import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
 public abstract class BaseRecyclerViewAdapter<T extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<T> {
     private final Context context;
     private final LayoutInflater inflater;
-    private final ImageLoader imageLoader;
+    private final AssetLoader mAssetLoader;
 
-    public BaseRecyclerViewAdapter(Context context, ImageLoader imageLoader) {
+    public BaseRecyclerViewAdapter(Context context, AssetLoader assetLoader) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-        this.imageLoader = imageLoader;
+        this.mAssetLoader = assetLoader;
     }
 
-    public ImageLoader getImageLoader() {
-        return imageLoader;
+    public AssetLoader getAssetLoader() {
+        return mAssetLoader;
     }
 
     public Context getContext() {

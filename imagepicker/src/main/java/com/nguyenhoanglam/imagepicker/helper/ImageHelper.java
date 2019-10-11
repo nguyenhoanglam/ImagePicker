@@ -8,8 +8,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.model.SavePath;
+import com.nguyenhoanglam.imagepicker.model.Video;
+import com.nguyenhoanglam.imagepicker.util.Extensions_FileKt;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,12 +28,12 @@ public class ImageHelper {
 
     private static final String TAG = "ImageHelper";
 
-    public static File createImageFile(SavePath savePath) {
+    public static File createAssetFile(boolean isVideoFile, SavePath savePath) {
         // External sdcard location
         final String path = savePath.getPath();
         File mediaStorageDir = savePath.isFullPath()
                 ? new File(path)
-                : new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), path);
+                : new File(isVideoFile ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) : Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), path);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -41,15 +44,15 @@ public class ImageHelper {
         }
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "IMG_" + timeStamp;
+        String fileName = (isVideoFile ? "VIDEO_" : "IMG_") + timeStamp;
 
-        File imageFile = null;
+        File file = null;
         try {
-            imageFile = File.createTempFile(imageFileName, ".jpg", mediaStorageDir);
+            file = File.createTempFile(fileName, isVideoFile ? ".mp4" : ".jpg", mediaStorageDir);
         } catch (IOException e) {
-            Log.d(TAG, "Oops! Failed create " + imageFileName + " file");
+            Log.d(TAG, "Oops! Failed create " + fileName + " file");
         }
-        return imageFile;
+        return file;
     }
 
     public static String getNameFromFilePath(String path) {
@@ -75,10 +78,15 @@ public class ImageHelper {
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
     }
 
-    public static List<Image> singleListFromPath(String path) {
-        List<Image> images = new ArrayList<>();
-        images.add(new Image(0, getNameFromFilePath(path), path));
-        return images;
+    public static List<Asset> singleListFromPath(String path, Context context) {
+        List<Asset> assets = new ArrayList<>();
+        File f = new File(path);
+        if (Extensions_FileKt.isImageFile(f)) {
+            assets.add(new Image(0, getNameFromFilePath(path), path));
+        } else if (Extensions_FileKt.isVideoFile(f)) {
+            assets.add(new Video(0, getNameFromFilePath(path), path));
+        }
+        return assets;
     }
 
     public static boolean isGifFormat(Image image) {

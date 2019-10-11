@@ -1,7 +1,7 @@
 package com.nguyenhoanglam.imagepicker.ui.imagepicker;
 
+import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Folder;
-import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.common.MvpView;
 
 import java.util.List;
@@ -14,14 +14,14 @@ public interface ImagePickerView extends MvpView {
 
     void showLoading(boolean isLoading);
 
-    void showFetchCompleted(List<Image> images, List<Folder> folders);
+    void showFetchCompleted(List<Asset> assets, List<Folder> folders);
 
     void showError(Throwable throwable);
 
     void showEmpty();
 
-    void showCapturedImage(List<Image> images);
+    void showCapturedAsset(List<Asset> assets);
 
-    void finishPickImages(List<Image> images);
+    void finishPickAssets(List<Asset> assets);
 
 }
