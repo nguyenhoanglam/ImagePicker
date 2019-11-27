@@ -9,7 +9,6 @@ import androidx.core.content.FileProvider;
 
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper;
 import com.nguyenhoanglam.imagepicker.model.Config;
-import com.nguyenhoanglam.imagepicker.util.FileUtils;
 
 import java.io.File;
 import java.io.Serializable;
@@ -21,41 +20,34 @@ import java.util.Locale;
 
 public class DefaultCameraModule implements CameraModule, Serializable {
 
-    private String imagePath;
+    protected String imagePath;
 
 
     @Override
     public Intent getCameraIntent(Context context, Config config) {
-        Intent intent;
-        File assetFile = null;
-        if (config.isIncludeVideos()) {
-            Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            Intent imgIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent = Intent.createChooser(imgIntent, config.getVideoOrImagePickerTitle());
-            intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{videoIntent});
-        } else {
-            intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            assetFile = new ImageHelper().createAssetFile(false, config.getSavePath());
-        }
-        if (assetFile != null) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imageFile = new ImageHelper().createImageFile(config.getSavePath());
+        if (imageFile != null) {
             Context appContext = context.getApplicationContext();
             String providerName = String.format(Locale.ENGLISH, "%s%s", appContext.getPackageName(), ".fileprovider");
-            Uri uri = FileProvider.getUriForFile(appContext, providerName, assetFile);
-            imagePath = assetFile.getAbsolutePath();
+            Uri uri = FileProvider.getUriForFile(appContext, providerName, imageFile);
+            imagePath = imageFile.getAbsolutePath();
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             ImageHelper.grantAppPermission(context, intent, uri);
+            return intent;
         }
-        return intent;
+        return null;
     }
 
     @Override
-    public void getImage(final Context context, Intent intent, final OnAssetReadyListener imageReadyListener) {
+    public void getImage(final Context context, Intent intent, final OnImageReadyListener imageReadyListener) {
         if (imageReadyListener == null) {
-            throw new IllegalStateException("OnAssetReadyListener must not be null");
+            throw new IllegalStateException("OnImageReadyListener must not be null");
         }
 
         if (imagePath == null) {
-            imagePath = FileUtils.getPath(context, intent.getData());
+            imageReadyListener.onImageReady(null);
+            return;
         }
 
         final Uri imageUri = Uri.parse(new File(imagePath).toString());
@@ -65,10 +57,10 @@ public class DefaultCameraModule implements CameraModule, Serializable {
                     , new MediaScannerConnection.OnScanCompletedListener() {
                         @Override
                         public void onScanCompleted(String path, Uri uri) {
-                            if (path == null) {
+                            if (path != null) {
                                 path = imagePath;
                             }
-                            imageReadyListener.onAssetReady(ImageHelper.singleListFromPath(path, context));
+                            imageReadyListener.onImageReady(ImageHelper.singleListFromPath(path));
                             ImageHelper.revokeAppPermission(context, imageUri);
                         }
                     });

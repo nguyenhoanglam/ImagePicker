@@ -29,12 +29,12 @@ allprojects {
 Add the dependency
 ```java
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:2.0.0'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.3.3'
 }
 ```
 
 You NEED to migrate your project to support AndroidX by add following lines on gradle.properties file:
-```
+```java
 android.useAndroidX=true
 android.enableJetifier=true
 ```
@@ -44,7 +44,7 @@ Usage
 
 ### Start ImagePicker
 ```java
-AssetPicker.with(this)                         //  Initialize ImagePicker with activity or fragment context
+ImagePicker.with(this)                         //  Initialize ImagePicker with activity or fragment context
            .setToolbarColor("#212121")         //  Toolbar color
            .setStatusBarColor("#000000")       //  StatusBar color (works with SDK >= 21  )
            .setToolbarTextColor("#FFFFFF")     //  Toolbar text color (Title and Done button)
@@ -54,7 +54,6 @@ AssetPicker.with(this)                         //  Initialize ImagePicker with a
            .setCameraOnly(false)               //  Camera mode
            .setMultipleMode(true)              //  Select multiple images or single image
            .setFolderMode(true)                //  Folder mode
-           .setIncludeVideos(true)             //  If the picker should include Videos or only Image Assets
            .setShowCamera(true)                //  Show camera button
            .setFolderTitle("Albums")           //  Folder title (works with FolderMode = true)
            .setImageTitle("Galleries")         //  Image title (works with FolderMode = false)
@@ -69,14 +68,13 @@ AssetPicker.with(this)                         //  Initialize ImagePicker with a
            .start();                           //  Start ImagePicker    
 ```
 
-### Receive assets (Video or Image)
+### Receive images
 
 ```java
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == Config.RC_PICK_ASSETS && resultCode == RESULT_OK && data != null) {
-        ArrayList<Asset> assets = data.getParcelableArrayListExtra(Config.EXTRA_ASSETS);
-        // Assets can be of type Image or Video, filter them here if needed, so your have a list of Images for example.
+    if (requestCode == Config.RC_PICK_IMAGES && resultCode == RESULT_OK && data != null) {
+        ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
         // do your logic here...
     }
     super.onActivityResult(requestCode, resultCode, data);  // You MUST have this line to be here
@@ -87,7 +85,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 What's New
 --------
 
-- Now supports Videos and Images.
+- Fix selected images can not be unselected after restart ImagePicker.
 
 
 License

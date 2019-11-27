@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Folder {
 
     private String folderName;
-    private ArrayList<Asset> images;
+    private ArrayList<Image> images;
 
     public Folder(String bucket) {
         folderName = bucket;
@@ -23,11 +23,11 @@ public class Folder {
         this.folderName = folderName;
     }
 
-    public ArrayList<Asset> getImages() {
+    public ArrayList<Image> getImages() {
         return images;
     }
 
-    public void setImages(ArrayList<Asset> images) {
+    public void setImages(ArrayList<Image> images) {
         this.images = images;
     }
 }

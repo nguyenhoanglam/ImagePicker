@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class LogHelper {
 
-    private static final String TAG = "AssetPicker";
+    private static final String TAG = "ImagePicker";
 
     private static LogHelper INSTANCE;
 
