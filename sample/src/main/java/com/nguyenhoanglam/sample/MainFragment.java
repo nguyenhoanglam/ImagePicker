@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Config;
-import com.nguyenhoanglam.imagepicker.ui.imagepicker.AssetPicker;
+import com.nguyenhoanglam.imagepicker.model.Image;
+import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
 import java.util.ArrayList;
 
@@ -32,8 +32,8 @@ public class MainFragment extends Fragment {
 
     private Config config;
     ;
-    private AssetAdapter adapter;
-    private ArrayList<Asset> assets = new ArrayList<>();
+    private ImageAdapter adapter;
+    private ArrayList<Image> images = new ArrayList<>();
 
 
     public static MainFragment newInstance(Config config) {
@@ -71,7 +71,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-        adapter = new AssetAdapter(getActivity());
+        adapter = new ImageAdapter(getActivity());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -79,22 +79,21 @@ public class MainFragment extends Fragment {
 
     private void start() {
 
-        AssetPicker.with(this)
+        ImagePicker.with(this)
                 .setFolderMode(config.isFolderMode())
-                .setIncludeVideos(config.isIncludeVideos())
                 .setCameraOnly(config.isCameraOnly())
                 .setFolderTitle(config.getFolderTitle())
                 .setMultipleMode(config.isMultipleMode())
-                .setSelectedImages(config.getSelectedAssets())
+                .setSelectedImages(config.getSelectedImages())
                 .setMaxSize(config.getMaxSize())
                 .start();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Config.RC_PICK_ASSETS && resultCode == Activity.RESULT_OK && data != null) {
-            assets = data.getParcelableArrayListExtra(Config.EXTRA_ASSETS);
-            adapter.setData(assets);
+        if (requestCode == Config.RC_PICK_IMAGES && resultCode == Activity.RESULT_OK && data != null) {
+            images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+            adapter.setData(images);
         }
     }
 }

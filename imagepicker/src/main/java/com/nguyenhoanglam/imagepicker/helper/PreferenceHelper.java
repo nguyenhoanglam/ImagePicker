@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 
 public class PreferenceHelper {
 
-    private static final String PREFS_FILE_NAME = "AssetPicker";
+    private static final String PREFS_FILE_NAME = "ImagePicker";
 
     public static void firstTimeAskingPermission(Context context, String permission, boolean isFirstTime) {
         SharedPreferences preferences = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);

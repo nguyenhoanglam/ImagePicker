@@ -12,5 +12,5 @@ import com.nguyenhoanglam.imagepicker.model.Config;
 public interface CameraModule {
     Intent getCameraIntent(Context context, Config config);
 
-    void getImage(Context context, Intent intent, OnAssetReadyListener imageReadyListener);
+    void getImage(Context context, Intent intent, OnImageReadyListener imageReadyListener);
 }

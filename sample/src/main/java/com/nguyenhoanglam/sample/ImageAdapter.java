@@ -9,9 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.nguyenhoanglam.imagepicker.model.Asset;
 import com.nguyenhoanglam.imagepicker.model.Image;
-import com.nguyenhoanglam.imagepicker.model.Video;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +18,16 @@ import java.util.List;
  * Created by hoanglam on 8/23/17.
  */
 
-public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.ImageViewHolder> {
+public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     private Context context;
-    private List<Asset> assets;
+    private List<Image> images;
     private LayoutInflater inflater;
 
-    public AssetAdapter(Context context) {
+    public ImageAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        assets = new ArrayList<>();
+        images = new ArrayList<>();
     }
 
     @Override
@@ -39,25 +37,23 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-        final Asset asset = assets.get(position);
+        final Image image = images.get(position);
         Glide.with(context)
-                .load(asset instanceof Image ? asset.getPath(): ((Video)asset).getThumbnailUri())
-                .override(holder.imageView.getWidth(), holder.imageView.getHeight())
+                .load(image.getPath())
                 .apply(new RequestOptions().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder))
                 .into(holder.imageView);
 
-        holder.videoIndicator.setVisibility(asset instanceof Video ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public int getItemCount() {
-        return assets.size();
+        return images.size();
     }
 
-    public void setData(List<Asset> assets) {
-        this.assets.clear();
-        if (assets != null) {
-            this.assets.addAll(assets);
+    public void setData(List<Image> images) {
+        this.images.clear();
+        if (images != null) {
+            this.images.addAll(images);
         }
         notifyDataSetChanged();
     }
@@ -65,12 +61,10 @@ public class AssetAdapter extends RecyclerView.Adapter<AssetAdapter.ImageViewHol
     static class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
-        ImageView videoIndicator;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_thumbnail);
-            videoIndicator = itemView.findViewById(R.id.image_video_icon);
         }
     }
 }

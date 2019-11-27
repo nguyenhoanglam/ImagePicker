@@ -1,28 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginRight="@dimen/spacing"
-    >
+    android:layout_marginRight="@dimen/spacing">
 
     <ImageView
         android:id="@+id/image_thumbnail"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="Image"
-        android:scaleType="centerCrop"
-        />
-
-    <ImageView
-        android:id="@+id/image_video_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:contentDescription="Video"
-        android:elevation="4dp"
-        android:src="@drawable/ic_video"
-        android:tint="@android:color/white"
-        />
-
+        android:scaleType="centerCrop" />
 </FrameLayout>

@@ -8,13 +8,13 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
-import com.nguyenhoanglam.imagepicker.listener.OnAssetLoaderListener;
-import com.nguyenhoanglam.imagepicker.model.Asset;
+import com.nguyenhoanglam.imagepicker.listener.OnImageLoaderListener;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Folder;
+import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.camera.CameraModule;
 import com.nguyenhoanglam.imagepicker.ui.camera.DefaultCameraModule;
-import com.nguyenhoanglam.imagepicker.ui.camera.OnAssetReadyListener;
+import com.nguyenhoanglam.imagepicker.ui.camera.OnImageReadyListener;
 import com.nguyenhoanglam.imagepicker.ui.common.BasePresenter;
 
 import java.io.File;
@@ -26,31 +26,31 @@ import java.util.List;
 
 public class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
-    private AssetFileLoader imageLoader;
+    private ImageFileLoader imageLoader;
     private CameraModule cameraModule = new DefaultCameraModule();
     private Handler handler = new Handler(Looper.getMainLooper());
 
-    public ImagePickerPresenter(AssetFileLoader imageLoader) {
+    public ImagePickerPresenter(ImageFileLoader imageLoader) {
         this.imageLoader = imageLoader;
     }
 
     public void abortLoading() {
-        imageLoader.abortLoadAssets();
+        imageLoader.abortLoadImages();
     }
 
-    public void loadAssets(boolean includeVideos, boolean isFolderMode) {
+    public void loadImages(boolean isFolderMode) {
         if (!isViewAttached()) return;
 
         getView().showLoading(true);
-        imageLoader.loadDeviceAssets(includeVideos, isFolderMode, new OnAssetLoaderListener() {
+        imageLoader.loadDeviceImages(isFolderMode, new OnImageLoaderListener() {
             @Override
-            public void onAssetLoaded(final List<Asset> assets, final List<Folder> folders) {
+            public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         if (isViewAttached()) {
-                            getView().showFetchCompleted(assets, folders);
-                            final boolean isEmpty = folders != null ? folders.isEmpty() : assets.isEmpty();
+                            getView().showFetchCompleted(images, folders);
+                            final boolean isEmpty = folders != null ? folders.isEmpty() : images.isEmpty();
                             if (isEmpty) {
                                 getView().showEmpty();
                             } else {
@@ -86,30 +86,30 @@ public class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     }
 
     public void finishCaptureImage(Context context, Intent data, final Config config) {
-        cameraModule.getImage(context, data, new OnAssetReadyListener() {
+        cameraModule.getImage(context, data, new OnImageReadyListener() {
             @Override
-            public void onAssetReady(List<Asset> assets) {
+            public void onImageReady(List<Image> images) {
                 if (!config.isMultipleMode()) {
-                    getView().finishPickAssets(assets);
+                    getView().finishPickImages(images);
                 } else {
-                    getView().showCapturedAsset(assets);
+                    getView().showCapturedImage(images);
                 }
             }
         });
     }
 
-    public void onDoneSelectAssets(List<Asset> selectedAssets) {
-        if (selectedAssets != null && !selectedAssets.isEmpty()) {
-            for (int i = 0; i < selectedAssets.size(); i++) {
-                Asset asset = selectedAssets.get(i);
-                File file = new File(asset.getPath());
+    public void onDoneSelectImages(List<Image> selectedImages) {
+        if (selectedImages != null && !selectedImages.isEmpty()) {
+            for (int i = 0; i < selectedImages.size(); i++) {
+                Image image = selectedImages.get(i);
+                File file = new File(image.getPath());
                 if (!file.exists()) {
-                    selectedAssets.remove(i);
+                    selectedImages.remove(i);
                     i--;
                 }
             }
         }
-        getView().finishPickAssets(selectedAssets);
+        getView().finishPickImages(selectedImages);
     }
 
 }

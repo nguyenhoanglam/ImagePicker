@@ -23,11 +23,11 @@ import com.nguyenhoanglam.imagepicker.helper.LogHelper;
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper;
 import com.nguyenhoanglam.imagepicker.listener.OnBackAction;
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener;
-import com.nguyenhoanglam.imagepicker.listener.OnAssetClickListener;
-import com.nguyenhoanglam.imagepicker.listener.OnAssetSelectionListener;
-import com.nguyenhoanglam.imagepicker.model.Asset;
+import com.nguyenhoanglam.imagepicker.listener.OnImageClickListener;
+import com.nguyenhoanglam.imagepicker.listener.OnImageSelectionListener;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Folder;
+import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.widget.ImagePickerToolbar;
 import com.nguyenhoanglam.imagepicker.widget.ProgressWheel;
 import com.nguyenhoanglam.imagepicker.widget.SnackBarView;
@@ -54,9 +54,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private LogHelper logger = LogHelper.getInstance();
 
 
-    private OnAssetClickListener imageClickListener = new OnAssetClickListener() {
+    private OnImageClickListener imageClickListener = new OnImageClickListener() {
         @Override
-        public boolean onAssetClick(View view, int position, boolean isSelected) {
+        public boolean onImageClick(View view, int position, boolean isSelected) {
             return recyclerViewManager.selectImage();
         }
     };
@@ -64,7 +64,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private OnFolderClickListener folderClickListener = new OnFolderClickListener() {
         @Override
         public void onFolderClick(Folder folder) {
-            setAssetAdapter(folder.getImages(), folder.getFolderName());
+            setImageAdapter(folder.getImages(), folder.getFolderName());
         }
     };
 
@@ -134,17 +134,17 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void setupComponents() {
         recyclerViewManager = new RecyclerViewManager(recyclerView, config, getResources().getConfiguration().orientation);
         recyclerViewManager.setupAdapters(imageClickListener, folderClickListener);
-        recyclerViewManager.setOnImageSelectionListener(new OnAssetSelectionListener() {
+        recyclerViewManager.setOnImageSelectionListener(new OnImageSelectionListener() {
             @Override
-            public void onSelectionUpdate(List<Asset> assets) {
+            public void onSelectionUpdate(List<Image> images) {
                 invalidateToolbar();
-                if (!config.isMultipleMode() && !assets.isEmpty()) {
+                if (!config.isMultipleMode() && !images.isEmpty()) {
                     onDone();
                 }
             }
         });
 
-        presenter = new ImagePickerPresenter(new AssetFileLoader(this));
+        presenter = new ImagePickerPresenter(new ImageFileLoader(this));
         presenter.attachView(this);
     }
 
@@ -162,8 +162,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
 
-    private void setAssetAdapter(List<Asset> assets, String title) {
-        recyclerViewManager.setAssetAdapter(assets, title);
+    private void setImageAdapter(List<Image> images, String title) {
+        recyclerViewManager.setImageAdapter(images, title);
         invalidateToolbar();
     }
 
@@ -179,7 +179,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     private void onDone() {
-        presenter.onDoneSelectAssets(recyclerViewManager.getSelectedAssets());
+        presenter.onDoneSelectImages(recyclerViewManager.getSelectedImages());
     }
 
     @Override
@@ -223,7 +223,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     private void getData() {
         presenter.abortLoading();
-        presenter.loadAssets(config.isIncludeVideos(), config.isFolderMode());
+        presenter.loadImages(config.isFolderMode());
     }
 
 
@@ -373,11 +373,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     @Override
-    public void showFetchCompleted(List<Asset> assets, List<Folder> folders) {
+    public void showFetchCompleted(List<Image> images, List<Folder> folders) {
         if (config.isFolderMode()) {
             setFolderAdapter(folders);
         } else {
-            setAssetAdapter(assets, config.getImageTitle());
+            setImageAdapter(images, config.getImageTitle());
         }
     }
 
@@ -398,18 +398,18 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     @Override
-    public void showCapturedAsset(List<Asset> assets) {
+    public void showCapturedImage(List<Image> images) {
         boolean shouldSelect = recyclerViewManager.selectImage();
         if (shouldSelect) {
-            recyclerViewManager.addSelectedAssets(assets);
+            recyclerViewManager.addSelectedImages(images);
         }
         getDataWithPermission();
     }
 
     @Override
-    public void finishPickAssets(List<Asset> assets) {
+    public void finishPickImages(List<Image> images) {
         Intent data = new Intent();
-        data.putParcelableArrayListExtra(Config.EXTRA_ASSETS, (ArrayList<? extends Parcelable>) assets);
+        data.putParcelableArrayListExtra(Config.EXTRA_IMAGES, (ArrayList<? extends Parcelable>) images);
         setResult(RESULT_OK, data);
         finish();
     }

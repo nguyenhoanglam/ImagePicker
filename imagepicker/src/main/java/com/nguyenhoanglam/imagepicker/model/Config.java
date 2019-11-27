@@ -15,10 +15,10 @@ import java.util.ArrayList;
 public class Config implements Parcelable {
 
     public static final String EXTRA_CONFIG = "ImagePickerConfig";
-    public static final String EXTRA_ASSETS = "ImagePickerAssets";
+    public static final String EXTRA_IMAGES = "ImagePickerImages";
 
 
-    public static final int RC_PICK_ASSETS = 100;
+    public static final int RC_PICK_IMAGES = 100;
     public static final int RC_CAPTURE_IMAGE = 101;
     public static final int RC_WRITE_EXTERNAL_STORAGE_PERMISSION = 102;
     public static final int RC_CAMERA_PERMISSION = 103;
@@ -45,8 +45,6 @@ public class Config implements Parcelable {
     private boolean isCameraOnly;
     private boolean isMultipleMode;
     private boolean isFolderMode;
-    private boolean includeVideos;
-    private String videoOrImagePickerTitle;
     private boolean isShowCamera;
     private int maxSize;
     private String doneTitle;
@@ -57,7 +55,7 @@ public class Config implements Parcelable {
     private boolean isAlwaysShowDoneButton;
     private boolean isKeepScreenOn;
     private int requestCode;
-    private ArrayList<Asset> selectedAssets;
+    private ArrayList<Image> selectedImages;
 
 
     public Config() {
@@ -73,8 +71,6 @@ public class Config implements Parcelable {
         this.isCameraOnly = in.readByte() != 0;
         this.isMultipleMode = in.readByte() != 0;
         this.isFolderMode = in.readByte() != 0;
-        this.includeVideos = in.readByte() != 0;
-        this.videoOrImagePickerTitle = in.readString();
         this.isShowCamera = in.readByte() != 0;
         this.maxSize = in.readInt();
         this.doneTitle = in.readString();
@@ -85,7 +81,7 @@ public class Config implements Parcelable {
         this.isAlwaysShowDoneButton = in.readByte() != 0;
         this.isKeepScreenOn = in.readByte() != 0;
         this.requestCode = in.readInt();
-        this.selectedAssets = in.createTypedArrayList(Image.CREATOR);
+        this.selectedImages = in.createTypedArrayList(Image.CREATOR);
     }
 
     public int getToolbarColor() {
@@ -178,22 +174,6 @@ public class Config implements Parcelable {
         isFolderMode = folderMode;
     }
 
-    public boolean isIncludeVideos() {
-        return includeVideos;
-    }
-
-    public void setIncludeVideos(boolean includeVideos) {
-        this.includeVideos = includeVideos;
-    }
-
-    public String getVideoOrImagePickerTitle() {
-        return videoOrImagePickerTitle;
-    }
-
-    public void setVideoOrImagePickerTitle(String videoOrImagePickerTitle) {
-        this.videoOrImagePickerTitle = videoOrImagePickerTitle;
-    }
-
     public boolean isShowCamera() {
         return isShowCamera;
     }
@@ -274,12 +254,12 @@ public class Config implements Parcelable {
         this.requestCode = requestCode;
     }
 
-    public ArrayList<Asset> getSelectedAssets() {
-        return selectedAssets;
+    public ArrayList<Image> getSelectedImages() {
+        return selectedImages;
     }
 
-    public void setSelectedAssets(ArrayList<Asset> selectedAssets) {
-        this.selectedAssets = selectedAssets;
+    public void setSelectedImages(ArrayList<Image> selectedImages) {
+        this.selectedImages = selectedImages;
     }
 
     @Override
@@ -298,8 +278,6 @@ public class Config implements Parcelable {
         dest.writeByte(this.isCameraOnly ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isMultipleMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFolderMode ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.includeVideos ? (byte) 1 : (byte) 0);
-        dest.writeString(this.videoOrImagePickerTitle);
         dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
         dest.writeInt(this.maxSize);
         dest.writeString(this.doneTitle);
@@ -310,7 +288,7 @@ public class Config implements Parcelable {
         dest.writeByte(this.isAlwaysShowDoneButton ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isKeepScreenOn ? (byte) 1 : (byte) 0);
         dest.writeInt(this.requestCode);
-        dest.writeTypedList(this.selectedAssets);
+        dest.writeTypedList(this.selectedImages);
     }
 }
 
