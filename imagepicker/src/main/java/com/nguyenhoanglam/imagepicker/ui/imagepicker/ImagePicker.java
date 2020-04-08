@@ -8,13 +8,15 @@ package com.nguyenhoanglam.imagepicker.ui.imagepicker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+
 import androidx.fragment.app.Fragment;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
-import com.nguyenhoanglam.imagepicker.model.SavePath;
 import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivty;
 
 import java.util.ArrayList;
@@ -164,6 +166,11 @@ public class ImagePicker {
             return this;
         }
 
+        public Builder setShowSelectedAsNumber(boolean showSelectedAsNumber) {
+            config.setShowSelectedAsNumber(showSelectedAsNumber);
+            return this;
+        }
+
         public Builder setShowCamera(boolean isShowCamera) {
             config.setShowCamera(isShowCamera);
             return this;
@@ -194,18 +201,13 @@ public class ImagePicker {
             return this;
         }
 
-        public Builder setSavePath(String path) {
-            config.setSavePath(new SavePath(path, false));
+        public Builder setDirectoryName(String directoryName) {
+            config.setDirectoryName(directoryName);
             return this;
         }
 
         public Builder setAlwaysShowDoneButton(boolean isAlwaysShowDoneButton) {
             config.setAlwaysShowDoneButton(isAlwaysShowDoneButton);
-            return this;
-        }
-
-        public Builder setKeepScreenOn(boolean keepScreenOn) {
-            config.setKeepScreenOn(keepScreenOn);
             return this;
         }
 
@@ -236,16 +238,28 @@ public class ImagePicker {
             config.setCameraOnly(false);
             config.setMultipleMode(true);
             config.setFolderMode(true);
+            config.setShowSelectedAsNumber(false);
             config.setShowCamera(true);
             config.setMaxSize(Config.MAX_SIZE);
             config.setDoneTitle(resources.getString(R.string.imagepicker_action_done));
             config.setFolderTitle(resources.getString(R.string.imagepicker_title_folder));
             config.setImageTitle(resources.getString(R.string.imagepicker_title_image));
             config.setLimitMessage(resources.getString(R.string.imagepicker_msg_limit_images));
-            config.setSavePath(SavePath.DEFAULT);
+            config.setDirectoryName(getDefaultDirectoryName(context));
             config.setAlwaysShowDoneButton(false);
-            config.setKeepScreenOn(false);
             config.setSelectedImages(new ArrayList<Image>());
+        }
+
+        public String getDefaultDirectoryName(Context context) {
+            final PackageManager pm = context.getPackageManager();
+            ApplicationInfo ai;
+            try {
+                ai = pm.getApplicationInfo("your_package_name", 0);
+            } catch (final PackageManager.NameNotFoundException e) {
+                ai = null;
+            }
+            String directoryName = (String) (ai != null ? pm.getApplicationLabel(ai) : "Camera");
+            return directoryName;
         }
     }
 

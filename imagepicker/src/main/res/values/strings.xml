@@ -15,7 +15,7 @@
     <string name="imagepicker_error_images_not_exist">Images not exist</string>
     <string name="imagepicker_error_unknown">Unknown error</string>
 
-    <string name="imagepicker_msg_no_images">No images</string>
+    <string name="imagepicker_msg_no_images">No image available</string>
     <string name="imagepicker_msg_no_write_external_storage_permission">To continue, please give access to your photos</string>
     <string name="imagepicker_msg_no_camera_permission">To continue, please give access to take pictures</string>
     <string name="imagepicker_msg_no_write_external_storage_camera_permission">To continue, please give access to take pictures</string>

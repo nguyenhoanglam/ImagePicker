@@ -9,13 +9,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.view.View;
+import android.view.Window;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.CameraHelper;
@@ -44,7 +45,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private RecyclerViewManager recyclerViewManager;
     private RecyclerView recyclerView;
     private ProgressWheel progressWheel;
-    private View emptyLayout;
+    private TextView noImageText;
     private SnackBarView snackBar;
 
     private Config config;
@@ -93,31 +94,24 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Intent intent = getIntent();
         if (intent == null) {
             finish();
             return;
         }
-
         config = intent.getParcelableExtra(Config.EXTRA_CONFIG);
-        if (config.isKeepScreenOn()) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
-
         setContentView(R.layout.imagepicker_activity_picker);
-
-        setupView();
+        setupViews();
         setupComponents();
         setupToolbar();
 
     }
 
-    private void setupView() {
+    private void setupViews() {
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.recyclerView);
         progressWheel = findViewById(R.id.progressWheel);
-        emptyLayout = findViewById(R.id.layout_empty);
+        noImageText = findViewById(R.id.noImageText);
         snackBar = findViewById(R.id.snackbar);
 
         Window window = getWindow();
@@ -128,7 +122,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         progressWheel.setBarColor(config.getProgressBarColor());
         findViewById(R.id.container).setBackgroundColor(config.getBackgroundColor());
 
-
+        progressWheel.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        noImageText.setVisibility(View.GONE);
     }
 
     private void setupComponents() {
@@ -319,7 +315,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         observer = new ContentObserver(handler) {
             @Override
             public void onChange(boolean selfChange) {
-                getData();
+                getDataWithPermission();
             }
         };
         getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
@@ -369,7 +365,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public void showLoading(boolean isLoading) {
         progressWheel.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
-        emptyLayout.setVisibility(View.GONE);
+        noImageText.setVisibility(View.GONE);
     }
 
     @Override
@@ -379,6 +375,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         } else {
             setImageAdapter(images, config.getImageTitle());
         }
+        progressWheel.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        noImageText.setVisibility(View.GONE);
     }
 
     @Override
@@ -388,13 +387,14 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             message = getString(R.string.imagepicker_error_images_not_exist);
         }
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        progressWheel.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmpty() {
         progressWheel.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
-        emptyLayout.setVisibility(View.VISIBLE);
+        noImageText.setVisibility(View.VISIBLE);
     }
 
     @Override

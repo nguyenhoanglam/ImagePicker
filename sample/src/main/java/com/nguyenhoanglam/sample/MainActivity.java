@@ -7,18 +7,18 @@ package com.nguyenhoanglam.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
-import com.nguyenhoanglam.imagepicker.model.SavePath;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImagePicker;
 
 import java.util.ArrayList;
@@ -80,12 +80,14 @@ public class MainActivity extends AppCompatActivity {
                 .setCameraOnly(cameraOnly)
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
+                .setShowSelectedAsNumber(false)
                 .setSelectedImages(images)
                 .setMaxSize(10)
+                .setDirectoryName("Insta")
+                .setToolbarColor("#000000")
                 .setBackgroundColor("#212121")
                 .setAlwaysShowDoneButton(true)
                 .setRequestCode(100)
-                .setKeepScreenOn(true)
                 .start();
 
     }
@@ -104,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         config.setDoneTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_action_done));
         config.setFolderTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_folder));
         config.setImageTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_image));
-        config.setSavePath(SavePath.DEFAULT);
         config.setSelectedImages(new ArrayList<Image>());
 
         getSupportFragmentManager()

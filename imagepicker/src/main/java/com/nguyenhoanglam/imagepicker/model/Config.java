@@ -25,17 +25,7 @@ public class Config implements Parcelable {
 
 
     public static final int MAX_SIZE = Integer.MAX_VALUE;
-    public static final Parcelable.Creator<Config> CREATOR = new Parcelable.Creator<Config>() {
-        @Override
-        public Config createFromParcel(Parcel source) {
-            return new Config(source);
-        }
 
-        @Override
-        public Config[] newArray(int size) {
-            return new Config[size];
-        }
-    };
     private String toolbarColor;
     private String statusBarColor;
     private String toolbarTextColor;
@@ -45,15 +35,15 @@ public class Config implements Parcelable {
     private boolean isCameraOnly;
     private boolean isMultipleMode;
     private boolean isFolderMode;
+    private boolean isShowSelectedAsNumber;
     private boolean isShowCamera;
     private int maxSize;
     private String doneTitle;
     private String folderTitle;
     private String imageTitle;
     private String limitMessage;
-    private SavePath savePath;
+    private String directoryName;
     private boolean isAlwaysShowDoneButton;
-    private boolean isKeepScreenOn;
     private int requestCode;
     private ArrayList<Image> selectedImages;
 
@@ -62,27 +52,39 @@ public class Config implements Parcelable {
     }
 
     protected Config(Parcel in) {
-        this.toolbarColor = in.readString();
-        this.statusBarColor = in.readString();
-        this.toolbarTextColor = in.readString();
-        this.toolbarIconColor = in.readString();
-        this.progressBarColor = in.readString();
-        this.backgroundColor = in.readString();
-        this.isCameraOnly = in.readByte() != 0;
-        this.isMultipleMode = in.readByte() != 0;
-        this.isFolderMode = in.readByte() != 0;
-        this.isShowCamera = in.readByte() != 0;
-        this.maxSize = in.readInt();
-        this.doneTitle = in.readString();
-        this.folderTitle = in.readString();
-        this.imageTitle = in.readString();
-        this.limitMessage = in.readString();
-        this.savePath = in.readParcelable(SavePath.class.getClassLoader());
-        this.isAlwaysShowDoneButton = in.readByte() != 0;
-        this.isKeepScreenOn = in.readByte() != 0;
-        this.requestCode = in.readInt();
-        this.selectedImages = in.createTypedArrayList(Image.CREATOR);
+        toolbarColor = in.readString();
+        statusBarColor = in.readString();
+        toolbarTextColor = in.readString();
+        toolbarIconColor = in.readString();
+        progressBarColor = in.readString();
+        backgroundColor = in.readString();
+        isCameraOnly = in.readByte() != 0;
+        isMultipleMode = in.readByte() != 0;
+        isFolderMode = in.readByte() != 0;
+        isShowSelectedAsNumber = in.readByte() != 0;
+        isShowCamera = in.readByte() != 0;
+        maxSize = in.readInt();
+        doneTitle = in.readString();
+        folderTitle = in.readString();
+        imageTitle = in.readString();
+        limitMessage = in.readString();
+        directoryName = in.readString();
+        isAlwaysShowDoneButton = in.readByte() != 0;
+        requestCode = in.readInt();
+        selectedImages = in.createTypedArrayList(Image.CREATOR);
     }
+
+    public static final Creator<Config> CREATOR = new Creator<Config>() {
+        @Override
+        public Config createFromParcel(Parcel in) {
+            return new Config(in);
+        }
+
+        @Override
+        public Config[] newArray(int size) {
+            return new Config[size];
+        }
+    };
 
     public int getToolbarColor() {
         if (TextUtils.isEmpty(toolbarColor)) {
@@ -174,6 +176,14 @@ public class Config implements Parcelable {
         isFolderMode = folderMode;
     }
 
+    public boolean isShowSelectedAsNumber() {
+        return isShowSelectedAsNumber;
+    }
+
+    public void setShowSelectedAsNumber(boolean showSelectedAsNumber) {
+        isShowSelectedAsNumber = showSelectedAsNumber;
+    }
+
     public boolean isShowCamera() {
         return isShowCamera;
     }
@@ -222,12 +232,12 @@ public class Config implements Parcelable {
         this.limitMessage = limitMessage;
     }
 
-    public SavePath getSavePath() {
-        return savePath;
+    public String getDirectoryName() {
+        return directoryName;
     }
 
-    public void setSavePath(SavePath savePath) {
-        this.savePath = savePath;
+    public void setDirectoryName(String directoryName) {
+        this.directoryName = directoryName;
     }
 
     public boolean isAlwaysShowDoneButton() {
@@ -236,14 +246,6 @@ public class Config implements Parcelable {
 
     public void setAlwaysShowDoneButton(boolean isAlwaysShowDoneButton) {
         this.isAlwaysShowDoneButton = isAlwaysShowDoneButton;
-    }
-
-    public boolean isKeepScreenOn() {
-        return isKeepScreenOn;
-    }
-
-    public void setKeepScreenOn(boolean keepScreenOn) {
-        isKeepScreenOn = keepScreenOn;
     }
 
     public int getRequestCode() {
@@ -269,26 +271,26 @@ public class Config implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.toolbarColor);
-        dest.writeString(this.statusBarColor);
-        dest.writeString(this.toolbarTextColor);
-        dest.writeString(this.toolbarIconColor);
-        dest.writeString(this.progressBarColor);
-        dest.writeString(this.backgroundColor);
-        dest.writeByte(this.isCameraOnly ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.isMultipleMode ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.isFolderMode ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
-        dest.writeInt(this.maxSize);
-        dest.writeString(this.doneTitle);
-        dest.writeString(this.folderTitle);
-        dest.writeString(this.imageTitle);
-        dest.writeString(this.limitMessage);
-        dest.writeParcelable(this.savePath, flags);
-        dest.writeByte(this.isAlwaysShowDoneButton ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.isKeepScreenOn ? (byte) 1 : (byte) 0);
-        dest.writeInt(this.requestCode);
-        dest.writeTypedList(this.selectedImages);
+        dest.writeString(toolbarColor);
+        dest.writeString(statusBarColor);
+        dest.writeString(toolbarTextColor);
+        dest.writeString(toolbarIconColor);
+        dest.writeString(progressBarColor);
+        dest.writeString(backgroundColor);
+        dest.writeByte((byte) (isCameraOnly ? 1 : 0));
+        dest.writeByte((byte) (isMultipleMode ? 1 : 0));
+        dest.writeByte((byte) (isFolderMode ? 1 : 0));
+        dest.writeByte((byte) (isShowSelectedAsNumber ? 1 : 0));
+        dest.writeByte((byte) (isShowCamera ? 1 : 0));
+        dest.writeInt(maxSize);
+        dest.writeString(doneTitle);
+        dest.writeString(folderTitle);
+        dest.writeString(imageTitle);
+        dest.writeString(limitMessage);
+        dest.writeString(directoryName);
+        dest.writeByte((byte) (isAlwaysShowDoneButton ? 1 : 0));
+        dest.writeInt(requestCode);
+        dest.writeTypedList(selectedImages);
     }
 }
 

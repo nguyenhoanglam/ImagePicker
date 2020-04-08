@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.nguyenhoanglam.imagepicker">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application>
 
@@ -15,8 +15,9 @@
 
         <activity
             android:name=".ui.camera.CameraActivty"
-            android:screenOrientation="portrait"
-            android:theme="@style/imagepicker_CameraTheme" />
+            android:screenOrientation="unspecified"
+            android:theme="@style/imagepicker_CameraTheme"
+            tools:replace="android:screenOrientation" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

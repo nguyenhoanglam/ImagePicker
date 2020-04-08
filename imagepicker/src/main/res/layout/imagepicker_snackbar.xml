@@ -11,7 +11,7 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/button_snackbar_action"
         android:textColor="@color/imagepicker_white"
-        tools:text="Death is like the wind, always by my side" />
+        tools:text="Please grant app permissions to capture photo!" />
 
     <Button
         android:id="@+id/button_snackbar_action"

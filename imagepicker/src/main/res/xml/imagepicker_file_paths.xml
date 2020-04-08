@@ -2,5 +2,5 @@
 <paths>
     <external-path
         name="imagepicker_images"
-        path="." />
+        path="DCIM" />
 </paths>

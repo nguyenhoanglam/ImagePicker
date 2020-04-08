@@ -4,11 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
-import android.view.WindowManager;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.CameraHelper;
@@ -48,9 +48,6 @@ public class CameraActivty extends AppCompatActivity implements CameraView {
         }
 
         config = intent.getParcelableExtra(Config.EXTRA_CONFIG);
-        if (config.isKeepScreenOn()) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
 
         setContentView(R.layout.imagepicker_activity_camera);
         snackBar = findViewById(R.id.snackbar);
@@ -93,26 +90,26 @@ public class CameraActivty extends AppCompatActivity implements CameraView {
     private void requestCameraPermission() {
         logger.w("Write External permission is not granted. Requesting permission");
 
-        boolean hasPermissionDisbled = false;
+        boolean hasPermissionDisabled = false;
 
         boolean wesGranted = PermissionHelper.hasSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         boolean cameraGranted = PermissionHelper.hasSelfPermission(this, Manifest.permission.CAMERA);
 
         if (!wesGranted && !PermissionHelper.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             if (!PreferenceHelper.isFirstTimeAskingPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                hasPermissionDisbled = true;
+                hasPermissionDisabled = true;
             }
         }
 
         if (!cameraGranted && !PermissionHelper.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             if (!PreferenceHelper.isFirstTimeAskingPermission(this, Manifest.permission.CAMERA)) {
-                hasPermissionDisbled = true;
+                hasPermissionDisabled = true;
             }
         }
 
         List<String> permissions = new ArrayList<>();
 
-        if (!hasPermissionDisbled) {
+        if (!hasPermissionDisabled) {
 
             if (!wesGranted) {
                 permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -184,11 +181,14 @@ public class CameraActivty extends AppCompatActivity implements CameraView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Config.RC_CAPTURE_IMAGE && resultCode == RESULT_OK) {
-            presenter.finishCaptureImage(this, data, config);
-        } else {
-            setResult(RESULT_CANCELED, new Intent());
-            finish();
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Config.RC_CAPTURE_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                presenter.finishCaptureImage(this, data, config);
+            } else {
+                setResult(RESULT_CANCELED, new Intent());
+                finish();
+            }
         }
     }
 

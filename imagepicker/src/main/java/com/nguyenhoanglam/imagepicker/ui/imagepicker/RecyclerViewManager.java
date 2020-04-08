@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Parcelable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.adapter.FolderPickerAdapter;
@@ -63,7 +62,7 @@ public class RecyclerViewManager {
             selectedImages = config.getSelectedImages();
         }
 
-        imageAdapter = new ImagePickerAdapter(context, imageLoader, selectedImages, imageClickListener);
+        imageAdapter = new ImagePickerAdapter(context, config, imageLoader, selectedImages, imageClickListener);
         folderAdapter = new FolderPickerAdapter(context, imageLoader, new OnFolderClickListener() {
             @Override
             public void onFolderClick(Folder folder) {
@@ -123,8 +122,6 @@ public class RecyclerViewManager {
     public boolean selectImage() {
         if (config.isMultipleMode()) {
             if (imageAdapter.getSelectedImages().size() >= config.getMaxSize()) {
-                String message = String.format(config.getLimitMessage(), config.getMaxSize());
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 return false;
             }
         } else {

@@ -1,17 +1,19 @@
 package com.nguyenhoanglam.imagepicker.adapter;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper;
 import com.nguyenhoanglam.imagepicker.listener.OnImageClickListener;
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectionListener;
+import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.nguyenhoanglam.imagepicker.ui.common.BaseRecyclerViewAdapter;
 import com.nguyenhoanglam.imagepicker.ui.imagepicker.ImageLoader;
@@ -25,13 +27,15 @@ import java.util.List;
  */
 public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapter.ImageViewHolder> {
 
+    private Config config;
     private List<Image> images = new ArrayList<>();
     private List<Image> selectedImages = new ArrayList<>();
     private OnImageClickListener itemClickListener;
     private OnImageSelectionListener imageSelectionListener;
 
-    public ImagePickerAdapter(Context context, ImageLoader imageLoader, List<Image> selectedImages, OnImageClickListener itemClickListener) {
+    public ImagePickerAdapter(Context context, Config config, ImageLoader imageLoader, List<Image> selectedImages, OnImageClickListener itemClickListener) {
         super(context, imageLoader);
+        this.config = config;
         this.itemClickListener = itemClickListener;
 
         if (selectedImages != null && !selectedImages.isEmpty()) {
@@ -49,15 +53,18 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
     public void onBindViewHolder(final ImageViewHolder viewHolder, final int position) {
 
         final Image image = images.get(position);
-        final boolean isSelected = isSelected(image);
+        final int selectedPosition = getSelectedPosition(image);
+        final boolean isSelected = selectedPosition != -1;
 
         getImageLoader().loadImage(image.getPath(), viewHolder.image);
 
         viewHolder.gifIndicator.setVisibility(ImageHelper.isGifFormat(image) ? View.VISIBLE : View.GONE);
-        viewHolder.alphaView.setAlpha(isSelected ? 0.5f : 0.0f);
-        viewHolder.container.setForeground(isSelected
-                ? ContextCompat.getDrawable(getContext(), R.drawable.imagepicker_ic_selected)
-                : null);
+
+        viewHolder.selectedIcon.setVisibility(isSelected && !config.isShowSelectedAsNumber() ? View.VISIBLE : View.GONE);
+        viewHolder.selectedNumber.setVisibility(isSelected && config.isShowSelectedAsNumber() ? View.VISIBLE : View.GONE);
+        if (viewHolder.selectedNumber.getVisibility() == View.VISIBLE) {
+            viewHolder.selectedNumber.setText((selectedPosition + 1) + "");
+        }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,18 +74,22 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
                     removeSelected(image, position);
                 } else if (shouldSelect) {
                     addSelected(image, position);
+                } else {
+                    String message = String.format(config.getLimitMessage(), config.getMaxSize());
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private boolean isSelected(Image image) {
-        for (Image selectedImage : selectedImages) {
+    private int getSelectedPosition(Image image) {
+        for (int i = 0; i < selectedImages.size(); i++) {
+            Image selectedImage = selectedImages.get(i);
             if (selectedImage.getPath().equals(image.getPath())) {
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     public void setOnImageSelectionListener(OnImageSelectionListener imageSelectedListener) {
@@ -119,7 +130,7 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
                 break;
             }
         }
-        notifyItemChanged(position);
+        notifyDataSetChanged();
         notifySelectionChanged();
     }
 
@@ -141,16 +152,16 @@ public class ImagePickerAdapter extends BaseRecyclerViewAdapter<ImagePickerAdapt
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {
 
-        private FrameLayout container;
         private ImageView image;
-        private View alphaView;
+        private ImageView selectedIcon;
+        private TextView selectedNumber;
         private View gifIndicator;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
-            container = (FrameLayout) itemView;
             image = itemView.findViewById(R.id.image_thumbnail);
-            alphaView = itemView.findViewById(R.id.view_alpha);
+            selectedIcon = itemView.findViewById(R.id.image_selected_icon);
+            selectedNumber = itemView.findViewById(R.id.text_selected_number);
             gifIndicator = itemView.findViewById(R.id.gif_indicator);
 
         }
