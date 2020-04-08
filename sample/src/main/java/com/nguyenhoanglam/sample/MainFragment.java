@@ -82,9 +82,9 @@ public class MainFragment extends Fragment {
         ImagePicker.with(this)
                 .setFolderMode(config.isFolderMode())
                 .setCameraOnly(config.isCameraOnly())
-                .setFolderTitle(config.getFolderTitle())
+                .setFolderTitle(config.folderTitle)
                 .setMultipleMode(config.isMultipleMode())
-                .setSelectedImages(config.getSelectedImages())
+                .setSelectedImages(config.selectedImages)
                 .setMaxSize(config.getMaxSize())
                 .start();
     }

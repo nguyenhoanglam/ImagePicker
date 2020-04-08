@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 .setFolderTitle("Album")
                 .setMultipleMode(multipleMode)
                 .setShowSelectedAsNumber(false)
-                .setSelectedImages(images)
+//                .setSelectedImages(images)
                 .setMaxSize(10)
                 .setDirectoryName("Insta")
                 .setToolbarColor("#000000")
@@ -103,10 +103,10 @@ public class MainActivity extends AppCompatActivity {
         config.setFolderMode(folderMode);
         config.setShowCamera(true);
         config.setMaxSize(Config.MAX_SIZE);
-        config.setDoneTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_action_done));
-        config.setFolderTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_folder));
-        config.setImageTitle(getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_image));
-        config.setSelectedImages(new ArrayList<Image>());
+        config.doneTitle = getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_action_done);
+        config.folderTitle = getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_folder);
+        config.imageTitle = getString(com.nguyenhoanglam.imagepicker.R.string.imagepicker_title_image);
+        config.selectedImages = new ArrayList<Image>();
 
         getSupportFragmentManager()
                 .beginTransaction()
