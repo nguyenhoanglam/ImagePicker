@@ -24,9 +24,9 @@ import com.nguyenhoanglam.imagepicker.R;
  * Todd Davies' Progress Wheel https://github.com/Todd-Davies/ProgressWheel
  *
  * @author Nico Hormazábal
- *         <p/>
- *         Licensed under the Apache License 2.0 license see:
- *         http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
+ * Licensed under the Apache License 2.0 license see:
+ * http://www.apache.org/licenses/LICENSE-2.0
  */
 public class ProgressWheel extends View {
     private static final String TAG = ProgressWheel.class.getSimpleName();
@@ -701,7 +701,7 @@ public class ProgressWheel extends View {
          *
          * @param progress a double value between 0.00 and 1.00 both included
          */
-        public void onProgressUpdate(float progress);
+        void onProgressUpdate(float progress);
     }
 
     static class WheelSavedState extends BaseSavedState {

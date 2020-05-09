@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020 Nguyen Hoang Lam.
+ * All rights reserved.
+ */
+
 package com.nguyenhoanglam.imagepicker.widget
 
 import android.content.Context
@@ -9,9 +14,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.model.Config
 
-/**
- * Created by hoanglam on 8/11/17.
- */
 class ImagePickerToolbar : RelativeLayout {
 
     private lateinit var titleText: TextView
@@ -48,10 +50,10 @@ class ImagePickerToolbar : RelativeLayout {
         titleText.setTextColor(config.getToolbarTextColor())
         doneText.text = config.doneTitle
         doneText.setTextColor(config.getToolbarTextColor())
+        doneText.visibility = if (config.isAlwaysShowDoneButton) View.VISIBLE else View.GONE
         backImage.setColorFilter(config.getToolbarIconColor())
         cameraImage.setColorFilter(config.getToolbarIconColor())
         cameraImage.visibility = if (config.isShowCamera) View.VISIBLE else View.GONE
-        doneText.visibility = View.GONE
     }
 
     fun setTitle(title: String?) {
@@ -62,15 +64,15 @@ class ImagePickerToolbar : RelativeLayout {
         doneText.visibility = if (isShow) View.VISIBLE else View.GONE
     }
 
-    fun setOnBackClickListener(clickListener: OnClickListener?) {
+    fun setOnBackClickListener(clickListener: OnClickListener) {
         backImage.setOnClickListener(clickListener)
     }
 
-    fun setOnCameraClickListener(clickListener: OnClickListener?) {
+    fun setOnCameraClickListener(clickListener: OnClickListener) {
         cameraImage.setOnClickListener(clickListener)
     }
 
-    fun setOnDoneClickListener(clickListener: OnClickListener?) {
+    fun setOnDoneClickListener(clickListener: OnClickListener) {
         doneText.setOnClickListener(clickListener)
     }
 }

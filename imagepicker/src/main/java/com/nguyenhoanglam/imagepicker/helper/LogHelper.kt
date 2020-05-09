@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020 Nguyen Hoang Lam.
+ * All rights reserved.
+ */
+
 package com.nguyenhoanglam.imagepicker.helper
 
 import android.util.Log
@@ -10,19 +15,19 @@ class LogHelper private constructor() {
         isEnable = enable
     }
 
-    fun d(message: String?) {
+    fun d(message: String) {
         if (isEnable) {
             Log.d(TAG, message)
         }
     }
 
-    fun e(message: String?) {
+    fun e(message: String) {
         if (isEnable) {
             Log.e(TAG, message)
         }
     }
 
-    fun w(message: String?) {
+    fun w(message: String) {
         if (isEnable) {
             Log.w(TAG, message)
         }

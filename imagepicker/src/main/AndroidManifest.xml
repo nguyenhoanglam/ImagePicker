@@ -14,7 +14,7 @@
             android:theme="@style/imagepicker_ImagePickerTheme" />
 
         <activity
-            android:name=".ui.camera.CameraActivty"
+            android:name=".ui.camera.CameraActivity"
             android:screenOrientation="unspecified"
             android:theme="@style/imagepicker_CameraTheme"
             tools:replace="android:screenOrientation" />

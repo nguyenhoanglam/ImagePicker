@@ -1,13 +1,15 @@
+/*
+ * Copyright (c) 2020 Nguyen Hoang Lam.
+ * All rights reserved.
+ */
+
 package com.nguyenhoanglam.imagepicker.model
 
 import android.graphics.Color
+import android.os.Environment
 import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
-
-/**
- * Created by hoanglam on 8/11/17.
- */
 
 class Config() : Parcelable {
 
@@ -17,16 +19,18 @@ class Config() : Parcelable {
     private lateinit var toolbarIconColor: String
     private lateinit var progressBarColor: String
     private lateinit var backgroundColor: String
+    private lateinit var indicatorColor: String
     var isCameraOnly = false
     var isMultipleMode = false
     var isFolderMode = false
-    var isShowSelectedAsNumber = false
+    var isShowNumberIndicator = false
     var isShowCamera = false
     var maxSize = MAX_SIZE
     lateinit var doneTitle: String
     lateinit var folderTitle: String
     lateinit var imageTitle: String
-    lateinit var limitMessage: String
+    var limitMessage: String? = null
+    lateinit var rootDirectoryName: String
     lateinit var directoryName: String
     var isAlwaysShowDoneButton = false
     lateinit var selectedImages: ArrayList<Image>
@@ -39,16 +43,18 @@ class Config() : Parcelable {
         toolbarIconColor = parcel.readString()!!
         progressBarColor = parcel.readString()!!
         backgroundColor = parcel.readString()!!
+        indicatorColor = parcel.readString()!!
         isCameraOnly = parcel.readByte() != 0.toByte()
         isMultipleMode = parcel.readByte() != 0.toByte()
         isFolderMode = parcel.readByte() != 0.toByte()
-        isShowSelectedAsNumber = parcel.readByte() != 0.toByte()
+        isShowNumberIndicator = parcel.readByte() != 0.toByte()
         isShowCamera = parcel.readByte() != 0.toByte()
         maxSize = parcel.readInt()
         doneTitle = parcel.readString()!!
         folderTitle = parcel.readString()!!
         imageTitle = parcel.readString()!!
-        limitMessage = parcel.readString()!!
+        limitMessage = parcel.readString()
+        rootDirectoryName = parcel.readString()!!
         directoryName = parcel.readString()!!
         isAlwaysShowDoneButton = parcel.readByte() != 0.toByte()
         selectedImages = parcel.createTypedArrayList(Image.CREATOR)!!
@@ -104,6 +110,14 @@ class Config() : Parcelable {
         this.backgroundColor = backgroundColor
     }
 
+    fun getIndicatorColor(): Int {
+        return Color.parseColor(indicatorColor)
+    }
+
+    fun setIndicatorColor(indicatorColor: String) {
+        this.indicatorColor = indicatorColor
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(toolbarColor)
         parcel.writeString(statusBarColor)
@@ -111,19 +125,21 @@ class Config() : Parcelable {
         parcel.writeString(toolbarIconColor)
         parcel.writeString(progressBarColor)
         parcel.writeString(backgroundColor)
+        parcel.writeString(indicatorColor)
         parcel.writeByte(if (isCameraOnly) 1 else 0)
         parcel.writeByte(if (isMultipleMode) 1 else 0)
         parcel.writeByte(if (isFolderMode) 1 else 0)
-        parcel.writeByte(if (isShowSelectedAsNumber) 1 else 0)
+        parcel.writeByte(if (isShowNumberIndicator) 1 else 0)
         parcel.writeByte(if (isShowCamera) 1 else 0)
         parcel.writeInt(maxSize)
         parcel.writeString(doneTitle)
         parcel.writeString(folderTitle)
         parcel.writeString(imageTitle)
         parcel.writeString(limitMessage)
+        parcel.writeString(rootDirectoryName)
         parcel.writeString(directoryName)
         parcel.writeByte(if (isAlwaysShowDoneButton) 1 else 0)
-        parcel.writeTypedList(selectedImages);
+        parcel.writeTypedList(selectedImages)
         parcel.writeInt(requestCode)
     }
 
@@ -140,6 +156,9 @@ class Config() : Parcelable {
         const val RC_WRITE_EXTERNAL_STORAGE_PERMISSION = 102
         const val RC_CAMERA_PERMISSION = 103
         const val MAX_SIZE = Int.MAX_VALUE
+        val ROOT_DIR_DCIM: String = Environment.DIRECTORY_DCIM
+        val ROOT_DIR_DOWNLOAD: String = Environment.DIRECTORY_DOWNLOADS
+        val ROOT_DIR_PICTURES: String = Environment.DIRECTORY_PICTURES
 
         override fun createFromParcel(parcel: Parcel): Config {
             return Config(parcel)

@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2020 Nguyen Hoang Lam.
+ * All rights reserved.
+ */
+
+/*
  * Created by Nguyen Hoang Lam
  * Date: ${DATE}
  */
@@ -13,12 +18,9 @@ import androidx.fragment.app.Fragment
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
-import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivty
+import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivity
 import java.util.*
 
-/**
- * Created by hoanglam on 8/4/16.
- */
 class ImagePicker(builder: Builder) {
 
     private var config: Config
@@ -42,7 +44,7 @@ class ImagePicker(builder: Builder) {
                     intent = Intent(activity, ImagePickerActivity::class.java)
                     intent.putExtra(Config.EXTRA_CONFIG, config)
                 } else {
-                    intent = Intent(activity, CameraActivty::class.java)
+                    intent = Intent(activity, CameraActivity::class.java)
                     intent.putExtra(Config.EXTRA_CONFIG, config)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }
@@ -70,7 +72,7 @@ class ImagePicker(builder: Builder) {
                     intent = Intent(fragment.activity, ImagePickerActivity::class.java)
                     intent.putExtra(Config.EXTRA_CONFIG, config)
                 } else {
-                    intent = Intent(fragment.activity, CameraActivty::class.java)
+                    intent = Intent(fragment.activity, CameraActivity::class.java)
                     intent.putExtra(Config.EXTRA_CONFIG, config)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 }
@@ -84,9 +86,9 @@ class ImagePicker(builder: Builder) {
         abstract fun start()
         abstract val intent: Intent
 
-        constructor(activity: Activity?) : super(activity) {}
+        constructor(activity: Activity?) : super(activity)
 
-        constructor(fragment: Fragment) : super(fragment.context) {}
+        constructor(fragment: Fragment) : super(fragment.context)
 
         fun setToolbarColor(toolbarColor: String): Builder {
             config.setToolbarColor(toolbarColor)
@@ -118,6 +120,11 @@ class ImagePicker(builder: Builder) {
             return this
         }
 
+        fun setIndicatorColor(indicatorColor: String): Builder {
+            config.setIndicatorColor(indicatorColor)
+            return this
+        }
+
         fun setCameraOnly(isCameraOnly: Boolean): Builder {
             config.isCameraOnly = isCameraOnly
             return this
@@ -133,8 +140,8 @@ class ImagePicker(builder: Builder) {
             return this
         }
 
-        fun setShowSelectedAsNumber(showSelectedAsNumber: Boolean): Builder {
-            config.isShowSelectedAsNumber = showSelectedAsNumber
+        fun setShowNumberIndicator(isShowNumberIndicator: Boolean): Builder {
+            config.isShowNumberIndicator = isShowNumberIndicator
             return this
         }
 
@@ -168,6 +175,11 @@ class ImagePicker(builder: Builder) {
             return this
         }
 
+        fun setRootDirectoryName(rootDirectoryName: String): Builder {
+            config.rootDirectoryName = rootDirectoryName
+            return this
+        }
+
         fun setDirectoryName(directoryName: String): Builder {
             config.directoryName = directoryName
             return this
@@ -197,7 +209,7 @@ class ImagePicker(builder: Builder) {
             val pm = context.packageManager
             val ai: ApplicationInfo?
             ai = try {
-                pm.getApplicationInfo("your_package_name", 0)
+                pm.getApplicationInfo(context.applicationContext.packageName ?: "", 0)
             } catch (e: PackageManager.NameNotFoundException) {
                 null
             }
@@ -211,17 +223,18 @@ class ImagePicker(builder: Builder) {
             config.setToolbarTextColor("#FFFFFF")
             config.setToolbarIconColor("#FFFFFF")
             config.setProgressBarColor("#4CAF50")
-            config.setBackgroundColor("#212121")
+            config.setBackgroundColor("#424242")
+            config.setIndicatorColor("#1976D2")
             config.isCameraOnly = false
             config.isMultipleMode = true
             config.isFolderMode = true
-            config.isShowSelectedAsNumber = false
+            config.isShowNumberIndicator = false
             config.isShowCamera = true
             config.maxSize = Config.MAX_SIZE
             config.doneTitle = resources.getString(R.string.imagepicker_action_done)
             config.folderTitle = resources.getString(R.string.imagepicker_title_folder)
             config.imageTitle = resources.getString(R.string.imagepicker_title_image)
-            config.limitMessage = resources.getString(R.string.imagepicker_msg_limit_images)
+            config.rootDirectoryName = Config.ROOT_DIR_DCIM
             config.directoryName = getDefaultDirectoryName(context)
             config.isAlwaysShowDoneButton = false
             config.selectedImages = arrayListOf()

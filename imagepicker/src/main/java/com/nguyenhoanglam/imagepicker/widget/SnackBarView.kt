@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020 Nguyen Hoang Lam.
+ * All rights reserved.
+ */
+
 package com.nguyenhoanglam.imagepicker.widget
 
 import android.content.Context
@@ -14,9 +19,6 @@ import androidx.core.view.ViewCompat
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import com.nguyenhoanglam.imagepicker.R
 
-/**
- * Created by hoanglam on 8/21/17.
- */
 class SnackBarView : RelativeLayout {
 
     private lateinit var messageText: TextView
@@ -58,31 +60,34 @@ class SnackBarView : RelativeLayout {
 
     private fun setOnActionClickListener(actionText: String, onClickListener: OnClickListener) {
         actionButton.text = actionText
-        actionButton.setOnClickListener { view -> hide(Runnable { onClickListener.onClick(view) }) }
+        actionButton.setOnClickListener { view ->
+            hide(Runnable { onClickListener.onClick(view) })
+        }
     }
 
     fun show(textResId: Int, onClickListener: OnClickListener) {
         setText(textResId)
         setOnActionClickListener(context.getString(R.string.imagepicker_action_ok), onClickListener)
         ViewCompat.animate(this)
-                .translationY(0f)
-                .setDuration(ANIM_DURATION.toLong())
-                .setInterpolator(INTERPOLATOR)
-                .alpha(1f)
+            .translationY(0f)
+            .setDuration(ANIM_DURATION.toLong())
+            .setInterpolator(INTERPOLATOR)
+            .alpha(1f)
         isShowing = true
     }
 
     private fun hide(runnable: Runnable) {
         ViewCompat.animate(this)
-                .translationY(height.toFloat())
-                .setDuration(ANIM_DURATION.toLong())
-                .alpha(0.5f)
-                .withEndAction(runnable)
+            .translationY(height.toFloat())
+            .setDuration(ANIM_DURATION.toLong())
+            .alpha(0.5f)
+            .withEndAction(runnable)
         isShowing = false
     }
 
     private fun convertDpToPixels(context: Context, dp: Float): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics).toInt()
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
+            .toInt()
     }
 
     companion object {

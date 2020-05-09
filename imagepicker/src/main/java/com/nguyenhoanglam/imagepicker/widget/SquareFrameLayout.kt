@@ -1,12 +1,15 @@
+/*
+ * Copyright (c) 2020 Nguyen Hoang Lam.
+ * All rights reserved.
+ */
+
 package com.nguyenhoanglam.imagepicker.widget
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 
-/**
- * Created by hoanglam on 9/5/16.
- */
+
 class SquareFrameLayout : FrameLayout {
 
     constructor(context: Context) : super(context)

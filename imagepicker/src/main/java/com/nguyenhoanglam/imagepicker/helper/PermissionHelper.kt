@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020 Nguyen Hoang Lam.
+ * All rights reserved.
+ */
+
 package com.nguyenhoanglam.imagepicker.helper
 
 import android.annotation.TargetApi
@@ -10,9 +15,6 @@ import android.os.Build
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 
-/**
- * Created by hoanglam on 8/21/17.
- */
 object PermissionHelper {
 
     fun checkPermission(activity: Activity, permission: String, listener: PermissionAskListener) {
@@ -33,8 +35,7 @@ object PermissionHelper {
     }
 
     fun openAppSettings(activity: Activity) {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.fromParts("package", activity.packageName, null))
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", activity.packageName, null))
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
