@@ -129,7 +129,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 | `setDirectoryName` | Root directory's sub folder of captured images | Application name
 | `setShowNumberIndicator` | Show selected image's indicator as number | `false`
 | `setMaxSize` | Max images can be selected | `Int.MAX_VALUE`
-| `setLimitMessage` | Folder screen's title |
+| `setLimitMessage` | Message to be displayed when total selected images exceeds max count |
 | `setSelectedImages` | List of images that will be shown as selected in ImagePicker | empty list
 | `setRequestCode` | Request code for starting ImagePicker | `100`
 | `start` | Open ImagePicker |
