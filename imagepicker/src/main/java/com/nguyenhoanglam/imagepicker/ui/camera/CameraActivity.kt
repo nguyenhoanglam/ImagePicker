@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.nguyenhoanglam.imagepicker.R
-import com.nguyenhoanglam.imagepicker.extension.showToast
 import com.nguyenhoanglam.imagepicker.helper.CameraHelper.checkCameraAvailability
 import com.nguyenhoanglam.imagepicker.helper.LogHelper.Companion.instance
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.hasGranted
@@ -23,6 +22,7 @@ import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.requestAllPermissi
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.shouldShowRequestPermissionRationale
 import com.nguyenhoanglam.imagepicker.helper.PreferenceHelper.firstTimeAskingPermission
 import com.nguyenhoanglam.imagepicker.helper.PreferenceHelper.isFirstTimeAskingPermission
+import com.nguyenhoanglam.imagepicker.helper.ToastHelper
 import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
 import kotlinx.android.synthetic.main.imagepicker_activity_camera.*
@@ -72,7 +72,7 @@ class CameraActivity : AppCompatActivity() {
         }
         val intent = cameraModule.getCameraIntent(this, config!!)
         if (intent == null) {
-            showToast(getString(R.string.imagepicker_error_create_image_file))
+            ToastHelper.show(this, getString(R.string.imagepicker_error_create_image_file))
             return
         }
         startActivityForResult(intent, Config.RC_CAPTURE_IMAGE)

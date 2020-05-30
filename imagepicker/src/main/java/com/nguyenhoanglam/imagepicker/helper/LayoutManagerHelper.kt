@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 object LayoutManagerHelper {
 
     fun newInstance(context: Context, isFolder: Boolean = false): GridLayoutManager {
-        val isPortrait = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-        val columns = if (isFolder) (if (isPortrait) 2 else 4) else (if (isPortrait) 3 else 5)
-        return GridLayoutManager(context, columns)
+        val spanCount = getSpanCountForCurrentConfiguration(context, isFolder)
+        return GridLayoutManager(context, spanCount)
     }
 
     fun getSpanCountForCurrentConfiguration(context: Context, isFolder: Boolean): Int {

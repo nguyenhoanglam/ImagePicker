@@ -39,7 +39,7 @@ allprojects {
 Add the following dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.4.0'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.4.1'
 }
 ```
 

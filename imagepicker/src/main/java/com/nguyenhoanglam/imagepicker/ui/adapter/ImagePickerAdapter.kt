@@ -13,8 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nguyenhoanglam.imagepicker.R
-import com.nguyenhoanglam.imagepicker.extension.showToast
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
+import com.nguyenhoanglam.imagepicker.helper.ToastHelper
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
 import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
@@ -29,6 +29,18 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val itemView = inflater.inflate(R.layout.imagepicker_item_image, parent, false)
         return ImageViewHolder(itemView, config.isShowNumberIndicator, config.getIndicatorColor())
+    }
+
+    override fun onBindViewHolder(viewHolder: ImageViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(viewHolder, position)
+        } else {
+            if (payloads.any { it is ImageUnselected }) {
+                val image = images[position]
+                val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
+                viewHolder.selectedNumber.text = (selectedIndex + 1).toString()
+            }
+        }
     }
 
     override fun onBindViewHolder(viewHolder: ImageViewHolder, position: Int) {
@@ -62,13 +74,13 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
                 if (config.isShowNumberIndicator) {
                     val indexes = ImageHelper.findImageIndexes(selectedImages, images)
                     for (index in indexes) {
-                        notifyItemChanged(index)
+                        notifyItemChanged(index, ImageUnselected())
                     }
                 }
             } else {
                 if (selectedImages.size >= config.maxSize) {
                     val message = if (config.limitMessage != null) config.limitMessage!! else String.format(context.resources.getString(R.string.imagepicker_msg_limit_images), config.maxSize)
-                    context.showToast(message)
+                    ToastHelper.show(context, message)
                     return
                 } else {
                     selectedImages.add(image)
@@ -105,4 +117,6 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
             drawable.setColor(indicatorColor)
         }
     }
+
+    class ImageUnselected
 }

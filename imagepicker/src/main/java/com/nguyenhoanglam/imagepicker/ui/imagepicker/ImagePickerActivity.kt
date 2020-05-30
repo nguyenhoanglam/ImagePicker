@@ -15,11 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.nguyenhoanglam.imagepicker.R
-import com.nguyenhoanglam.imagepicker.extension.showToast
-import com.nguyenhoanglam.imagepicker.helper.CameraHelper
-import com.nguyenhoanglam.imagepicker.helper.ImageHelper
-import com.nguyenhoanglam.imagepicker.helper.LogHelper
-import com.nguyenhoanglam.imagepicker.helper.PermissionHelper
+import com.nguyenhoanglam.imagepicker.helper.*
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
 import com.nguyenhoanglam.imagepicker.model.Config
@@ -196,7 +192,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
 
         val intent = cameraModule.getCameraIntent(this, config!!)
         if (intent == null) {
-            showToast(getString(R.string.imagepicker_error_create_image_file))
+            ToastHelper.show(this, getString(R.string.imagepicker_error_create_image_file))
             return
         }
         startActivityForResult(intent, Config.RC_CAPTURE_IMAGE)

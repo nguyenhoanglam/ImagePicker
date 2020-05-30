@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ImagePicker.iml" filepath="$PROJECT_DIR$/ImagePicker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imagepicker/imagepicker.iml" filepath="$PROJECT_DIR$/imagepicker/imagepicker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ImagePicker.iml" filepath="$PROJECT_DIR$/ImagePicker.iml" group="ImagePicker" />
+      <module fileurl="file://$PROJECT_DIR$/imagepicker/ImagePicker-imagepicker.iml" filepath="$PROJECT_DIR$/imagepicker/ImagePicker-imagepicker.iml" group="ImagePicker/imagepicker" />
+      <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" group="ImagePicker/example" />
+      <module fileurl="file://$PROJECT_DIR$/imagepicker/imagepicker.iml" filepath="$PROJECT_DIR$/imagepicker/imagepicker.iml" group="ImagePicker/imagepicker" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" group="ImagePicker/sample" />
     </modules>
   </component>
 </project>
