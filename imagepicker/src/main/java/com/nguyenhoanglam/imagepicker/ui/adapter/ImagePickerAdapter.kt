@@ -6,11 +6,14 @@
 package com.nguyenhoanglam.imagepicker.ui.adapter
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
@@ -35,10 +38,28 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
         if (payloads.isEmpty()) {
             onBindViewHolder(viewHolder, position)
         } else {
-            if (payloads.any { it is ImageUnselected }) {
-                val image = images[position]
-                val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
-                viewHolder.selectedNumber.text = (selectedIndex + 1).toString()
+            when {
+                payloads.any { it is ImageSelectedOrUpdated } -> {
+                    if (config.isShowNumberIndicator) {
+                        val image = images[position]
+                        val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
+                        viewHolder.selectedNumber.text = (selectedIndex + 1).toString()
+                        viewHolder.selectedNumber.visibility = View.VISIBLE
+                        viewHolder.selectedIcon.visibility = View.GONE
+                    } else {
+                        viewHolder.selectedIcon.visibility = View.VISIBLE
+                        viewHolder.selectedNumber.visibility = View.GONE
+                    }
+                    setupItemForeground(viewHolder.image, true)
+                }
+                payloads.any { it is ImageUnselected } -> {
+                    if (config.isShowNumberIndicator) viewHolder.selectedNumber.visibility = View.GONE
+                    else viewHolder.selectedIcon.visibility = View.GONE
+                    setupItemForeground(viewHolder.image, false)
+                }
+                else -> {
+                    onBindViewHolder(viewHolder, position)
+                }
             }
         }
     }
@@ -49,6 +70,7 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
         val isSelected = config.isMultipleMode && selectedIndex != -1
 
         glideLoader.loadImage(image.id, image.path, viewHolder.image)
+        setupItemForeground(viewHolder.image, isSelected)
 
         viewHolder.gifIndicator.visibility = if (ImageHelper.isGifFormat(image)) View.VISIBLE else View.GONE
         viewHolder.selectedIcon.visibility = if (isSelected && !config.isShowNumberIndicator) View.VISIBLE else View.GONE
@@ -65,17 +87,21 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
         return images.size
     }
 
+    private fun setupItemForeground(view: View, isSelected: Boolean) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            view.foreground = if (isSelected) ColorDrawable(ContextCompat.getColor(context, R.color.imagepicker_black_alpha_30)) else null
+        }
+    }
+
     private fun selectOrRemoveImage(image: Image, position: Int) {
         if (config.isMultipleMode) {
             val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
             if (selectedIndex != -1) {
                 selectedImages.removeAt(selectedIndex)
-                notifyItemChanged(position)
-                if (config.isShowNumberIndicator) {
-                    val indexes = ImageHelper.findImageIndexes(selectedImages, images)
-                    for (index in indexes) {
-                        notifyItemChanged(index, ImageUnselected())
-                    }
+                notifyItemChanged(position, ImageUnselected())
+                val indexes = ImageHelper.findImageIndexes(selectedImages, images)
+                for (index in indexes) {
+                    notifyItemChanged(index, ImageSelectedOrUpdated())
                 }
             } else {
                 if (selectedImages.size >= config.maxSize) {
@@ -84,7 +110,7 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
                     return
                 } else {
                     selectedImages.add(image)
-                    notifyItemChanged(position)
+                    notifyItemChanged(position, ImageSelectedOrUpdated())
                 }
             }
             imageSelectListener.onSelectedImagesChanged(selectedImages)
@@ -117,6 +143,8 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
             drawable.setColor(indicatorColor)
         }
     }
+
+    class ImageSelectedOrUpdated
 
     class ImageUnselected
 }

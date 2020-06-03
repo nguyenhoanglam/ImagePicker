@@ -3,10 +3,6 @@
  * All rights reserved.
  */
 
-/*
- * Created by Nguyen Hoang Lam
- * Date: ${DATE}
- */
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
 
 import android.app.Activity
@@ -250,6 +246,18 @@ class ImagePicker(builder: Builder) {
         @JvmStatic
         fun with(fragment: Fragment): Builder {
             return FragmentBuilder(fragment)
+        }
+
+        @JvmStatic
+        fun shouldHandleResult(requestCode: Int, resultCode: Int, data: Intent?, callerRequestCode: Int = Config.RC_PICK_IMAGES): Boolean {
+            return requestCode == callerRequestCode && resultCode == Activity.RESULT_OK && data != null
+        }
+
+        @JvmStatic
+        fun getImages(data: Intent?): ArrayList<Image> {
+            return if (data != null) data.getParcelableArrayListExtra(Config.EXTRA_IMAGES)
+            else arrayListOf()
+
         }
     }
 

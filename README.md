@@ -9,7 +9,7 @@ An Android library that supports selecting images from the device or from the ca
 Demo
 --------
 
-<img src="https://i.imgur.com/ZM09aU3.png" height="652" width="350"> <img src="https://i.imgur.com/Hs9nhVt.png" height="652" width="350">
+<img src="https://i.imgur.com/ZM09aU3.png" height="652" width="350"> <img src="https://i.imgur.com/d3O0VFN.png" height="652" width="350">
 
 What's new
 --------
@@ -39,7 +39,7 @@ allprojects {
 Add the following dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.4.1'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.4.2'
 }
 ```
 
@@ -85,8 +85,10 @@ ImagePicker.with(this)
 
 ```kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    if (requestCode == Config.RC_PICK_IMAGES && resultCode == Activity.RESULT_OK && data != null) {
-        val images: ArrayList<Image> = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES)
+    // The last parameter value of shouldHandleResult() is the value you pass to setRequestCode().
+    // If you did not call setRequestCode(), you could ignore the last parameter.
+    if (ImagePicker.shouldHandleResult(requestCode, resultCode, data, 100)) {
+        val images: ArrayList<Image> = ImagePicker.getImages(data)
         // Do stuff with image's path or id. For example:
         for (image in images) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -133,6 +135,8 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 | `setSelectedImages` | List of images that will be shown as selected in ImagePicker | empty list
 | `setRequestCode` | Request code for starting ImagePicker | `100`
 | `start` | Open ImagePicker |
+| `shouldHandleResult` | Check if ImagePicker result was returned |
+| `getImages` | Get ImagePicker returned images  |
 
 License
 --------

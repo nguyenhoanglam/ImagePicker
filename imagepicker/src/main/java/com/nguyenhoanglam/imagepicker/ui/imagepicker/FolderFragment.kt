@@ -5,12 +5,10 @@
 
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,7 +23,7 @@ import com.nguyenhoanglam.imagepicker.widget.GridSpacingItemDecoration
 import kotlinx.android.synthetic.main.imagepicker_fragment.*
 import kotlinx.android.synthetic.main.imagepicker_fragment.view.*
 
-class FolderFragment : Fragment() {
+class FolderFragment : BaseFragment() {
 
     private var viewModel: ImagePickerViewModel? = null
     private lateinit var folderAdapter: FolderPickerAdapter
@@ -78,14 +76,7 @@ class FolderFragment : Fragment() {
         progressWheel.visibility = if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
     }
 
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        updateViewsOnConfigurationChanged()
-
-    }
-
-    private fun updateViewsOnConfigurationChanged() {
+    override fun handleOnConfigurationChanged() {
         val newSpanCount = LayoutManagerHelper.getSpanCountForCurrentConfiguration(context!!, true)
         recyclerView.removeItemDecoration(itemDecoration)
         itemDecoration = GridSpacingItemDecoration(newSpanCount, newSpanCount, false)
