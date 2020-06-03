@@ -19,6 +19,7 @@ What's new
 - Converted Java code to Kotlin code.
 - Upgraded Glide to v4.11, AndroidX to v1.1.0.
 - Added new `rootDirectoryName`, `limitMessage`, `indicatorColor` and `isShowNumberIndicator` options.
+- Added 2 static methods `shouldHandleResult` and `getImages` to ImagePicker to handle result easier.
 - Replaced `savePath` option by `directoryName` option.
 - Removed `keepScreenOn` option.
 
