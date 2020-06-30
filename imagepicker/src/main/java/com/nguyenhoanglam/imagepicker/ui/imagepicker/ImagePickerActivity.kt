@@ -146,7 +146,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
         if (selectedImages != null && selectedImages.isNotEmpty()) {
             var i = 0
             while (i < selectedImages.size) {
-                val (_, _, path) = selectedImages[i]
+                val (_, _, _, path) = selectedImages[i]
                 val file = File(path)
                 if (!file.exists()) {
                     selectedImages.removeAt(i)

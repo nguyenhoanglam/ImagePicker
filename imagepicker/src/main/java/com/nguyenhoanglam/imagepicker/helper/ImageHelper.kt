@@ -5,10 +5,12 @@
 
 package com.nguyenhoanglam.imagepicker.helper
 
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.provider.MediaStore
 import com.nguyenhoanglam.imagepicker.model.Folder
 import com.nguyenhoanglam.imagepicker.model.Image
 import java.io.File
@@ -35,7 +37,8 @@ object ImageHelper {
 
     fun singleListFromPath(id: Long, path: String): ArrayList<Image> {
         val images = arrayListOf<Image>()
-        images.add(Image(id, getNameFromFilePath(path), path))
+        val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+        images.add(Image(id, getNameFromFilePath(path), uri, path))
         return images
     }
 

@@ -13,15 +13,15 @@ Demo
 
 What's new
 --------
-- Fixed bugs.
+- Fixed infinite loading bug.
+- Added `uri` attribute to `Image` class.
 - Supported Android 10 (API 29).
-- Updated to new UI (remove selection overlay, add indicator...).
+- Updated to new UI.
 - Converted Java code to Kotlin code.
-- Upgraded Glide to v4.11, AndroidX to v1.1.0.
+- Upgraded Glide to v4.11, AndroidX to v1.1.0, Kotlin to v.1.3.72.
 - Added new `rootDirectoryName`, `limitMessage`, `indicatorColor` and `isShowNumberIndicator` options.
 - Added 2 static methods `shouldHandleResult` and `getImages` to ImagePicker to handle result easier.
 - Replaced `savePath` option by `directoryName` option.
-- Removed `keepScreenOn` option.
 
 Installation
 --------
@@ -40,7 +40,7 @@ allprojects {
 Add the following dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.4.2'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.4.3'
 }
 ```
 
@@ -86,16 +86,15 @@ ImagePicker.with(this)
 
 ```kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    // The last parameter value of shouldHandleResult() is the value you pass to setRequestCode().
-    // If you did not call setRequestCode(), you could ignore the last parameter.
+    // The last parameter value of shouldHandleResult() is the value we pass to setRequestCode().
+    // If we do not call setRequestCode(), we can ignore the last parameter.
     if (ImagePicker.shouldHandleResult(requestCode, resultCode, data, 100)) {
         val images: ArrayList<Image> = ImagePicker.getImages(data)
         // Do stuff with image's path or id. For example:
         for (image in images) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, image.id.toString())
                 Glide.with(context)
-                     .load(uri)
+                     .load(image.uri)
                      .into(imageView)
             } else {
                 Glide.with(context)
@@ -137,7 +136,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 | `setRequestCode` | Request code for starting ImagePicker | `100`
 | `start` | Open ImagePicker |
 | `shouldHandleResult` | Check if ImagePicker result was returned |
-| `getImages` | Get ImagePicker returned images  |
+| `getImages` | Get ImagePicker's returned images  |
 
 License
 --------

@@ -5,6 +5,7 @@
 
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
 
+import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import com.nguyenhoanglam.imagepicker.listener.OnImageLoaderListener
@@ -34,28 +35,46 @@ class ImageFileLoader(private val context: Context) {
 
     private inner class ImageLoadRunnable(private val listener: OnImageLoaderListener) : Runnable {
         override fun run() {
-            val cursor = context.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, MediaStore.Images.Media.DATE_ADDED)
+            val cursor = context.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, MediaStore.Images.Media.DATE_ADDED + " DESC")
             if (cursor == null) {
                 listener.onFailed(NullPointerException())
                 return
             }
+
+            val idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+            val nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+            val dataColumn = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+            val bucketIdColumn = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID)
+            val bucketNameColumn = cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+
             val images = arrayListOf<Image>()
-            if (cursor.moveToLast()) {
+            if (cursor.moveToFirst()) {
                 do {
-                    val id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))
-                    val name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
-                    val path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
-                    val bucketId = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
-                    val bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
+                    if (Thread.interrupted()) {
+                        listener.onFailed(NullPointerException())
+                        return
+                    }
+                    val id = cursor.getLong(idColumn)
+                    val name = cursor.getString(nameColumn)
+                    val path = cursor.getString(dataColumn)
+                    val bucketId = cursor.getLong(bucketIdColumn)
+                    val bucketName = cursor.getString(bucketNameColumn)
+
                     val file = makeSafeFile(path)
                     if (file != null && file.exists()) {
-                        val image = Image(id, name, path, bucketId, bucketName)
-                        images.add(image)
+                        if (id != null && name != null && path != null && bucketId != null && bucketName != null) {
+                            val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                            val image = Image(id, name, uri, path, bucketId, bucketName)
+                            images.add(image)
+                        }
                     }
-                } while (cursor.moveToPrevious())
+
+                } while (cursor.moveToNext())
             }
+
             cursor.close()
             listener.onImageLoaded(images)
+            Thread.interrupted()
         }
 
     }
