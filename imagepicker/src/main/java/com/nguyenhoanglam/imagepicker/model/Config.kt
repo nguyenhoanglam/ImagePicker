@@ -10,6 +10,7 @@ import android.os.Environment
 import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Config() : Parcelable {
 
@@ -20,6 +21,7 @@ class Config() : Parcelable {
     private lateinit var progressBarColor: String
     private lateinit var backgroundColor: String
     private lateinit var indicatorColor: String
+    private lateinit var disabledText: String
     var isCameraOnly = false
     var isMultipleMode = false
     var isFolderMode = false
@@ -34,6 +36,7 @@ class Config() : Parcelable {
     lateinit var directoryName: String
     var isAlwaysShowDoneButton = false
     lateinit var selectedImages: ArrayList<Image>
+    lateinit var disabledImages: ArrayList<Image>
     var requestCode = RC_PICK_IMAGES
 
     constructor(parcel: Parcel) : this() {
@@ -58,6 +61,8 @@ class Config() : Parcelable {
         directoryName = parcel.readString()!!
         isAlwaysShowDoneButton = parcel.readByte() != 0.toByte()
         selectedImages = parcel.createTypedArrayList(Image.CREATOR)!!
+        disabledImages = parcel.createTypedArrayList(Image.CREATOR)!!
+        disabledText = parcel.readString()!!
         requestCode = parcel.readInt()
     }
 
@@ -118,6 +123,14 @@ class Config() : Parcelable {
         this.indicatorColor = indicatorColor
     }
 
+    fun getDisabledText(): String{
+        return disabledText
+    }
+
+    fun setDisabledText(disabledText: String){
+        this.disabledText = disabledText
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(toolbarColor)
         parcel.writeString(statusBarColor)
@@ -140,6 +153,8 @@ class Config() : Parcelable {
         parcel.writeString(directoryName)
         parcel.writeByte(if (isAlwaysShowDoneButton) 1 else 0)
         parcel.writeTypedList(selectedImages)
+        parcel.writeTypedList(disabledImages)
+        parcel.writeString(disabledText)
         parcel.writeInt(requestCode)
     }
 

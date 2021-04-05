@@ -23,9 +23,12 @@ class ImagePickerViewModel(application: Application) : AndroidViewModel(applicat
     lateinit var selectedImages: MutableLiveData<ArrayList<Image>>
     val result = MutableLiveData(Result(CallbackStatus.IDLE, arrayListOf()))
 
+    lateinit var disabledImages: MutableLiveData<ArrayList<Image>>
+
     fun setConfig(config: Config) {
         this.config = config
         selectedImages = MutableLiveData(config.selectedImages)
+        disabledImages = MutableLiveData(config.disabledImages)
     }
 
     fun getConfig() = config

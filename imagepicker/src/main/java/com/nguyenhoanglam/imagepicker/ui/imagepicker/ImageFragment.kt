@@ -57,6 +57,13 @@ class ImageFragment : BaseFragment() {
 
     }
 
+    private val disablesImageObserver = object :Observer<ArrayList<Image>> {
+        override fun onChanged(images: ArrayList<Image>) {
+            imageAdapter.setDisabledImages(images)
+            viewModel.disabledImages.removeObserver(this)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bucketId = arguments?.getLong(BUCKET_ID)
@@ -85,6 +92,7 @@ class ImageFragment : BaseFragment() {
         })
 
         viewModel.selectedImages.observe(viewLifecycleOwner, selectedImageObserver)
+        viewModel.disabledImages.observe(viewLifecycleOwner,disablesImageObserver)
 
         return root
     }
