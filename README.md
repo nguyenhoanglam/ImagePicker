@@ -78,6 +78,8 @@ ImagePicker.with(this)
            .setMaxSize(10)
            .setLimitMessage("You can select up to 10 images")
            .setSelectedImages(images)
+           .setDisabledImages(images2)
+           .setDiabledText("you cannot select this image")
            .setRequestCode(100)
            .start();
 ```
@@ -133,6 +135,8 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 | `setMaxSize` | Max images can be selected | `Int.MAX_VALUE`
 | `setLimitMessage` | Message to be displayed when total selected images exceeds max count |
 | `setSelectedImages` | List of images that will be shown as selected in ImagePicker | empty list
+| `setDisabledImages` | List of images that will be shown darker and user will not be able to select them, a toast will appear it they click on them | empty list
+| `setDisabledText` | String than will be shown as Toast when user pressed the disabled images | `This Image cannot be selected` 
 | `setRequestCode` | Request code for starting ImagePicker | `100`
 | `start` | Open ImagePicker |
 | `shouldHandleResult` | Check if ImagePicker result was returned |
