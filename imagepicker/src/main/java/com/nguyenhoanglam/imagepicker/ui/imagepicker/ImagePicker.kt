@@ -16,6 +16,7 @@ import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivity
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ImagePicker(builder: Builder) {
 
@@ -111,6 +112,7 @@ class ImagePicker(builder: Builder) {
             return this
         }
 
+
         fun setBackgroundColor(backgroundColor: String): Builder {
             config.setBackgroundColor(backgroundColor)
             return this
@@ -191,6 +193,16 @@ class ImagePicker(builder: Builder) {
             return this
         }
 
+        fun setDisabledImages(disabledImage: ArrayList<Image>?):Builder{
+            config.disabledImages = disabledImage ?: arrayListOf()
+            return this
+        }
+
+        fun setDisabledText(disabledText: String):Builder{
+            config.setDisabledText(disabledText)
+            return this
+        }
+
         fun setRequestCode(requestCode: Int): Builder {
             config.requestCode = requestCode
             return this
@@ -234,6 +246,8 @@ class ImagePicker(builder: Builder) {
             config.directoryName = getDefaultDirectoryName(context)
             config.isAlwaysShowDoneButton = false
             config.selectedImages = arrayListOf()
+            config.disabledImages = arrayListOf()
+            config.setDisabledText("This Image cannot be selected")
         }
     }
 
