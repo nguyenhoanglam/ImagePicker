@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.model
@@ -15,6 +15,7 @@ class Config() : Parcelable {
 
     private lateinit var toolbarColor: String
     private lateinit var statusBarColor: String
+    var isLightStatusBar = false
     private lateinit var toolbarTextColor: String
     private lateinit var toolbarIconColor: String
     private lateinit var progressBarColor: String
@@ -26,19 +27,21 @@ class Config() : Parcelable {
     var isShowNumberIndicator = false
     var isShowCamera = false
     var maxSize = MAX_SIZE
+    lateinit var folderGridCount: GridCount
+    lateinit var imageGridCount: GridCount
     lateinit var doneTitle: String
     lateinit var folderTitle: String
     lateinit var imageTitle: String
     var limitMessage: String? = null
-    lateinit var rootDirectoryName: String
-    lateinit var directoryName: String
+    lateinit var rootDirectory: String
+    lateinit var subDirectory: String
     var isAlwaysShowDoneButton = false
     lateinit var selectedImages: ArrayList<Image>
-    var requestCode = RC_PICK_IMAGES
 
     constructor(parcel: Parcel) : this() {
         toolbarColor = parcel.readString()!!
         statusBarColor = parcel.readString()!!
+        isLightStatusBar = parcel.readByte() != 0.toByte()
         toolbarTextColor = parcel.readString()!!
         toolbarIconColor = parcel.readString()!!
         progressBarColor = parcel.readString()!!
@@ -50,15 +53,16 @@ class Config() : Parcelable {
         isShowNumberIndicator = parcel.readByte() != 0.toByte()
         isShowCamera = parcel.readByte() != 0.toByte()
         maxSize = parcel.readInt()
+        folderGridCount = parcel.readParcelable(GridCount::class.java.classLoader)!!
+        imageGridCount = parcel.readParcelable(GridCount::class.java.classLoader)!!
         doneTitle = parcel.readString()!!
         folderTitle = parcel.readString()!!
         imageTitle = parcel.readString()!!
         limitMessage = parcel.readString()
-        rootDirectoryName = parcel.readString()!!
-        directoryName = parcel.readString()!!
+        rootDirectory = parcel.readString()!!
+        subDirectory = parcel.readString()!!
         isAlwaysShowDoneButton = parcel.readByte() != 0.toByte()
         selectedImages = parcel.createTypedArrayList(Image.CREATOR)!!
-        requestCode = parcel.readInt()
     }
 
 
@@ -121,6 +125,7 @@ class Config() : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(toolbarColor)
         parcel.writeString(statusBarColor)
+        parcel.writeByte(if (isLightStatusBar) 1 else 0)
         parcel.writeString(toolbarTextColor)
         parcel.writeString(toolbarIconColor)
         parcel.writeString(progressBarColor)
@@ -132,15 +137,16 @@ class Config() : Parcelable {
         parcel.writeByte(if (isShowNumberIndicator) 1 else 0)
         parcel.writeByte(if (isShowCamera) 1 else 0)
         parcel.writeInt(maxSize)
+        parcel.writeParcelable(folderGridCount, flags)
+        parcel.writeParcelable(imageGridCount, flags)
         parcel.writeString(doneTitle)
         parcel.writeString(folderTitle)
         parcel.writeString(imageTitle)
         parcel.writeString(limitMessage)
-        parcel.writeString(rootDirectoryName)
-        parcel.writeString(directoryName)
+        parcel.writeString(rootDirectory)
+        parcel.writeString(subDirectory)
         parcel.writeByte(if (isAlwaysShowDoneButton) 1 else 0)
         parcel.writeTypedList(selectedImages)
-        parcel.writeInt(requestCode)
     }
 
     override fun describeContents(): Int {
@@ -151,10 +157,8 @@ class Config() : Parcelable {
 
         const val EXTRA_CONFIG = "ImagePickerConfig"
         const val EXTRA_IMAGES = "ImagePickerImages"
-        const val RC_PICK_IMAGES = 100
-        const val RC_CAPTURE_IMAGE = 101
-        const val RC_WRITE_EXTERNAL_STORAGE_PERMISSION = 102
-        const val RC_CAMERA_PERMISSION = 103
+        const val RC_READ_EXTERNAL_STORAGE_PERMISSION = 1000
+        const val RC_WRITE_EXTERNAL_STORAGE_PERMISSION = 1001
         const val MAX_SIZE = Int.MAX_VALUE
         val ROOT_DIR_DCIM: String = Environment.DIRECTORY_DCIM
         val ROOT_DIR_DOWNLOAD: String = Environment.DIRECTORY_DOWNLOADS

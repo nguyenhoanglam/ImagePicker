@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:override="true">
+    <color name="imagepicker_black">#000000</color>
     <color name="imagepicker_white">#FFFFFF</color>
     <color name="imagepicker_black_alpha_30">#4D000000</color>
     <color name="imagepicker_grey">#424242</color>

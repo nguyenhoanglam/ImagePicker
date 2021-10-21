@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.helper
@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.core.app.ActivityCompat
 
 object PermissionHelper {
@@ -35,7 +36,10 @@ object PermissionHelper {
     }
 
     fun openAppSettings(activity: Activity) {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", activity.packageName, null))
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", activity.packageName, null)
+        )
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
@@ -65,7 +69,7 @@ object PermissionHelper {
         return true
     }
 
-    fun hasSelfPermission(context: Context, permission: String): Boolean {
+    private fun hasSelfPermission(context: Context, permission: String): Boolean {
         return if (shouldAskPermission()) {
             permissionHasGranted(context, permission)
         } else true
@@ -89,7 +93,11 @@ object PermissionHelper {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    private fun internalRequestPermissions(activity: Activity?, permissions: Array<String>, requestCode: Int) {
+    private fun internalRequestPermissions(
+        activity: Activity?,
+        permissions: Array<String>,
+        requestCode: Int
+    ) {
         requireNotNull(activity) { "Given activity is null." }
         activity.requestPermissions(permissions, requestCode)
     }
@@ -99,6 +107,7 @@ object PermissionHelper {
         return hasGranted(context.checkSelfPermission(permission))
     }
 
+    @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.M)
     private fun shouldAskPermission(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     }

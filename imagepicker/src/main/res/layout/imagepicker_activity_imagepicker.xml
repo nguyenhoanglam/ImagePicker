@@ -4,6 +4,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:background="@color/imagepicker_dark">
 
     <com.nguyenhoanglam.imagepicker.widget.ImagePickerToolbar
@@ -23,7 +24,6 @@
         android:id="@+id/snackbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/recyclerView"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

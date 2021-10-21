@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
@@ -9,21 +9,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.nguyenhoanglam.imagepicker.R
+import com.nguyenhoanglam.imagepicker.databinding.ImagepickerFragmentBinding
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.LayoutManagerHelper
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener
 import com.nguyenhoanglam.imagepicker.model.CallbackStatus
+import com.nguyenhoanglam.imagepicker.model.GridCount
 import com.nguyenhoanglam.imagepicker.model.Result
 import com.nguyenhoanglam.imagepicker.ui.adapter.FolderPickerAdapter
 import com.nguyenhoanglam.imagepicker.widget.GridSpacingItemDecoration
-import kotlinx.android.synthetic.main.imagepicker_fragment.*
-import kotlinx.android.synthetic.main.imagepicker_fragment.view.*
 
 class FolderFragment : BaseFragment() {
+
+    private var _binding: ImagepickerFragmentBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var gridCount: GridCount
 
     private var viewModel: ImagePickerViewModel? = null
     private lateinit var folderAdapter: FolderPickerAdapter
@@ -31,36 +35,59 @@ class FolderFragment : BaseFragment() {
     private lateinit var itemDecoration: GridSpacingItemDecoration
 
     companion object {
-        fun newInstance(): FolderFragment {
-            return FolderFragment()
+        const val GRID_COUNT = "GridCount"
+
+        fun newInstance(gridCount: GridCount): FolderFragment {
+            val fragment = FolderFragment()
+            val args = Bundle()
+            args.putParcelable(ImageFragment.GRID_COUNT, gridCount)
+            fragment.arguments = args
+            return fragment
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        gridCount = arguments?.getParcelable(FolderFragment.GRID_COUNT)!!
+
         viewModel = activity?.run {
-            ViewModelProvider(this, ImagePickerViewModelFactory(activity!!.application)).get(ImagePickerViewModel::class.java)
+            ViewModelProvider(this, ImagePickerViewModelFactory(requireActivity().application)).get(
+                ImagePickerViewModel::class.java
+            )
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.imagepicker_fragment, container, false)
-        root.setBackgroundColor(viewModel!!.getConfig()
-            .getBackgroundColor())
-        folderAdapter = FolderPickerAdapter(activity!!, activity as OnFolderClickListener)
-        gridLayoutManager = LayoutManagerHelper.newInstance(context!!, true)
-        itemDecoration = GridSpacingItemDecoration(gridLayoutManager.spanCount, gridLayoutManager.spanCount, false)
-        with(root.recyclerView) {
-            this.layoutManager = gridLayoutManager
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ImagepickerFragmentBinding.inflate(inflater, container, false)
+
+        binding.root.setBackgroundColor(
+            viewModel!!.getConfig()
+                .getBackgroundColor()
+        )
+
+        folderAdapter = FolderPickerAdapter(requireActivity(), activity as OnFolderClickListener)
+        gridLayoutManager = LayoutManagerHelper.newInstance(requireContext(), gridCount)
+        itemDecoration = GridSpacingItemDecoration(
+            gridLayoutManager.spanCount,
+            resources.getDimension(R.dimen.imagepicker_grid_spacing).toInt()
+        )
+
+        binding.recyclerView.apply {
             setHasFixedSize(true)
+            layoutManager = gridLayoutManager
             addItemDecoration(itemDecoration)
-            this.adapter = folderAdapter
+            adapter = folderAdapter
         }
-        viewModel?.result?.observe(viewLifecycleOwner, Observer {
+        viewModel?.result?.observe(viewLifecycleOwner, {
             handleResult(it)
         })
 
-        return root
+        return binding.root
     }
 
 
@@ -68,19 +95,32 @@ class FolderFragment : BaseFragment() {
         if (result.status is CallbackStatus.SUCCESS && result.images.isNotEmpty()) {
             val folders = ImageHelper.folderListFromImages(result.images)
             folderAdapter.setData(folders)
-            recyclerView.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.VISIBLE
         } else {
-            recyclerView.visibility = View.GONE
+            binding.recyclerView.visibility = View.GONE
         }
-        emptyText.visibility = if (result.status is CallbackStatus.SUCCESS && result.images.isEmpty()) View.VISIBLE else View.GONE
-        progressWheel.visibility = if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
+        binding.emptyText.visibility =
+            if (result.status is CallbackStatus.SUCCESS && result.images.isEmpty()) View.VISIBLE else View.GONE
+        binding.progressWheel.visibility =
+            if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
     }
 
     override fun handleOnConfigurationChanged() {
-        val newSpanCount = LayoutManagerHelper.getSpanCountForCurrentConfiguration(context!!, true)
-        recyclerView.removeItemDecoration(itemDecoration)
-        itemDecoration = GridSpacingItemDecoration(newSpanCount, newSpanCount, false)
+        binding.recyclerView.removeItemDecoration(itemDecoration)
+
+        val newSpanCount =
+            LayoutManagerHelper.getSpanCountForCurrentConfiguration(requireContext(), gridCount)
+        itemDecoration =
+            GridSpacingItemDecoration(
+                gridLayoutManager.spanCount,
+                resources.getDimension(R.dimen.imagepicker_grid_spacing).toInt()
+            )
         gridLayoutManager.spanCount = newSpanCount
-        recyclerView.addItemDecoration(itemDecoration)
+        binding.recyclerView.addItemDecoration(itemDecoration)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

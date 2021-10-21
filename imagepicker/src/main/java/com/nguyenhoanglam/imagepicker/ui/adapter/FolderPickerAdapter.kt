@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.adapter
@@ -12,14 +12,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nguyenhoanglam.imagepicker.R
+import com.nguyenhoanglam.imagepicker.helper.GlideHelper
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener
 import com.nguyenhoanglam.imagepicker.model.Folder
 import com.nguyenhoanglam.imagepicker.ui.adapter.FolderPickerAdapter.FolderViewHolder
-import com.nguyenhoanglam.imagepicker.ui.imagepicker.GlideLoader
 
-class FolderPickerAdapter(context: Context, private val itemClickListener: OnFolderClickListener) : BaseRecyclerViewAdapter<FolderViewHolder?>(context) {
+class FolderPickerAdapter(context: Context, private val itemClickListener: OnFolderClickListener) :
+    BaseRecyclerViewAdapter<FolderViewHolder?>(context) {
 
-    private val imageLoader = GlideLoader()
     private val folders: MutableList<Folder> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderViewHolder {
@@ -31,9 +31,10 @@ class FolderPickerAdapter(context: Context, private val itemClickListener: OnFol
         val folder = folders[position]
         val count = folder.images.size
         val previewImage = folder.images[0]
-        imageLoader.loadImage(previewImage.id, previewImage.path, holder.image)
+
+        GlideHelper.loadImage(holder.image, previewImage.uri)
         holder.name.text = folder.name
-        holder.count.text = "" + count
+        holder.count.text = count.toString()
         holder.itemView.setOnClickListener {
             itemClickListener.onFolderClick(folder)
         }

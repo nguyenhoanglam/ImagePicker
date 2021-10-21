@@ -3,4 +3,5 @@
     <dimen name="imagepicker_padding_medium">8dp</dimen>
     <dimen name="imagepicker_padding_large">16dp</dimen>
     <dimen name="imagepicker_margin_large">16dp</dimen>
+    <dimen name="imagepicker_grid_spacing">1dp</dimen>
 </resources>

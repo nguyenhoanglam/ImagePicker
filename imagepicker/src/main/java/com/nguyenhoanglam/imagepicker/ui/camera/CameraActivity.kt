@@ -1,40 +1,62 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.camera
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.view.ContextThemeWrapper
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.nguyenhoanglam.imagepicker.R
-import com.nguyenhoanglam.imagepicker.helper.CameraHelper.checkCameraAvailability
-import com.nguyenhoanglam.imagepicker.helper.LogHelper.Companion.instance
+import com.nguyenhoanglam.imagepicker.databinding.ImagepickerActivityCameraBinding
+import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
+import com.nguyenhoanglam.imagepicker.helper.PermissionHelper
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.hasGranted
-import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.hasSelfPermission
-import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.hasSelfPermissions
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.openAppSettings
-import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.requestAllPermissions
-import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.shouldShowRequestPermissionRationale
-import com.nguyenhoanglam.imagepicker.helper.PreferenceHelper.firstTimeAskingPermission
-import com.nguyenhoanglam.imagepicker.helper.PreferenceHelper.isFirstTimeAskingPermission
 import com.nguyenhoanglam.imagepicker.helper.ToastHelper
 import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
-import kotlinx.android.synthetic.main.imagepicker_activity_camera.*
 import java.util.*
 
 class CameraActivity : AppCompatActivity() {
 
-    private val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    private lateinit var binding: ImagepickerActivityCameraBinding
+
+    private val permissions =
+        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
     private var config: Config? = null
-    private val cameraModule: CameraModule = DefaultCameraModule()
-    private val logger = instance
+    private val cameraModule = CameraModule()
+    private var alertDialog: AlertDialog? = null
     private var isOpeningCamera = false
+
+
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                cameraModule.saveImage(
+                    this@CameraActivity,
+                    config!!,
+                    object : OnImageReadyListener {
+                        override fun onImageReady(images: ArrayList<Image>) {
+                            finishCaptureImage(images)
+                        }
+
+                        override fun onImageNotReady() {
+                            finishCaptureImage(arrayListOf())
+                        }
+                    })
+            } else {
+                setResult(Activity.RESULT_CANCELED, Intent())
+                finish()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,135 +66,117 @@ class CameraActivity : AppCompatActivity() {
         }
 
         config = intent.getParcelableExtra(Config.EXTRA_CONFIG)
-        setContentView(R.layout.imagepicker_activity_camera)
+        binding = ImagepickerActivityCameraBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onResume() {
         super.onResume()
-        if (hasSelfPermissions(this, permissions) && isOpeningCamera) {
-            isOpeningCamera = false
-        } else if (!snackbar.isShowing) {
+        if (!isOpeningCamera && (alertDialog == null || !alertDialog!!.isShowing)) {
             captureImageWithPermission()
         }
     }
 
     private fun captureImageWithPermission() {
-        if (hasSelfPermissions(this, permissions)) {
+        if (DeviceHelper.isMinSdk29) {
             captureImage()
-        } else {
-            logger?.w("Camera permission is not granted. Requesting permission")
-            requestCameraPermission()
+            return
         }
+
+        val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        PermissionHelper.checkPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            object : PermissionHelper.PermissionAskListener {
+                override fun onNeedPermission() {
+                    PermissionHelper.requestAllPermissions(
+                        this@CameraActivity,
+                        permissions,
+                        Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                    )
+                }
+
+                override fun onPermissionPreviouslyDenied() {
+                    PermissionHelper.requestAllPermissions(
+                        this@CameraActivity,
+                        permissions,
+                        Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                    )
+                }
+
+                override fun onPermissionDisabled() {
+                    showOpenSettingDialog()
+                }
+
+                override fun onPermissionGranted() {
+                    captureImage()
+                }
+            })
+    }
+
+    private fun showOpenSettingDialog() {
+        val builder = AlertDialog.Builder(
+            ContextThemeWrapper(
+                this@CameraActivity,
+                R.style.Theme_AppCompat_Light_Dialog
+            )
+        )
+        with(builder) {
+            setMessage(R.string.imagepicker_msg_no_external_storage_permission)
+            setNegativeButton(R.string.imagepicker_action_cancel) { _, _ ->
+                finish()
+            }
+            setPositiveButton(R.string.imagepicker_action_ok) { _, _ ->
+                openAppSettings(this@CameraActivity)
+                finish()
+            }
+        }
+
+        alertDialog = builder.create()
+        alertDialog!!.show()
     }
 
     private fun captureImage() {
-        if (!checkCameraAvailability(this)) {
+        if (!DeviceHelper.checkCameraAvailability(this)) {
             finish()
             return
         }
-        val intent = cameraModule.getCameraIntent(this, config!!)
+
+        val intent = cameraModule.getCameraIntent(this@CameraActivity, config!!)
         if (intent == null) {
-            ToastHelper.show(this, getString(R.string.imagepicker_error_create_image_file))
+            ToastHelper.show(this, getString(R.string.imagepicker_error_open_camera))
             return
         }
-        startActivityForResult(intent, Config.RC_CAPTURE_IMAGE)
+
+        resultLauncher.launch(intent)
         isOpeningCamera = true
     }
 
-    private fun requestCameraPermission() {
-        logger?.w("Write External permission is not granted. Requesting permission...")
-        var hasPermissionDisabled = false
-        val wesGranted = hasSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val cameraGranted = hasSelfPermission(this, Manifest.permission.CAMERA)
-        if (!wesGranted && !shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            if (!isFirstTimeAskingPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                hasPermissionDisabled = true
-            }
-        }
-        if (!cameraGranted && !shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-            if (!isFirstTimeAskingPermission(this, Manifest.permission.CAMERA)) {
-                hasPermissionDisabled = true
-            }
-        }
-        val permissions: MutableList<String> = ArrayList()
-        if (!hasPermissionDisabled) {
-            if (!wesGranted) {
-                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                firstTimeAskingPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, false)
-            }
-            if (!cameraGranted) {
-                permissions.add(Manifest.permission.CAMERA)
-                firstTimeAskingPermission(this, Manifest.permission.CAMERA, false)
-            }
-            requestAllPermissions(this, permissions.toTypedArray(), Config.RC_CAMERA_PERMISSION)
-        } else {
-            snackbar.show(R.string.imagepicker_msg_no_write_external_storage_camera_permission, View.OnClickListener {
-                openAppSettings(this@CameraActivity)
-            })
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
-            Config.RC_CAMERA_PERMISSION -> {
+            Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION -> {
                 if (hasGranted(grantResults)) {
-                    logger?.d("Camera permission granted")
                     captureImage()
-                    return
-                }
-                logger?.e("Permission not granted: results len = " + grantResults.size + " Result code = " + if (grantResults.size > 0) grantResults[0] else "(empty)")
-                var shouldShowSnackBar = false
-                for (grantResult in grantResults) {
-                    if (hasGranted(grantResult)) {
-                        shouldShowSnackBar = true
-                        break
-                    }
-                }
-                if (shouldShowSnackBar) {
-                    snackbar.show(R.string.imagepicker_msg_no_write_external_storage_camera_permission, View.OnClickListener {
-                        openAppSettings(this@CameraActivity)
-                    })
                 } else {
                     finish()
                 }
             }
             else -> {
-                logger?.d("Got unexpected permission result: $requestCode")
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults)
                 finish()
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Config.RC_CAPTURE_IMAGE) {
-            if (resultCode == Activity.RESULT_OK) {
-                finishCaptureImage()
-            } else {
-                setResult(Activity.RESULT_CANCELED, Intent())
-                finish()
-            }
-        }
-    }
-
-    private fun finishCaptureImage() {
-        cameraModule.getImage(this, config!!.isCameraOnly, object : OnImageReadyListener {
-            override fun onImageReady(images: ArrayList<Image>) {
-                val data = Intent()
-                data.putParcelableArrayListExtra(Config.EXTRA_IMAGES, images)
-                setResult(Activity.RESULT_OK, data)
-                finish()
-            }
-
-            override fun onImageNotReady() {
-                val data = Intent()
-                data.putParcelableArrayListExtra(Config.EXTRA_IMAGES, arrayListOf())
-                setResult(Activity.RESULT_OK, data)
-                finish()
-            }
-
-        })
+    private fun finishCaptureImage(images: ArrayList<Image>) {
+        val data = Intent()
+        data.putParcelableArrayListExtra(Config.EXTRA_IMAGES, images)
+        setResult(Activity.RESULT_OK, data)
+        finish()
     }
 
     override fun onBackPressed() {
@@ -184,5 +188,4 @@ class CameraActivity : AppCompatActivity() {
         super.finish()
         overridePendingTransition(0, 0)
     }
-
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
@@ -10,27 +10,29 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.model.Config
+import com.nguyenhoanglam.imagepicker.model.GridCount
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivity
 import java.util.*
 
 class ImagePicker(builder: Builder) {
 
-    private var config: Config
+    private var config: Config = builder.config
 
-    internal class ActivityBuilder(private val activity: Activity) : Builder(activity) {
+    internal class ActivityBuilder(
+        private val activity: Activity,
+        private val resultLauncher: ActivityResultLauncher<Intent>
+    ) : Builder(activity) {
         override fun start() {
-            val intent = intent
-            val requestCode = if (config.requestCode != Config.RC_PICK_IMAGES) config.requestCode else Config.RC_PICK_IMAGES
-            if (!config.isCameraOnly) {
-                activity.startActivityForResult(intent, requestCode)
-            } else {
+            if (config.isCameraOnly) {
                 activity.overridePendingTransition(0, 0)
-                activity.startActivityForResult(intent, requestCode)
             }
+
+            resultLauncher.launch(intent)
         }
 
         override val intent: Intent
@@ -49,16 +51,16 @@ class ImagePicker(builder: Builder) {
 
     }
 
-    internal class FragmentBuilder(private val fragment: Fragment) : Builder(fragment) {
+    internal class FragmentBuilder(
+        private val fragment: Fragment,
+        private val resultLauncher: ActivityResultLauncher<Intent>
+    ) : Builder(fragment) {
         override fun start() {
             val intent = intent
-            val requestCode = if (config.requestCode != Config.RC_PICK_IMAGES) config.requestCode else Config.RC_PICK_IMAGES
-            if (!config.isCameraOnly) {
-                fragment.startActivityForResult(intent, requestCode)
-            } else {
+            if (config.isCameraOnly) {
                 fragment.activity?.overridePendingTransition(0, 0)
-                fragment.startActivityForResult(intent, requestCode)
             }
+            resultLauncher.launch(intent)
         }
 
         override val intent: Intent
@@ -82,9 +84,13 @@ class ImagePicker(builder: Builder) {
         abstract fun start()
         abstract val intent: Intent
 
-        constructor(activity: Activity?) : super(activity)
+        constructor(activity: Activity?) : super(
+            activity
+        )
 
-        constructor(fragment: Fragment) : super(fragment.context)
+        constructor(fragment: Fragment) : super(
+            fragment.context
+        )
 
         fun setToolbarColor(toolbarColor: String): Builder {
             config.setToolbarColor(toolbarColor)
@@ -93,6 +99,11 @@ class ImagePicker(builder: Builder) {
 
         fun setStatusBarColor(statusBarColor: String): Builder {
             config.setStatusBarColor(statusBarColor)
+            return this
+        }
+
+        fun setIsLightStatusBar(isLightStatusBar: Boolean): Builder {
+            config.isLightStatusBar = isLightStatusBar
             return this
         }
 
@@ -151,6 +162,16 @@ class ImagePicker(builder: Builder) {
             return this
         }
 
+        fun setFolderGridCount(portraitCount: Int, landscapeCount: Int): Builder {
+            config.folderGridCount = GridCount(portraitCount, landscapeCount)
+            return this
+        }
+
+        fun setImageGridCount(portraitCount: Int, landscapeCount: Int): Builder {
+            config.imageGridCount = GridCount(portraitCount, landscapeCount)
+            return this
+        }
+
         fun setDoneTitle(doneTitle: String): Builder {
             config.doneTitle = doneTitle
             return this
@@ -171,13 +192,13 @@ class ImagePicker(builder: Builder) {
             return this
         }
 
-        fun setRootDirectoryName(rootDirectoryName: String): Builder {
-            config.rootDirectoryName = rootDirectoryName
+        fun setRootDirectory(rootDirectory: String): Builder {
+            config.rootDirectory = rootDirectory
             return this
         }
 
-        fun setDirectoryName(directoryName: String): Builder {
-            config.directoryName = directoryName
+        fun setSubDirectory(subDirectory: String): Builder {
+            config.subDirectory = subDirectory
             return this
         }
 
@@ -190,21 +211,15 @@ class ImagePicker(builder: Builder) {
             config.selectedImages = selectedImages ?: arrayListOf()
             return this
         }
-
-        fun setRequestCode(requestCode: Int): Builder {
-            config.requestCode = requestCode
-            return this
-        }
     }
 
     abstract class BaseBuilder(context: Context?) {
 
         var config: Config = Config()
 
-        private fun getDefaultDirectoryName(context: Context): String {
+        private fun getDefaultSubDirectoryName(context: Context): String {
             val pm = context.packageManager
-            val ai: ApplicationInfo?
-            ai = try {
+            val ai: ApplicationInfo? = try {
                 pm.getApplicationInfo(context.applicationContext.packageName ?: "", 0)
             } catch (e: PackageManager.NameNotFoundException) {
                 null
@@ -216,6 +231,7 @@ class ImagePicker(builder: Builder) {
             val resources = context!!.resources
             config.setToolbarColor("#212121")
             config.setStatusBarColor("#000000")
+            config.isLightStatusBar = false
             config.setToolbarTextColor("#FFFFFF")
             config.setToolbarIconColor("#FFFFFF")
             config.setProgressBarColor("#4CAF50")
@@ -227,11 +243,13 @@ class ImagePicker(builder: Builder) {
             config.isShowNumberIndicator = false
             config.isShowCamera = true
             config.maxSize = Config.MAX_SIZE
+            config.folderGridCount = GridCount(2, 4)
+            config.imageGridCount = GridCount(3, 5)
             config.doneTitle = resources.getString(R.string.imagepicker_action_done)
             config.folderTitle = resources.getString(R.string.imagepicker_title_folder)
             config.imageTitle = resources.getString(R.string.imagepicker_title_image)
-            config.rootDirectoryName = Config.ROOT_DIR_DCIM
-            config.directoryName = getDefaultDirectoryName(context)
+            config.rootDirectory = Config.ROOT_DIR_DCIM
+            config.subDirectory = getDefaultSubDirectoryName(context)
             config.isAlwaysShowDoneButton = false
             config.selectedImages = arrayListOf()
         }
@@ -239,29 +257,20 @@ class ImagePicker(builder: Builder) {
 
     companion object {
         @JvmStatic
-        fun with(activity: Activity): Builder {
-            return ActivityBuilder(activity)
+        fun with(activity: Activity, resultLauncher: ActivityResultLauncher<Intent>): Builder {
+            return ActivityBuilder(activity, resultLauncher)
         }
 
         @JvmStatic
-        fun with(fragment: Fragment): Builder {
-            return FragmentBuilder(fragment)
-        }
-
-        @JvmStatic
-        fun shouldHandleResult(requestCode: Int, resultCode: Int, data: Intent?, callerRequestCode: Int = Config.RC_PICK_IMAGES): Boolean {
-            return requestCode == callerRequestCode && resultCode == Activity.RESULT_OK && data != null
+        fun with(fragment: Fragment, resultLauncher: ActivityResultLauncher<Intent>): Builder {
+            return FragmentBuilder(fragment, resultLauncher)
         }
 
         @JvmStatic
         fun getImages(data: Intent?): ArrayList<Image> {
-            return if (data != null) data.getParcelableArrayListExtra(Config.EXTRA_IMAGES)
+            return if (data != null) data.getParcelableArrayListExtra(Config.EXTRA_IMAGES)!!
             else arrayListOf()
-
         }
     }
 
-    init {
-        config = builder.config
-    }
 }

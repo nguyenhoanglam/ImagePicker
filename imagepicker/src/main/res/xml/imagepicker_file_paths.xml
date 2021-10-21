@@ -3,4 +3,12 @@
     <external-path
         name="imagepicker_images"
         path="." />
+
+    <external-files-path
+        name="imagepicker_images"
+        path="." />
+
+    <external-path
+        name="external_files"
+        path="." />
 </paths>

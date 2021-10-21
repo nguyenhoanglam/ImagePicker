@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.adapter
@@ -16,16 +16,19 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.nguyenhoanglam.imagepicker.R
+import com.nguyenhoanglam.imagepicker.helper.GlideHelper
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.ToastHelper
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
 import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
-import com.nguyenhoanglam.imagepicker.ui.imagepicker.GlideLoader
 
-class ImagePickerAdapter(context: Context, private val config: Config, private val imageSelectListener: OnImageSelectListener) : BaseRecyclerViewAdapter<ImagePickerAdapter.ImageViewHolder?>(context) {
+class ImagePickerAdapter(
+    context: Context,
+    private val config: Config,
+    private val imageSelectListener: OnImageSelectListener
+) : BaseRecyclerViewAdapter<ImagePickerAdapter.ImageViewHolder?>(context) {
 
-    private val glideLoader = GlideLoader()
     private val selectedImages = arrayListOf<Image>()
     private val images: ArrayList<Image> = ArrayList()
 
@@ -34,7 +37,11 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
         return ImageViewHolder(itemView, config.isShowNumberIndicator, config.getIndicatorColor())
     }
 
-    override fun onBindViewHolder(viewHolder: ImageViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        viewHolder: ImageViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
         if (payloads.isEmpty()) {
             onBindViewHolder(viewHolder, position)
         } else {
@@ -53,7 +60,8 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
                     setupItemForeground(viewHolder.image, true)
                 }
                 payloads.any { it is ImageUnselected } -> {
-                    if (config.isShowNumberIndicator) viewHolder.selectedNumber.visibility = View.GONE
+                    if (config.isShowNumberIndicator) viewHolder.selectedNumber.visibility =
+                        View.GONE
                     else viewHolder.selectedIcon.visibility = View.GONE
                     setupItemForeground(viewHolder.image, false)
                 }
@@ -69,12 +77,15 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
         val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
         val isSelected = config.isMultipleMode && selectedIndex != -1
 
-        glideLoader.loadImage(image.id, image.path, viewHolder.image)
+        GlideHelper.loadImage(viewHolder.image, image.uri)
         setupItemForeground(viewHolder.image, isSelected)
 
-        viewHolder.gifIndicator.visibility = if (ImageHelper.isGifFormat(image)) View.VISIBLE else View.GONE
-        viewHolder.selectedIcon.visibility = if (isSelected && !config.isShowNumberIndicator) View.VISIBLE else View.GONE
-        viewHolder.selectedNumber.visibility = if (isSelected && config.isShowNumberIndicator) View.VISIBLE else View.GONE
+        viewHolder.gifIndicator.visibility =
+            if (ImageHelper.isGifFormat(image)) View.VISIBLE else View.GONE
+        viewHolder.selectedIcon.visibility =
+            if (isSelected && !config.isShowNumberIndicator) View.VISIBLE else View.GONE
+        viewHolder.selectedNumber.visibility =
+            if (isSelected && config.isShowNumberIndicator) View.VISIBLE else View.GONE
         if (viewHolder.selectedNumber.visibility == View.VISIBLE) {
             viewHolder.selectedNumber.text = (selectedIndex + 1).toString()
         }
@@ -89,7 +100,12 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
 
     private fun setupItemForeground(view: View, isSelected: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            view.foreground = if (isSelected) ColorDrawable(ContextCompat.getColor(context, R.color.imagepicker_black_alpha_30)) else null
+            view.foreground = if (isSelected) ColorDrawable(
+                ContextCompat.getColor(
+                    context,
+                    R.color.imagepicker_black_alpha_30
+                )
+            ) else null
         }
     }
 
@@ -105,7 +121,11 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
                 }
             } else {
                 if (selectedImages.size >= config.maxSize) {
-                    val message = if (config.limitMessage != null) config.limitMessage!! else String.format(context.resources.getString(R.string.imagepicker_msg_limit_images), config.maxSize)
+                    val message =
+                        if (config.limitMessage != null) config.limitMessage!! else String.format(
+                            context.resources.getString(R.string.imagepicker_msg_limit_images),
+                            config.maxSize
+                        )
                     ToastHelper.show(context, message)
                     return
                 } else {
@@ -132,14 +152,16 @@ class ImagePickerAdapter(context: Context, private val config: Config, private v
 
     }
 
-    class ImageViewHolder(itemView: View, isShowNumberIndicator: Boolean, indicatorColor: Int) : RecyclerView.ViewHolder(itemView) {
+    class ImageViewHolder(itemView: View, isShowNumberIndicator: Boolean, indicatorColor: Int) :
+        RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.image_thumbnail)
         val selectedIcon: ImageView = itemView.findViewById(R.id.image_selected_icon)
         val selectedNumber: TextView = itemView.findViewById(R.id.text_selected_number)
         val gifIndicator: View = itemView.findViewById(R.id.gif_indicator)
 
         init {
-            val drawable: GradientDrawable = (if (isShowNumberIndicator) selectedNumber.background.mutate() else selectedIcon.background.mutate()) as GradientDrawable
+            val drawable: GradientDrawable =
+                (if (isShowNumberIndicator) selectedNumber.background.mutate() else selectedIcon.background.mutate()) as GradientDrawable
             drawable.setColor(indicatorColor)
         }
     }

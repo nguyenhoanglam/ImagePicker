@@ -22,7 +22,7 @@
             android:id="@+id/text_folder_name"
             style="@style/imagepicker_TextSmall"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:textColor="@color/imagepicker_white" />
 
         <TextView

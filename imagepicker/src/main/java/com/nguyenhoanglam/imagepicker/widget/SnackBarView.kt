@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.widget
@@ -34,7 +34,11 @@ class SnackBarView : RelativeLayout {
         init(context)
     }
 
-    constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init(context)
     }
 
@@ -60,9 +64,7 @@ class SnackBarView : RelativeLayout {
 
     private fun setOnActionClickListener(actionText: String, onClickListener: OnClickListener) {
         actionButton.text = actionText
-        actionButton.setOnClickListener { view ->
-            hide(Runnable { onClickListener.onClick(view) })
-        }
+        actionButton.setOnClickListener { view -> hide { onClickListener.onClick(view) } }
     }
 
     fun show(textResId: Int, onClickListener: OnClickListener) {
@@ -86,7 +88,11 @@ class SnackBarView : RelativeLayout {
     }
 
     private fun convertDpToPixels(context: Context, dp: Float): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            context.resources.displayMetrics
+        )
             .toInt()
     }
 

@@ -3,19 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nguyenhoanglam.imagepicker">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
 
     <application>
 
         <activity
             android:name=".ui.imagepicker.ImagePickerActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="true"
             android:theme="@style/imagepicker_ImagePickerTheme" />
 
         <activity
             android:name=".ui.camera.CameraActivity"
-            android:screenOrientation="unspecified"
+            android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/imagepicker_CameraTheme"
             tools:replace="android:screenOrientation" />
 

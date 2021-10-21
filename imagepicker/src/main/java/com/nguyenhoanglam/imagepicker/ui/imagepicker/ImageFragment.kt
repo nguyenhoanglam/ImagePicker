@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
@@ -13,20 +13,25 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.nguyenhoanglam.imagepicker.R
+import com.nguyenhoanglam.imagepicker.databinding.ImagepickerFragmentBinding
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.LayoutManagerHelper
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
 import com.nguyenhoanglam.imagepicker.model.CallbackStatus
+import com.nguyenhoanglam.imagepicker.model.GridCount
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.model.Result
 import com.nguyenhoanglam.imagepicker.ui.adapter.ImagePickerAdapter
 import com.nguyenhoanglam.imagepicker.widget.GridSpacingItemDecoration
-import kotlinx.android.synthetic.main.imagepicker_fragment.*
-import kotlinx.android.synthetic.main.imagepicker_fragment.view.*
 
 class ImageFragment : BaseFragment() {
 
+    private var _binding: ImagepickerFragmentBinding? = null
+    private val binding get() = _binding!!
+
     private var bucketId: Long? = null
+    private lateinit var gridCount: GridCount
+
     private lateinit var viewModel: ImagePickerViewModel
     private lateinit var imageAdapter: ImagePickerAdapter
     private lateinit var gridLayoutManager: GridLayoutManager
@@ -35,17 +40,23 @@ class ImageFragment : BaseFragment() {
     companion object {
 
         const val BUCKET_ID = "BucketId"
+        const val GRID_COUNT = "GridCount"
 
-        fun newInstance(bucketId: Long): ImageFragment {
+        fun newInstance(bucketId: Long, gridCount: GridCount): ImageFragment {
             val fragment = ImageFragment()
             val args = Bundle()
             args.putLong(BUCKET_ID, bucketId)
+            args.putParcelable(GRID_COUNT, gridCount)
             fragment.arguments = args
             return fragment
         }
 
-        fun newInstance(): ImageFragment {
-            return ImageFragment()
+        fun newInstance(gridCount: GridCount): ImageFragment {
+            val fragment = ImageFragment()
+            val args = Bundle()
+            args.putParcelable(GRID_COUNT, gridCount)
+            fragment.arguments = args
+            return fragment
         }
     }
 
@@ -60,33 +71,52 @@ class ImageFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bucketId = arguments?.getLong(BUCKET_ID)
-        viewModel = activity!!.run {
-            ViewModelProvider(this, ImagePickerViewModelFactory(activity!!.application)).get(ImagePickerViewModel::class.java)
+        gridCount = arguments?.getParcelable(GRID_COUNT)!!
+
+        viewModel = requireActivity().run {
+            ViewModelProvider(this, ImagePickerViewModelFactory(requireActivity().application)).get(
+                ImagePickerViewModel::class.java
+            )
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.imagepicker_fragment, container, false)
-        root.setBackgroundColor(viewModel.getConfig()
-            .getBackgroundColor())
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ImagepickerFragmentBinding.inflate(inflater, container, false)
 
-        imageAdapter = ImagePickerAdapter(activity!!, viewModel.getConfig(), activity as OnImageSelectListener)
-        gridLayoutManager = LayoutManagerHelper.newInstance(context!!)
-        itemDecoration = GridSpacingItemDecoration(gridLayoutManager.spanCount, gridLayoutManager.spanCount, false)
-        with(root.recyclerView) {
-            this.layoutManager = gridLayoutManager
+        binding.root.setBackgroundColor(
+            viewModel.getConfig()
+                .getBackgroundColor()
+        )
+
+        imageAdapter = ImagePickerAdapter(
+            requireActivity(),
+            viewModel.getConfig(),
+            activity as OnImageSelectListener
+        )
+        gridLayoutManager = LayoutManagerHelper.newInstance(requireContext(), gridCount)
+        itemDecoration = GridSpacingItemDecoration(
+            gridLayoutManager.spanCount,
+            resources.getDimension(R.dimen.imagepicker_grid_spacing).toInt()
+        )
+
+        binding.recyclerView.apply {
             setHasFixedSize(true)
+            layoutManager = gridLayoutManager
             addItemDecoration(itemDecoration)
-            this.adapter = imageAdapter
+            adapter = imageAdapter
         }
 
-        viewModel.result.observe(viewLifecycleOwner, Observer {
+        viewModel.result.observe(viewLifecycleOwner, {
             handleResult(it)
         })
 
         viewModel.selectedImages.observe(viewLifecycleOwner, selectedImageObserver)
 
-        return root
+        return binding.root
     }
 
 
@@ -95,23 +125,34 @@ class ImageFragment : BaseFragment() {
             val images = ImageHelper.filterImages(result.images, bucketId)
             if (images.isNotEmpty()) {
                 imageAdapter.setData(images)
-                recyclerView.visibility = View.VISIBLE
+                binding.recyclerView.visibility = View.VISIBLE
             } else {
-                recyclerView.visibility = View.GONE
+                binding.recyclerView.visibility = View.GONE
             }
         } else {
-            recyclerView.visibility = View.GONE
+            binding.recyclerView.visibility = View.GONE
         }
-        emptyText.visibility = if (result.status is CallbackStatus.SUCCESS && result.images.isEmpty()) View.VISIBLE else View.GONE
-        progressWheel.visibility = if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
+        binding.emptyText.visibility =
+            if (result.status is CallbackStatus.SUCCESS && result.images.isEmpty()) View.VISIBLE else View.GONE
+        binding.progressWheel.visibility =
+            if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
     }
 
     override fun handleOnConfigurationChanged() {
-        val newSpanCount = LayoutManagerHelper.getSpanCountForCurrentConfiguration(context!!, false)
-        recyclerView.removeItemDecoration(itemDecoration)
-        itemDecoration = GridSpacingItemDecoration(newSpanCount, newSpanCount, false)
+        val newSpanCount =
+            LayoutManagerHelper.getSpanCountForCurrentConfiguration(requireContext(), gridCount)
+        itemDecoration =
+            GridSpacingItemDecoration(
+                gridLayoutManager.spanCount,
+                resources.getDimension(R.dimen.imagepicker_grid_spacing).toInt()
+            )
         gridLayoutManager.spanCount = newSpanCount
-        recyclerView.addItemDecoration(itemDecoration)
+        binding.recyclerView.addItemDecoration(itemDecoration)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

@@ -1,9 +1,9 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="imagepicker_BaseTheme" parent="Theme.AppCompat.NoActionBar"></style>
+    <style name="imagepicker_BaseTheme" parent="Theme.AppCompat.NoActionBar" />
 
-    <style name="imagepicker_ImagePickerTheme" parent="imagepicker_BaseTheme"></style>
+    <style name="imagepicker_ImagePickerTheme" parent="imagepicker_BaseTheme" />
 
     <style name="imagepicker_CameraTheme" parent="imagepicker_BaseTheme">
         <item name="android:windowIsTranslucent">true</item>

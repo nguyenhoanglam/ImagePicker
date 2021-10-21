@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2021 The Android Open Source Project
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.model
@@ -10,15 +10,23 @@ import android.os.Parcel
 import android.os.Parcelable
 
 
-data class Image(var id: Long, var name: String, var uri: Uri, var path: String, var bucketId: Long = 0, var bucketName: String = "") : Parcelable {
-    constructor(parcel: Parcel) : this(parcel.readLong(), parcel.readString()!!, parcel.readParcelable(Uri::class.java.classLoader)!!, parcel.readString()!!, parcel.readLong(), parcel.readString()!!) {
+data class Image(
+    var uri: Uri,
+    var name: String,
+    var bucketId: Long = 0,
+    var bucketName: String = ""
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readParcelable(Uri::class.java.classLoader)!!,
+        parcel.readString()!!,
+        parcel.readLong(),
+        parcel.readString()!!
+    ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(id)
-        parcel.writeString(name)
         parcel.writeParcelable(uri, flags)
-        parcel.writeString(path)
+        parcel.writeString(name)
         parcel.writeLong(bucketId)
         parcel.writeString(bucketName)
     }
