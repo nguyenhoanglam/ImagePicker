@@ -3,8 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'maven-publish'
 
-group = 'com.github.nguyenhoanglam'
-
 android {
     compileSdkVersion 31
     defaultConfig {
@@ -35,6 +33,24 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.github.nguyenhoanglam'
+                artifactId = 'final'
+                version = '1.5.0'
+            }
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
