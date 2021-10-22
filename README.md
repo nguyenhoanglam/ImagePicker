@@ -22,13 +22,13 @@ Changelog
 Installation
 --------
 
-Add the following maven repositories in root build.gradle:
+In `settings.gradle` file, add JitPack maven like below:
 ```
-allprojects {
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         ...
-        maven { url "https://maven.google.com" }
-        maven { url "https://jitpack.io" }
+        maven { url 'https://jitpack.io' }
     }
 }
 ```
@@ -54,14 +54,14 @@ Usage
 Define an `ActivityResultLauncher` class variable in `Activity` or `Fragment`.
 ```java
 private val launcher = registerImagePicker { images ->
-    // Selected images are ready to use
-    if(images.isNotEmpty()){
+        // Selected images are ready to use
+        if(images.isNotEmpty()){
         val sampleImage = images[0]
         Glide.with(this@MainActivity)
-             .load(sampleImage.uri)
-             .into(imageView)
-    }
-}
+        .load(sampleImage.uri)
+        .into(imageView)
+        }
+        }
 ```
 
 Then, launch image picker when needed.
@@ -72,19 +72,19 @@ launcher.launch()
 - With customize configuration:
 ```java
 val config = ImagePickerConfig(
-    statusBarColor = "#000000",
-    isLightStatusBar = false,
-    isFolderMode = true,
-    isMultipleMode = true,
-    maxSize = 10,
-    rootDirectory = Config.ROOT_DIR_DOWNLOAD,
-    subDirectory = "Photos",
-    folderGridCount = GridCount(2, 4),
-    imageGridCount = GridCount(3, 5),
-    // See more at configuration attributes table below
-)
+        statusBarColor = "#000000",
+        isLightStatusBar = false,
+        isFolderMode = true,
+        isMultipleMode = true,
+        maxSize = 10,
+        rootDirectory = Config.ROOT_DIR_DOWNLOAD,
+        subDirectory = "Photos",
+        folderGridCount = GridCount(2, 4),
+        imageGridCount = GridCount(3, 5),
+        // See more at configuration attributes table below
+        )
 
-launcher.launch(config)
+        launcher.launch(config)
 ```
 
 Configuration attributes
