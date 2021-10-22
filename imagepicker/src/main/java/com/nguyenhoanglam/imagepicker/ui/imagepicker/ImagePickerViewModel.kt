@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2021 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -13,8 +13,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.model.CallbackStatus
-import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
+import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 import com.nguyenhoanglam.imagepicker.model.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,13 +26,13 @@ import java.lang.ref.WeakReference
 class ImagePickerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val contextRef = WeakReference(application.applicationContext)
-    private lateinit var config: Config
+    private lateinit var config: ImagePickerConfig
     private var job: Job? = null
 
     lateinit var selectedImages: MutableLiveData<ArrayList<Image>>
     val result = MutableLiveData(Result(CallbackStatus.IDLE, arrayListOf()))
 
-    fun setConfig(config: Config) {
+    fun setConfig(config: ImagePickerConfig) {
         this.config = config
         selectedImages = MutableLiveData(config.selectedImages)
     }

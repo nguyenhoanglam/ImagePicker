@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2021 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -15,34 +15,34 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.databinding.ImagepickerActivityCameraBinding
+import com.nguyenhoanglam.imagepicker.helper.Constants
 import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.hasGranted
 import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.openAppSettings
 import com.nguyenhoanglam.imagepicker.helper.ToastHelper
-import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
+import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 import java.util.*
 
 class CameraActivity : AppCompatActivity() {
 
     private lateinit var binding: ImagepickerActivityCameraBinding
+    private lateinit var config: ImagePickerConfig
 
-    private val permissions =
-        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-    private var config: Config? = null
     private val cameraModule = CameraModule()
     private var alertDialog: AlertDialog? = null
     private var isOpeningCamera = false
 
+    private val permissions =
+        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 cameraModule.saveImage(
                     this@CameraActivity,
-                    config!!,
+                    config,
                     object : OnImageReadyListener {
                         override fun onImageReady(images: ArrayList<Image>) {
                             finishCaptureImage(images)
@@ -53,8 +53,7 @@ class CameraActivity : AppCompatActivity() {
                         }
                     })
             } else {
-                setResult(Activity.RESULT_CANCELED, Intent())
-                finish()
+                finishCaptureImage(arrayListOf())
             }
         }
 
@@ -65,7 +64,9 @@ class CameraActivity : AppCompatActivity() {
             return
         }
 
-        config = intent.getParcelableExtra(Config.EXTRA_CONFIG)
+        config = intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
+        config.initDefaultValues(this@CameraActivity)
+
         binding = ImagepickerActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
@@ -92,7 +93,7 @@ class CameraActivity : AppCompatActivity() {
                     PermissionHelper.requestAllPermissions(
                         this@CameraActivity,
                         permissions,
-                        Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
                     )
                 }
 
@@ -100,7 +101,7 @@ class CameraActivity : AppCompatActivity() {
                     PermissionHelper.requestAllPermissions(
                         this@CameraActivity,
                         permissions,
-                        Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
                     )
                 }
 
@@ -142,7 +143,7 @@ class CameraActivity : AppCompatActivity() {
             return
         }
 
-        val intent = cameraModule.getCameraIntent(this@CameraActivity, config!!)
+        val intent = cameraModule.getCameraIntent(this@CameraActivity, config)
         if (intent == null) {
             ToastHelper.show(this, getString(R.string.imagepicker_error_open_camera))
             return
@@ -158,7 +159,7 @@ class CameraActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         when (requestCode) {
-            Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION -> {
+            Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION -> {
                 if (hasGranted(grantResults)) {
                     captureImage()
                 } else {
@@ -174,7 +175,7 @@ class CameraActivity : AppCompatActivity() {
 
     private fun finishCaptureImage(images: ArrayList<Image>) {
         val data = Intent()
-        data.putParcelableArrayListExtra(Config.EXTRA_IMAGES, images)
+        data.putParcelableArrayListExtra(Constants.EXTRA_IMAGES, images)
         setResult(Activity.RESULT_OK, data)
         finish()
     }

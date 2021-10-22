@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2021 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -8,6 +8,7 @@ package com.nguyenhoanglam.imagepicker.ui.imagepicker
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -21,17 +22,17 @@ import com.nguyenhoanglam.imagepicker.databinding.ImagepickerActivityImagepicker
 import com.nguyenhoanglam.imagepicker.helper.*
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
-import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Folder
 import com.nguyenhoanglam.imagepicker.model.Image
+import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 import com.nguyenhoanglam.imagepicker.ui.camera.CameraModule
 import com.nguyenhoanglam.imagepicker.ui.camera.OnImageReadyListener
 
 class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageSelectListener {
 
     private lateinit var binding: ImagepickerActivityImagepickerBinding
+    private lateinit var config: ImagePickerConfig
 
-    private var config: Config? = null
     private lateinit var viewModel: ImagePickerViewModel
     private val cameraModule = CameraModule()
 
@@ -44,7 +45,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
             if (result.resultCode == Activity.RESULT_OK) {
                 cameraModule.saveImage(
                     this@ImagePickerActivity,
-                    config!!,
+                    config,
                     object : OnImageReadyListener {
                         override fun onImageReady(images: ArrayList<Image>) {
                             fetchDataWithPermission()
@@ -64,14 +65,15 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
             return
         }
 
-        config = intent.getParcelableExtra(Config.EXTRA_CONFIG)
+        config = intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
+        config.initDefaultValues(this@ImagePickerActivity)
 
         // Setup status bar theme
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = config!!.getStatusBarColor()
+            window.statusBarColor = Color.parseColor(config.statusBarColor)
             WindowCompat.setDecorFitsSystemWindows(window, false)
             WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
-                config!!.isLightStatusBar
+                config.isLightStatusBar
         }
 
         binding = ImagepickerActivityImagepickerBinding.inflate(layoutInflater)
@@ -80,9 +82,9 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
         viewModel = ViewModelProvider(this, ImagePickerViewModelFactory(this.application)).get(
             ImagePickerViewModel::class.java
         )
-        viewModel.setConfig(config!!)
+        viewModel.setConfig(config)
         viewModel.selectedImages.observe(this, {
-            binding.toolbar.showDoneButton(config!!.isAlwaysShowDoneButton || it.isNotEmpty())
+            binding.toolbar.showDoneButton(config.isAlwaysShowDoneButton || it.isNotEmpty())
         })
 
         setupViews()
@@ -94,14 +96,17 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
     }
 
     private fun setupViews() {
-        binding.toolbar.config(config!!)
-        binding.toolbar.setOnBackClickListener(backClickListener)
-        binding.toolbar.setOnCameraClickListener(cameraClickListener)
-        binding.toolbar.setOnDoneClickListener(doneClickListener)
+        binding.toolbar.apply {
+            config(config)
+            setOnBackClickListener(backClickListener)
+            setOnCameraClickListener(cameraClickListener)
+            setOnDoneClickListener(doneClickListener)
+        }
 
         val initialFragment =
-            if (config!!.isFolderMode) FolderFragment.newInstance(config!!.folderGridCount)
-            else ImageFragment.newInstance(config!!.imageGridCount)
+            if (config.isFolderMode) FolderFragment.newInstance(config.folderGridCount)
+            else ImageFragment.newInstance(config.imageGridCount)
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, initialFragment)
             .commit()
@@ -118,7 +123,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
                     PermissionHelper.requestAllPermissions(
                         this@ImagePickerActivity,
                         permissions,
-                        Config.RC_READ_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_READ_EXTERNAL_STORAGE_PERMISSION
                     )
                 }
 
@@ -126,7 +131,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
                     PermissionHelper.requestAllPermissions(
                         this@ImagePickerActivity,
                         permissions,
-                        Config.RC_READ_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_READ_EXTERNAL_STORAGE_PERMISSION
                     )
                 }
 
@@ -150,14 +155,14 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
         grantResults: IntArray
     ) {
         when (requestCode) {
-            Config.RC_READ_EXTERNAL_STORAGE_PERMISSION -> {
+            Constants.RC_READ_EXTERNAL_STORAGE_PERMISSION -> {
                 if (PermissionHelper.hasGranted(grantResults)) {
                     fetchData()
                 } else {
                     finish()
                 }
             }
-            Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION -> {
+            Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION -> {
                 if (PermissionHelper.hasGranted(grantResults)) {
                     captureImage()
                 }
@@ -176,7 +181,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
         super.onBackPressed()
         val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
         if (fragment != null && fragment is FolderFragment) {
-            binding.toolbar.setTitle(config!!.folderTitle)
+            binding.toolbar.setTitle(config.folderTitle)
         }
     }
 
@@ -201,7 +206,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
                     PermissionHelper.requestAllPermissions(
                         this@ImagePickerActivity,
                         permissions,
-                        Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
                     )
                 }
 
@@ -209,7 +214,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
                     PermissionHelper.requestAllPermissions(
                         this@ImagePickerActivity,
                         permissions,
-                        Config.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
                     )
                 }
 
@@ -233,7 +238,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
             return
         }
 
-        val intent = cameraModule.getCameraIntent(this@ImagePickerActivity, config!!)
+        val intent = cameraModule.getCameraIntent(this@ImagePickerActivity, config)
         if (intent == null) {
             ToastHelper.show(this, getString(R.string.imagepicker_error_open_camera))
             return
@@ -244,7 +249,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
 
     private fun finishPickImages(images: ArrayList<Image>) {
         val data = Intent()
-        data.putParcelableArrayListExtra(Config.EXTRA_IMAGES, images)
+        data.putParcelableArrayListExtra(Constants.EXTRA_IMAGES, images)
         setResult(Activity.RESULT_OK, data)
         finish()
     }
@@ -254,7 +259,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
         supportFragmentManager.beginTransaction()
             .add(
                 R.id.fragmentContainer,
-                ImageFragment.newInstance(folder.bucketId, config!!.imageGridCount)
+                ImageFragment.newInstance(folder.bucketId, config.imageGridCount)
             )
             .addToBackStack(null)
             .commit()

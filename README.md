@@ -1,27 +1,23 @@
 ImagePicker
 ========
 
-An Android library that supports selecting images from the device or from the camera.
+An android library which help selecting images from the device with customizable UI.
 
 [![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://jitpack.io/#nguyenhoanglam/ImagePicker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
 
-Demo
+Preview
 --------
 
 <img src="https://i.imgur.com/ZM09aU3.png" height="652" width="350"> <img src="https://i.imgur.com/d3O0VFN.png" height="652" width="350">
 
-What's new
+Changelog
 --------
-- Fixed infinite loading bug.
-- Added `uri` attribute to `Image` class.
-- Supported Android 10 (API 29).
-- Updated to new UI.
-- Converted Java code to Kotlin code.
-- Upgraded Glide to v4.11, AndroidX to v1.1.0, Kotlin to v.1.3.72.
-- Added new `rootDirectoryName`, `limitMessage`, `indicatorColor` and `isShowNumberIndicator` options.
-- Added 2 static methods `shouldHandleResult` and `getImages` to ImagePicker to handle result easier.
-- Replaced `savePath` option by `directoryName` option.
+- Reimplement underlying logic to adapt to Android Q and later.
+- Replace `startActivityForResult` with `ActivityResultLauncher` mechanism.
+- Add and rename some configuration attributes: `isLightStatusBar`, `imageGridCount` ...
+- Remove `id` and `path` attribute from `Image` class.
+- Make some small UI changes.
 
 Installation
 --------
@@ -40,7 +36,7 @@ allprojects {
 Add the following dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.4.3'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.5.0'
 }
 ```
 
@@ -50,101 +46,78 @@ android.useAndroidX=true
 android.enableJetifier=true
 ```
 
-Add `android:requestLegacyExternalStorage="true"` attribute to the `application` tag in the `AndroidManifest.xml` file:
-```xml
-<application
-    ...
-    android:requestLegacyExternalStorage="true">
-
-    ...
-
-</application>
-```
-
 For any Java projects, please follow [this guide](https://developer.android.com/kotlin/add-kotlin) to add Kotlin to existing app.
 
 Usage
 --------
 
-### Start ImagePicker
+Define an `ActivityResultLauncher` class variable in `Activity` or `Fragment`.
 ```java
-ImagePicker.with(this)
-           .setFolderMode(true)
-           .setFolderTitle("Album")
-           .setRootDirectoryName(Config.ROOT_DIR_DCIM)
-           .setDirectoryName("Image Picker")
-           .setMultipleMode(true)
-           .setShowNumberIndicator(true)
-           .setMaxSize(10)
-           .setLimitMessage("You can select up to 10 images")
-           .setSelectedImages(images)
-           .setRequestCode(100)
-           .start();
-```
-
-### Handle selected images
-
-```kotlin
-override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    // The last parameter value of shouldHandleResult() is the value we pass to setRequestCode().
-    // If we do not call setRequestCode(), we can ignore the last parameter.
-    if (ImagePicker.shouldHandleResult(requestCode, resultCode, data, 100)) {
-        val images: ArrayList<Image> = ImagePicker.getImages(data)
-        // Do stuff with image's path or id. For example:
-        for (image in images) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                Glide.with(context)
-                     .load(image.uri)
-                     .into(imageView)
-            } else {
-                Glide.with(context)
-                     .load(image.path)
-                     .into(imageView)
-            }
-        }
+private val launcher = registerImagePicker { images ->
+    // Selected images are ready to use
+    if(images.isNotEmpty()){
+        val sampleImage = images[0]
+        Glide.with(this@MainActivity)
+             .load(sampleImage.uri)
+             .into(imageView)
     }
-    super.onActivityResult(requestCode, resultCode, data)   // This line is REQUIRED in fragment mode
 }
 ```
 
-### Methods's description
+Then, launch image picker when needed.
+- With default configuration:
+```java
+launcher.launch()
+```
+- With customize configuration:
+```java
+val config = ImagePickerConfig(
+    statusBarColor = "#000000",
+    isLightStatusBar = false,
+    isFolderMode = true,
+    isMultipleMode = true,
+    maxSize = 10,
+    rootDirectory = Config.ROOT_DIR_DOWNLOAD,
+    subDirectory = "Photos",
+    folderGridCount = GridCount(2, 4),
+    imageGridCount = GridCount(3, 5),
+    // See more at configuration attributes table below
+)
+
+launcher.launch(config)
+```
+
+Configuration attributes
+--------
 
 | Name | Description | Default
 | --- | --- | :---: |
-| `with` | Initialize ImagePicker with activity or fragment context |
-| `setStatusBarColor` | Status bar color, require API >= 21 | `#000000`
-| `setToolbarColor` | Toolbar color | `#212121`
-| `setToolbarTextColor` | Toolbar text color | `#FFFFFF`
-| `setToolbarIconColor` | Toolbar icon color | `#FFFFFF`
-| `setBackgroundColor` | Background color | `#424242`
-| `setProgressBarColor` | ProgressBar color | `#4CAF50`
-| `setIndicatorColor` | Selected image's indicator color | `#1976D2`
-| `setCameraOnly` | Start camera and return captured image | `false`
-| `setMultipleMode` | Allow to select multiple images | `true`
-| `setFolderMode` | Group images by folders | `false`
-| `setFolderTitle` | Folder screen's title, require FolderMode = `true` | `Albums`
-| `setImageTitle` | Image screen's title, require FolderMode = `false` | `Photos`
-| `setDoneTitle` | Done button's title | `DONE`
-| `setAlwaysShowDoneButton` | Show done button even though no image selected | `false`
-| `setShowCamera` | Show camera button | `true`
-| `setRootDirectoryName` | Public root directory of captured images, should be one of: `Config.ROOT_DIR_DCIM`, `Config.ROOT_DIR_PICTURES`, `Config.ROOT_DIR_DOWNLOAD`. | `DCIM`
-| `setDirectoryName` | Root directory's sub folder of captured images | Application name
-| `setShowNumberIndicator` | Show selected image's indicator as number | `false`
-| `setMaxSize` | Max images can be selected | `Int.MAX_VALUE`
-| `setLimitMessage` | Message to be displayed when total selected images exceeds max count |
-| `setSelectedImages` | List of images that will be shown as selected in ImagePicker | empty list
-| `setRequestCode` | Request code for starting ImagePicker | `100`
-| `start` | Open ImagePicker |
-| `shouldHandleResult` | Check if ImagePicker result was returned |
-| `getImages` | Get ImagePicker's returned images  |
+| `statusBarColor` | Status bar color (require API >= 21) | `#000000`
+| `isLightStatusBar` | Set status bar to light/dark mode to change it's content to dark/light (require API >= 21) | `false`
+| `toolbarColor` | Toolbar color | `#212121`
+| `toolbarTextColor` | Toolbar text color | `#FFFFFF`
+| `toolbarIconColor` | Toolbar icon color | `#FFFFFF`
+| `backgroundColor` | Background color | `#424242`
+| `progressIndicatorColor` | Loading indicator color | `#009688`
+| `selectedIndicatorColor` | Selected image's indicator color | `#1976D2`
+| `isCameraOnly` | Open camera, then capture and return an image   | `false`
+| `isMultipleMode` | Allow to select multiple images | `true`
+| `isFolderMode` | Show images by folders | `false`
+| `folderGridCount` | Set folder colums for portrait and landscape orientation | `GridCount(2, 4)`
+| `imageGridCount` | Set image colums for portrait and landscape orientation | `GridCount(3, 5)`
+| `doneTitle` | Done button title | `DONE`
+| `folderTitle` | Toolbar title for folder mode (require FolderMode = `true`) | `Albums`
+| `imageTitle` | Toolbar title for image mode (require FolderMode = `false`) | `Photos`
+| `isShowCamera` | Show camera button | `true`
+| `isShowNumberIndicator` | Show selected image's indicator as number | `false`
+| `isAlwaysShowDoneButton` | Show done button even though no images've been selected yet | `false`
+| `rootDirectory` | Public root directory of captured image, should be one of: `RootDirectory.DCIM`, `RootDirectory.PICTURES`, `RootDirectory.DOWNLOADS`. | `RootDirectory.DCIM`
+| `subDirectory` | Root directory's sub folder of captured image | Application name
+| `maxSize` | Max images can be selected | `Int.MAX_VALUE`
+| `limitMessage` | Message to be displayed when total selected images exceeds max size | ...
+| `selectedImages` | List of images that will be shown as selected in ImagePicker | Empty list
 
 License
 --------
 
-Copyright (c) 2020 Nguyen Hoang Lam
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Copyright (c) 2021 Nguyen Hoang Lam

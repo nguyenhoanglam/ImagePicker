@@ -1,18 +1,19 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2021 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.widget
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import com.nguyenhoanglam.imagepicker.R
-import com.nguyenhoanglam.imagepicker.model.Config
+import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 
 class ImagePickerToolbar : RelativeLayout {
 
@@ -48,15 +49,19 @@ class ImagePickerToolbar : RelativeLayout {
         cameraImage = findViewById(R.id.image_toolbar_camera)
     }
 
-    fun config(config: Config) {
-        setBackgroundColor(config.getToolbarColor())
+    fun config(config: ImagePickerConfig) {
+        setBackgroundColor(Color.parseColor(config.toolbarColor))
+
         titleText.text = if (config.isFolderMode) config.folderTitle else config.imageTitle
-        titleText.setTextColor(config.getToolbarTextColor())
+        titleText.setTextColor(Color.parseColor(config.toolbarTextColor))
+
         doneText.text = config.doneTitle
-        doneText.setTextColor(config.getToolbarTextColor())
+        doneText.setTextColor(Color.parseColor(config.toolbarTextColor))
         doneText.visibility = if (config.isAlwaysShowDoneButton) View.VISIBLE else View.GONE
-        backImage.setColorFilter(config.getToolbarIconColor())
-        cameraImage.setColorFilter(config.getToolbarIconColor())
+
+        backImage.setColorFilter(Color.parseColor(config.toolbarIconColor))
+
+        cameraImage.setColorFilter(Color.parseColor(config.toolbarIconColor))
         cameraImage.visibility = if (config.isShowCamera) View.VISIBLE else View.GONE
     }
 

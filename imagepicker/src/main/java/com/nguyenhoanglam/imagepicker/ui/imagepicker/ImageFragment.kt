@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2021 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -85,36 +86,35 @@ class ImageFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = ImagepickerFragmentBinding.inflate(inflater, container, false)
+        val config = viewModel.getConfig()
 
-        binding.root.setBackgroundColor(
-            viewModel.getConfig()
-                .getBackgroundColor()
-        )
-
-        imageAdapter = ImagePickerAdapter(
-            requireActivity(),
-            viewModel.getConfig(),
-            activity as OnImageSelectListener
-        )
+        imageAdapter =
+            ImagePickerAdapter(requireActivity(), config, activity as OnImageSelectListener)
         gridLayoutManager = LayoutManagerHelper.newInstance(requireContext(), gridCount)
         itemDecoration = GridSpacingItemDecoration(
             gridLayoutManager.spanCount,
             resources.getDimension(R.dimen.imagepicker_grid_spacing).toInt()
         )
 
-        binding.recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = gridLayoutManager
-            addItemDecoration(itemDecoration)
-            adapter = imageAdapter
+        _binding = ImagepickerFragmentBinding.inflate(inflater, container, false)
+
+        binding.apply {
+            root.setBackgroundColor(Color.parseColor(config.backgroundColor))
+            progressIndicator.setIndicatorColor(Color.parseColor(config.progressIndicatorColor))
+            recyclerView.apply {
+                setHasFixedSize(true)
+                layoutManager = gridLayoutManager
+                addItemDecoration(itemDecoration)
+                adapter = imageAdapter
+            }
         }
 
-        viewModel.result.observe(viewLifecycleOwner, {
-            handleResult(it)
-        })
-
-        viewModel.selectedImages.observe(viewLifecycleOwner, selectedImageObserver)
+        viewModel.apply {
+            result.observe(viewLifecycleOwner, {
+                handleResult(it)
+            })
+            selectedImages.observe(viewLifecycleOwner, selectedImageObserver)
+        }
 
         return binding.root
     }
@@ -132,10 +132,13 @@ class ImageFragment : BaseFragment() {
         } else {
             binding.recyclerView.visibility = View.GONE
         }
-        binding.emptyText.visibility =
-            if (result.status is CallbackStatus.SUCCESS && result.images.isEmpty()) View.VISIBLE else View.GONE
-        binding.progressWheel.visibility =
-            if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
+
+        binding.apply {
+            emptyText.visibility =
+                if (result.status is CallbackStatus.SUCCESS && result.images.isEmpty()) View.VISIBLE else View.GONE
+            progressIndicator.visibility =
+                if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
+        }
     }
 
     override fun handleOnConfigurationChanged() {

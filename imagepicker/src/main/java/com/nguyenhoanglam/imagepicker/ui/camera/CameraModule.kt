@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2021 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -18,8 +18,9 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
-import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
+import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
+import com.nguyenhoanglam.imagepicker.model.RootDirectory
 import java.io.File
 import java.io.IOException
 import java.io.Serializable
@@ -36,11 +37,11 @@ class CameraModule : Serializable {
     private var currentFilePath: String? = null
     private var currentFileName: String? = null
 
-    fun getCameraIntent(context: Context, config: Config): Intent? {
+    fun getCameraIntent(context: Context, config: ImagePickerConfig): Intent? {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
         val imageFile = try {
-            createImageFile(context, config.rootDirectory, config.subDirectory)
+            createImageFile(context, config.rootDirectory.value, config.subDirectory!!)
         } catch (e: IOException) {
             null
         }
@@ -94,7 +95,7 @@ class CameraModule : Serializable {
     @Suppress("DEPRECATION")
     fun saveImage(
         context: Context,
-        config: Config,
+        config: ImagePickerConfig,
         imageReadyListener: OnImageReadyListener
     ) {
         if (currentFileUri == null) {
@@ -102,13 +103,14 @@ class CameraModule : Serializable {
             reset(context)
         }
 
-        val contentResolver = context.contentResolver;
+        val contentResolver = context.contentResolver
+        var newFileUri: Uri? = null
         try {
             if (DeviceHelper.isMinSdk29) {
                 val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
                 val filePrefix = "IMG_${timeStamp}_"
                 val fileName = filePrefix + SUFFIX
-                val relativePath = "${config.rootDirectory}/${config.subDirectory}"
+                val relativePath = config.rootDirectory.value + File.separator + config.subDirectory
 
                 currentFileName = filePrefix
 
@@ -121,16 +123,16 @@ class CameraModule : Serializable {
                 val bitmap = getBitmapFromUri(contentResolver, currentFileUri!!)
                 contentResolver.run {
                     val url =
-                        if (config.rootDirectory == Config.ROOT_DIR_DOWNLOAD) MediaStore.Downloads.EXTERNAL_CONTENT_URI
+                        if (config.rootDirectory == RootDirectory.DOWNLOADS) MediaStore.Downloads.EXTERNAL_CONTENT_URI
                         else MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
-                    val newFileUri = contentResolver.insert(url, values)
+                    newFileUri = contentResolver.insert(url, values)
                     if (newFileUri != null) {
-                        val imageOutputStream = openOutputStream(newFileUri)
+                        val imageOutputStream = openOutputStream(newFileUri!!)
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageOutputStream)
 
                         val images = arrayListOf(
-                            Image(newFileUri, currentFileName!!, 0, config.subDirectory)
+                            Image(newFileUri!!, currentFileName!!, 0, config.subDirectory!!)
                         )
                         imageReadyListener.onImageReady(images)
                     } else {
@@ -145,13 +147,16 @@ class CameraModule : Serializable {
                     null
                 ) { _, _ ->
                     val images = arrayListOf(
-                        Image(currentFileUri!!, currentFileName!!, 0, config.subDirectory)
+                        Image(currentFileUri!!, currentFileName!!, 0, config.subDirectory!!)
                     )
                     imageReadyListener.onImageReady(images)
                     reset(context)
                 }
             }
         } catch (e: Exception) {
+            newFileUri?.let {
+                contentResolver.delete(it, null, null)
+            }
             imageReadyListener.onImageNotReady()
             reset(context)
         }

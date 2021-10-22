@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2021 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -20,12 +21,12 @@ import com.nguyenhoanglam.imagepicker.helper.GlideHelper
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.ToastHelper
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
-import com.nguyenhoanglam.imagepicker.model.Config
 import com.nguyenhoanglam.imagepicker.model.Image
+import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 
 class ImagePickerAdapter(
     context: Context,
-    private val config: Config,
+    private val config: ImagePickerConfig,
     private val imageSelectListener: OnImageSelectListener
 ) : BaseRecyclerViewAdapter<ImagePickerAdapter.ImageViewHolder?>(context) {
 
@@ -34,7 +35,11 @@ class ImagePickerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val itemView = inflater.inflate(R.layout.imagepicker_item_image, parent, false)
-        return ImageViewHolder(itemView, config.isShowNumberIndicator, config.getIndicatorColor())
+        return ImageViewHolder(
+            itemView,
+            config.isShowNumberIndicator,
+            config.selectedIndicatorColor
+        )
     }
 
     override fun onBindViewHolder(
@@ -152,7 +157,7 @@ class ImagePickerAdapter(
 
     }
 
-    class ImageViewHolder(itemView: View, isShowNumberIndicator: Boolean, indicatorColor: Int) :
+    class ImageViewHolder(itemView: View, isShowNumberIndicator: Boolean, indicatorColor: String) :
         RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.image_thumbnail)
         val selectedIcon: ImageView = itemView.findViewById(R.id.image_selected_icon)
@@ -162,7 +167,7 @@ class ImagePickerAdapter(
         init {
             val drawable: GradientDrawable =
                 (if (isShowNumberIndicator) selectedNumber.background.mutate() else selectedIcon.background.mutate()) as GradientDrawable
-            drawable.setColor(indicatorColor)
+            drawable.setColor(Color.parseColor(indicatorColor))
         }
     }
 

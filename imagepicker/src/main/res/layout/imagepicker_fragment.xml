@@ -21,15 +21,12 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-
-    <com.nguyenhoanglam.imagepicker.widget.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/progressWheel"
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressIndicator"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
+        android:indeterminate="true"
         android:visibility="gone"
-        tools:visibility="visible"
-        wheel:matProg_barColor="@color/imagepicker_teal"
-        wheel:matProg_progressIndeterminate="true" />
-
+        tools:visibility="visible" />
 </FrameLayout>

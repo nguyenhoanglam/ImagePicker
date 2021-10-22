@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2021 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,8 +49,7 @@ class FolderFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        gridCount = arguments?.getParcelable(FolderFragment.GRID_COUNT)!!
+        gridCount = arguments?.getParcelable(GRID_COUNT)!!
 
         viewModel = activity?.run {
             ViewModelProvider(this, ImagePickerViewModelFactory(requireActivity().application)).get(
@@ -63,12 +63,7 @@ class FolderFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = ImagepickerFragmentBinding.inflate(inflater, container, false)
-
-        binding.root.setBackgroundColor(
-            viewModel!!.getConfig()
-                .getBackgroundColor()
-        )
+        val config = viewModel!!.getConfig()
 
         folderAdapter = FolderPickerAdapter(requireActivity(), activity as OnFolderClickListener)
         gridLayoutManager = LayoutManagerHelper.newInstance(requireContext(), gridCount)
@@ -77,12 +72,19 @@ class FolderFragment : BaseFragment() {
             resources.getDimension(R.dimen.imagepicker_grid_spacing).toInt()
         )
 
-        binding.recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = gridLayoutManager
-            addItemDecoration(itemDecoration)
-            adapter = folderAdapter
+        _binding = ImagepickerFragmentBinding.inflate(inflater, container, false)
+
+        binding.apply {
+            root.setBackgroundColor(Color.parseColor(config.backgroundColor))
+            progressIndicator.setIndicatorColor(Color.parseColor(config.progressIndicatorColor))
+            recyclerView.apply {
+                setHasFixedSize(true)
+                layoutManager = gridLayoutManager
+                addItemDecoration(itemDecoration)
+                adapter = folderAdapter
+            }
         }
+
         viewModel?.result?.observe(viewLifecycleOwner, {
             handleResult(it)
         })
@@ -99,10 +101,13 @@ class FolderFragment : BaseFragment() {
         } else {
             binding.recyclerView.visibility = View.GONE
         }
-        binding.emptyText.visibility =
-            if (result.status is CallbackStatus.SUCCESS && result.images.isEmpty()) View.VISIBLE else View.GONE
-        binding.progressWheel.visibility =
-            if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
+
+        binding.apply {
+            emptyText.visibility =
+                if (result.status is CallbackStatus.SUCCESS && result.images.isEmpty()) View.VISIBLE else View.GONE
+            progressIndicator.visibility =
+                if (result.status is CallbackStatus.FETCHING) View.VISIBLE else View.GONE
+        }
     }
 
     override fun handleOnConfigurationChanged() {

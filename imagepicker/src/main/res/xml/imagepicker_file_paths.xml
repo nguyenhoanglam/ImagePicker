@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <external-path
-        name="imagepicker_images"
+        name="imagepicker_external_path"
         path="." />
 
     <external-files-path
-        name="imagepicker_images"
+        name="imagepicker_external_files_path"
         path="." />
 
     <external-path
-        name="external_files"
+        name="imagepicker_external_path"
         path="." />
 </paths>

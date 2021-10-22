@@ -1,7 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="HoangLam">
+  <settings default="Image Picker">
     <module2copyright>
-      <element module="All" copyright="HoangLam" />
+      <element module="All" copyright="Image Picker" />
     </module2copyright>
   </settings>
 </component>

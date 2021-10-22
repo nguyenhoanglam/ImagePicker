@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <ScrollView
+        android:id="@+id/config_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true"
+        android:padding="@dimen/spacing">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/folderModeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:checked="true"
+                android:text="Folder Mode" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/multipleModeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:checked="true"
+                android:text="Multiple Mode" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/cameraOnlySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/folderModeSwitch"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/spacing"
+                android:text="Camera Only" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/showCameraSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/multipleModeSwitch"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/spacing"
+                android:checked="true"
+                android:text="Show Camera" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/showNumberIndicatorSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cameraOnlySwitch"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/spacing"
+                android:text="Number Indicator" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/alwaysShowDoneSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/showCameraSwitch"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/spacing"
+                android:checked="false"
+                android:text="Always Done" />
+
+
+            <Button
+                android:id="@+id/pickImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/showNumberIndicatorSwitch"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/spacing"
+                android:text="START" />
+
+            <Button
+                android:id="@+id/launchFragmentButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pickImageButton"
+                android:layout_gravity="center_horizontal"
+                android:text="OPEN FRAGMENT" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/config_container"
+        android:padding="@dimen/spacing" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
