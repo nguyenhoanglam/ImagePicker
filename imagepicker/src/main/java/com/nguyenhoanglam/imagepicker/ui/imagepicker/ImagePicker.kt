@@ -26,6 +26,15 @@ class ImagePickerLauncher(
         val intent = createImagePickerIntent(context(), config)
         resultLauncher.launch(intent)
     }
+
+    companion object {
+        fun createIntent(
+            context: Context,
+            config: ImagePickerConfig = ImagePickerConfig()
+        ): Intent {
+            return createImagePickerIntent(context, config)
+        }
+    }
 }
 
 private fun createImagePickerIntent(context: Context, config: ImagePickerConfig): Intent {
