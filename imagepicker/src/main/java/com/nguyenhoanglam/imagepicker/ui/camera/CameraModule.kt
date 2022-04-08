@@ -18,6 +18,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
+import com.nguyenhoanglam.imagepicker.helper.ExifUtil
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 import com.nguyenhoanglam.imagepicker.model.RootDirectory
@@ -82,7 +83,7 @@ class CameraModule : Serializable {
         }
         if (isDirExisted) {
             val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-            val filePrefix = "IMG_${timeStamp}_"
+            val filePrefix = "IMG_${timeStamp}"
 
             currentFileName = filePrefix
 
@@ -108,7 +109,7 @@ class CameraModule : Serializable {
         try {
             if (DeviceHelper.isMinSdk29) {
                 val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-                val filePrefix = "IMG_${timeStamp}_"
+                val filePrefix = "IMG_${timeStamp}"
                 val fileName = filePrefix + SUFFIX
                 val relativePath = config.rootDirectory.value + File.separator + config.subDirectory
 
@@ -121,6 +122,8 @@ class CameraModule : Serializable {
                 }
 
                 val bitmap = getBitmapFromUri(contentResolver, currentFileUri!!)
+                val orientedBitmap = ExifUtil.rotateBitmap(currentFilePath, bitmap)
+
                 contentResolver.run {
                     val url =
                         if (config.rootDirectory == RootDirectory.DOWNLOADS) MediaStore.Downloads.EXTERNAL_CONTENT_URI
@@ -129,7 +132,7 @@ class CameraModule : Serializable {
                     newFileUri = contentResolver.insert(url, values)
                     if (newFileUri != null) {
                         val imageOutputStream = openOutputStream(newFileUri!!)
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageOutputStream)
+                        orientedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageOutputStream)
 
                         val images = arrayListOf(
                             Image(newFileUri!!, currentFileName!!, 0, config.subDirectory!!)
@@ -163,10 +166,13 @@ class CameraModule : Serializable {
     }
 
     private fun reset(context: Context) {
-        if (DeviceHelper.isMinSdk29) {
-            deleteFileFromUri(context, currentFileUri!!)
+        if (currentFileUri != null) {
+            if (DeviceHelper.isMinSdk29) {
+                deleteFileFromUri(context, currentFileUri!!)
+            }
+            revokeAppPermission(context, currentFileUri!!)
         }
-        revokeAppPermission(context, currentFileUri!!)
+
         currentFileUri = null
         currentFilePath = null
         currentFileName = null

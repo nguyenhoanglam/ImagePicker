@@ -36,7 +36,7 @@ dependencyResolutionManagement {
 Add the following dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.5.1'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.5.2'
 }
 ```
 
@@ -120,4 +120,4 @@ Configuration attributes
 License
 --------
 
-Copyright (c) 2021 Nguyen Hoang Lam
+Copyright (c) 2022 Nguyen Hoang Lam
