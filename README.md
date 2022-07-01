@@ -13,11 +13,8 @@ Preview
 
 Changelog
 --------
-- Reimplement underlying logic to adapt to Android Q and later.
-- Replace `startActivityForResult` with `ActivityResultLauncher` mechanism.
-- Add and rename some configuration attributes: `isLightStatusBar`, `imageGridCount` ...
-- Remove `id` and `path` attribute from `Image` class.
-- Make some small UI changes.
+- Fix empty images bug. 
+- Upgrade some dependency versions: Kotlin v1.7.0, Glide v4.13.2 ...
 
 Installation
 --------
@@ -36,7 +33,7 @@ dependencyResolutionManagement {
 Add the following dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.5.2'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.5.3'
 }
 ```
 
