@@ -8,6 +8,7 @@ package com.nguyenhoanglam.imagepicker.ui.imagepicker
 import android.app.Application
 import android.content.ContentUris
 import android.provider.MediaStore
+import androidx.core.database.getStringOrNull
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -89,7 +90,7 @@ class ImagePickerViewModel(application: Application) : AndroidViewModel(applicat
                     val id = cursor.getLong(idColumn)
                     val name = cursor.getString(nameColumn)
                     val bucketId = cursor.getLong(bucketIdColumn)
-                    val bucketName = cursor.getString(bucketNameColumn)
+                    val bucketName = cursor.getStringOrNull(bucketNameColumn) ?: ""
 
                     val uri = ContentUris.withAppendedId(imageCollectionUri, id)
 
