@@ -112,7 +112,7 @@ object PermissionHelper {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     }
 
-    fun shouldShowRequestPermissionRationale(activity: Activity?, permission: String): Boolean {
+    private fun shouldShowRequestPermissionRationale(activity: Activity?, permission: String): Boolean {
         if (activity != null) {
             return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
         }

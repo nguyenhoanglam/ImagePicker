@@ -13,7 +13,7 @@
     <string name="imagepicker_error_open_camera">Could not open camera.</string>
 
     <string name="imagepicker_msg_no_images">No image available.</string>
-    <string name="imagepicker_msg_no_external_storage_permission">To continue, please allow app to access photos and media on this device.</string>
-    <string name="imagepicker_msg_limit_images">Limit selection to %d images.</string>
+    <string name="imagepicker_msg_no_external_storage_permission">Please allow permission to access photos and media.</string>
+    <string name="imagepicker_msg_limit_images">You can select up to %d images.</string>
 
 </resources>

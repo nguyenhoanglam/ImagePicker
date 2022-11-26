@@ -23,7 +23,6 @@ import com.nguyenhoanglam.imagepicker.helper.PermissionHelper.openAppSettings
 import com.nguyenhoanglam.imagepicker.helper.ToastHelper
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
-import java.util.*
 
 class CameraActivity : AppCompatActivity() {
 
@@ -64,7 +63,11 @@ class CameraActivity : AppCompatActivity() {
             return
         }
 
-        config = intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
+        @Suppress("DEPRECATION")
+        config = if (DeviceHelper.isMinSdk33) intent.getParcelableExtra(
+            Constants.EXTRA_CONFIG,
+            ImagePickerConfig::class.java
+        )!! else intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
         config.initDefaultValues(this@CameraActivity)
 
         binding = ImagepickerActivityCameraBinding.inflate(layoutInflater)
@@ -93,7 +96,7 @@ class CameraActivity : AppCompatActivity() {
                     PermissionHelper.requestAllPermissions(
                         this@CameraActivity,
                         permissions,
-                        Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_WRITE_PERMISSION
                     )
                 }
 
@@ -101,7 +104,7 @@ class CameraActivity : AppCompatActivity() {
                     PermissionHelper.requestAllPermissions(
                         this@CameraActivity,
                         permissions,
-                        Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_WRITE_PERMISSION
                     )
                 }
 
@@ -159,7 +162,7 @@ class CameraActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         when (requestCode) {
-            Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION -> {
+            Constants.RC_WRITE_PERMISSION -> {
                 if (hasGranted(grantResults)) {
                     captureImage()
                 } else {

@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -36,7 +37,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
     private lateinit var viewModel: ImagePickerViewModel
     private val cameraModule = CameraModule()
 
-    private val backClickListener = View.OnClickListener { onBackPressed() }
+    private val backClickListener = View.OnClickListener { handleBackPress() }
     private val cameraClickListener = View.OnClickListener { captureImageWithPermission() }
     private val doneClickListener = View.OnClickListener { onDone() }
 
@@ -65,7 +66,12 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
             return
         }
 
-        config = intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
+        @Suppress("DEPRECATION")
+        config =
+            if (DeviceHelper.isMinSdk33) intent.getParcelableExtra(
+                Constants.EXTRA_CONFIG,
+                ImagePickerConfig::class.java
+            )!! else intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
         config.initDefaultValues(this@ImagePickerActivity)
 
         // Setup status bar theme
@@ -79,15 +85,22 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
         binding = ImagepickerActivityImagepickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, ImagePickerViewModelFactory(this.application)).get(
-            ImagePickerViewModel::class.java
-        )
+        viewModel = ViewModelProvider(
+            this,
+            ImagePickerViewModelFactory(this.application)
+        )[ImagePickerViewModel::class.java]
         viewModel.setConfig(config)
-        viewModel.selectedImages.observe(this, {
+        viewModel.selectedImages.observe(this) {
             binding.toolbar.showDoneButton(config.isAlwaysShowDoneButton || it.isNotEmpty())
-        })
+        }
 
         setupViews()
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                handleBackPress()
+            }
+        })
     }
 
     override fun onResume() {
@@ -112,26 +125,39 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
             .commit()
     }
 
+    private fun handleBackPress() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStackImmediate()
+            val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+            if (fragment != null && fragment is FolderFragment) {
+                binding.toolbar.setTitle(config.folderTitle)
+            }
+        } else {
+            finish()
+        }
+    }
 
     private fun fetchDataWithPermission() {
-        val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        val readPermission =
+            if (DeviceHelper.isMinSdk33) Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
+
         PermissionHelper.checkPermission(
             this,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
+            readPermission,
             object : PermissionHelper.PermissionAskListener {
                 override fun onNeedPermission() {
                     PermissionHelper.requestAllPermissions(
                         this@ImagePickerActivity,
-                        permissions,
-                        Constants.RC_READ_EXTERNAL_STORAGE_PERMISSION
+                        arrayOf(readPermission),
+                        Constants.RC_READ_PERMISSION
                     )
                 }
 
                 override fun onPermissionPreviouslyDenied() {
                     PermissionHelper.requestAllPermissions(
                         this@ImagePickerActivity,
-                        permissions,
-                        Constants.RC_READ_EXTERNAL_STORAGE_PERMISSION
+                        arrayOf(readPermission),
+                        Constants.RC_READ_PERMISSION
                     )
                 }
 
@@ -155,14 +181,14 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
         grantResults: IntArray
     ) {
         when (requestCode) {
-            Constants.RC_READ_EXTERNAL_STORAGE_PERMISSION -> {
+            Constants.RC_READ_PERMISSION -> {
                 if (PermissionHelper.hasGranted(grantResults)) {
                     fetchData()
                 } else {
                     finish()
                 }
             }
-            Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION -> {
+            Constants.RC_WRITE_PERMISSION -> {
                 if (PermissionHelper.hasGranted(grantResults)) {
                     captureImage()
                 }
@@ -175,14 +201,6 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
 
     private fun fetchData() {
         viewModel.fetchImages()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
-        if (fragment != null && fragment is FolderFragment) {
-            binding.toolbar.setTitle(config.folderTitle)
-        }
     }
 
     private fun onDone() {
@@ -206,7 +224,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
                     PermissionHelper.requestAllPermissions(
                         this@ImagePickerActivity,
                         permissions,
-                        Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_WRITE_PERMISSION
                     )
                 }
 
@@ -214,7 +232,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
                     PermissionHelper.requestAllPermissions(
                         this@ImagePickerActivity,
                         permissions,
-                        Constants.RC_WRITE_EXTERNAL_STORAGE_PERMISSION
+                        Constants.RC_WRITE_PERMISSION
                     )
                 }
 
