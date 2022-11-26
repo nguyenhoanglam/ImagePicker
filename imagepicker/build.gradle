@@ -24,14 +24,14 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "androidx.activity:activity:1.7.0-alpha02"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20'
-    implementation 'com.google.android.material:material:1.7.0'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 }
@@ -47,7 +47,7 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.github.nguyenhoanglam'
                 artifactId = 'final'
-                version = '1.5.4'
+                version = '1.5.5'
             }
         }
     }
