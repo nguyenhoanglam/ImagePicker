@@ -39,14 +39,14 @@ dependencies {
 Define an `ActivityResultLauncher` class variable in `Activity` or `Fragment`.
 ```java
 private val launcher = registerImagePicker { images ->
-        // selected images
-        if(images.isNotEmpty()){
+    // selected images
+    if(images.isNotEmpty()){
         val image = images[0]
         Glide.with(this@MainActivity)
-        .load(image.uri)
-        .into(imageView)
-        }
-        }
+            .load(image.uri)
+            .into(imageView)
+    }
+}
 ```
 
 Then launch the picker
