@@ -1,25 +1,22 @@
-ImagePicker
-========
+# ImagePicker
 
-An android library which help selecting images from the device with customizable UI.
+An Android library that allows you to select images from the device library or camera with a handy UI customization.
 
-[![](https://jitpack.io/v/nguyenhoanglam/ImagePicker.svg)](https://jitpack.io/#nguyenhoanglam/ImagePicker)
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-green.svg?style=true)](https://android-arsenal.com/details/1/4072)
-
-Preview
---------
+## Preview
 
 <img src="https://i.imgur.com/ZM09aU3.png" height="652" width="350"> <img src="https://i.imgur.com/d3O0VFN.png" height="652" width="350">
 
-Changelog
---------
-- Fix permission error when running on Android 13.
-- Upgrade some dependency versions.
+## Changelog
 
-Installation
---------
+- Fix camera permission bug: [#148](https://github.com/nguyenhoanglam/ImagePicker/issues/148), [#155](https://github.com/nguyenhoanglam/ImagePicker/issues/155)
+- Allow to set custom colors, drawables, texts and messages.
+- Add select and unselect all feature.
+- Add, remove and rename some options.
+- Upgrade gradle and dependencies version.
 
-In `settings.gradle` file, add JitPack maven like below:
+## Installation
+
+In `settings.gradle` file, add JitPack maven as below:
 ```
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -30,91 +27,144 @@ dependencyResolutionManagement {
 }
 ```
 
-Add the following dependency in app build.gradle:
+Add the dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.5.5'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.6.0'
 }
 ```
 
-You have to migrate your project to support AndroidX by add following lines on gradle.properties file:
-```
-android.useAndroidX=true
-android.enableJetifier=true
-```
-
-For any Java projects, please follow [this guide](https://developer.android.com/kotlin/add-kotlin) to add Kotlin to existing app.
-
-Usage
---------
+## Usage
 
 Define an `ActivityResultLauncher` class variable in `Activity` or `Fragment`.
 ```java
 private val launcher = registerImagePicker { images ->
-        // Selected images are ready to use
+        // selected images
         if(images.isNotEmpty()){
-        val sampleImage = images[0]
+        val image = images[0]
         Glide.with(this@MainActivity)
-        .load(sampleImage.uri)
+        .load(image.uri)
         .into(imageView)
         }
         }
 ```
 
-Then, launch image picker when needed.
-- With default configuration:
+Then launch the picker
+- with default configuration:
 ```java
 launcher.launch()
 ```
-- With customize configuration:
+- with custom configuration:
 ```java
-val config = ImagePickerConfig(
-        statusBarColor = "#000000",
-        isLightStatusBar = false,
-        isFolderMode = true,
-        isMultipleMode = true,
-        maxSize = 10,
-        rootDirectory = Config.ROOT_DIR_DOWNLOAD,
-        subDirectory = "Photos",
-        folderGridCount = GridCount(2, 4),
-        imageGridCount = GridCount(3, 5),
-        // See more at configuration attributes table below
-        )
+val config = ImagePickerConfig(            
+    isFolderMode = true,
+    isShowCamera = true,
+    limitSize = 10,
+    selectedIndicatorType = IndicatorType.NUMBER,
+    rootDirectory = RootDirectory.DCIM,
+    subDirectory = "Image Picker",
+    folderGridCount = GridCount(2, 4),
+    imageGridCount = GridCount(3, 5),
+    customColor = CustomColor(
+        background = "#000000",
+        statusBar = "#000000",
+        toolbar = "#212121",
+        toolbarTitle = "#FFFFFF",
+        toolbarIcon = "#FFFFFF",
+        // ...
+    ),
+    customMessage = CustomMessage(
+        reachLimitSize = "You can only select up to 10 images.",
+        noImage = "No image found.",
+        noPhotoAccessPermission = "Please allow permission to access photos and media.",
+        noCameraPermission = "Please allow permission to access camera."
+        // ...
+    ),
+    customDrawable = CustomDrawable(
+        cameraIcon = R.drawable.ic_camera,
+        selectAllIcon = R.drawable.ic_select_all,
+        unselectAllIcon = R.drawable.ic_unselect_all,
+        loadingImagePlaceholder = R.drawable.img_loading_placeholder
+        // ...
+    ),
+    // see more options below
+)
 
-        launcher.launch(config)
+launcher.launch(config)
 ```
 
-Configuration attributes
---------
+## Configuration options
 
-| Name | Description | Default
+| Option | Description | Default value
 | --- | --- | :---: |
-| `statusBarColor` | Status bar color (require API >= 21) | `#000000`
-| `isLightStatusBar` | Set status bar to light/dark mode to change it's content to dark/light (require API >= 21) | `false`
-| `toolbarColor` | Toolbar color | `#212121`
-| `toolbarTextColor` | Toolbar text color | `#FFFFFF`
-| `toolbarIconColor` | Toolbar icon color | `#FFFFFF`
-| `backgroundColor` | Background color | `#424242`
-| `progressIndicatorColor` | Loading indicator color | `#009688`
-| `selectedIndicatorColor` | Selected image's indicator color | `#1976D2`
-| `isCameraOnly` | Open camera, then capture and return an image   | `false`
-| `isMultipleMode` | Allow to select multiple images | `true`
-| `isFolderMode` | Show images by folders | `false`
-| `folderGridCount` | Set folder colums for portrait and landscape orientation | `GridCount(2, 4)`
-| `imageGridCount` | Set image colums for portrait and landscape orientation | `GridCount(3, 5)`
-| `doneTitle` | Done button title | `DONE`
-| `folderTitle` | Toolbar title for folder mode (require FolderMode = `true`) | `Albums`
-| `imageTitle` | Toolbar title for image mode (require FolderMode = `false`) | `Photos`
-| `isShowCamera` | Show camera button | `true`
-| `isShowNumberIndicator` | Show selected image's indicator as number | `false`
-| `isAlwaysShowDoneButton` | Show done button even though no images've been selected yet | `false`
-| `rootDirectory` | Public root directory of captured image, should be one of: `RootDirectory.DCIM`, `RootDirectory.PICTURES`, `RootDirectory.DOWNLOADS`. | `RootDirectory.DCIM`
-| `subDirectory` | Root directory's sub folder of captured image | Application name
-| `maxSize` | Max images can be selected | `Int.MAX_VALUE`
-| `limitMessage` | Message to be displayed when total selected images exceeds max size | ...
-| `selectedImages` | List of images that will be shown as selected in ImagePicker | Empty list
+| `isCameraMode` | Capture an image from the camera instead of selecting from the library. If set to `true`, this option will ignore most of other options such as `isMultiSelectMode`, `isFolderMode`, `customColor`, `customIcon`... | `false`
+| `isMultiSelectMode` | Allow to select multiple images. | `true`
+| `isFolderMode` | Group images in folders. | `true`
+| `isShowCamera` | Show the camera button. | `true`
+| `isAlwaysShowDoneButton` | Show done button even if there's no image that has been selected yet. | `true`
+| `isSelectAllEnabled` | Show select all images button (works if `isMultiSelectMode = true`). | `true`
+| `isUnselectAllEnabled` | Show unselect all images button (works if `isMultiSelectMode = true`). | `true`
+| `isImageTransitionEnabled` | Enable image transition. | `true`
+| `statusBarContentMode` | Status bar content mode. | `StatusBarContent.LIGHT`
+| `selectedIndicatorType` | Set selected image's indicator type. | `IndicatorType.NUMBER`
+| `limitSize` | Maximum number of images that can be selected. | `Int.MAX_VALUE`
+| `folderGridCount` | Number of folder columns for portrait and landscape orientation. | `GridCount(2, 4)`
+| `imageGridCount` | Number of image columns for portrait and landscape orientation. | `GridCount(3, 5)`
+| `doneButtonTitle` | Done button's title. | `DONE`
+| `snackBarButtonTitle` | Snack bar action button's title. | `OK`
+| `folderTitle` | Toolbar title for folder mode (works if `isFolderMode = true`). | `Albums`
+| `imageTitle` | Toolbar title for image mode (works if `isFolderMode = false`). | `Photos`
+| `rootDirectory` | Public root directory of the captured image. | `RootDirectory.DCIM`
+| `subDirectory` | Subfolder of root directory where the captured image is saved. | *application name*
+| `selectedImages` | Define images that will be marked as selected when launching picker. | *empty list*
+| `customColor` | Custom colors: toolbar, indicator... | `CustomColor(...)`
+| `customDrawable` | Custom drawable resources: back icon, camera icon, image placeholder... | `CustomDrawable(...)`
+| `customMessage` | Custom messages: no permission, limit size, error... | `CustomMessage(...)`
 
-License
+#### *CustomColor* class
+
+Define custom color for views, type = `String`.
+| Property | Description | Default value
+| --- | --- | :---: |
+| `background` | Background color. | `#000000`
+| `statusBar` | Status bar color. | `#000000`
+| `toolbar` | Toolbar color. | `#212121`
+| `toolbarTitle` | Toolbar title color. | `#FFFFFF`
+| `toolbarIcon` | Toolbar icons color (this color will not be applied to `CustomDrawable` toolbar icons). | `#FFFFFF`
+| `doneButtonTitle` | Done button title color. | `#FFFFFF`
+| `snackBarBackground` | Snack bar background color. | `#323232`
+| `snackBarMessage` | Snack bar message color. | `#FFFFFF`
+| `snackBarButtonTitle` | Snack bar button title color. | `#4CAF50`
+| `loadingIndicator` | Loading indicator color. | `#757575`
+| `selectedImageIndicator` | Selected image indicator color. | `#1976D2`
+
+#### *CustomDrawable* class
+
+Define custom icon for the toolbar's buttons, type = `Int` (resource id). `24dp` icon size is recommended.
+| Property | Description | Example
+| --- | --- | :---: |
+| `backIcon` | Back button icon. | `R.drawable.ic_back`
+| `cameraIcon` | Camera button icon. | `R.drawable.ic_camera`
+| `selectAllIcon` | Select all button icon. | `R.drawable.ic_select_all`
+| `unselectAllIcon` | Unselect all button icon. | `R.drawable.ic_unselect_all`
+| `loadingImagePlaceholder` | Placeholder for loading image. | `R.drawable.img_loading_placeholder`
+| `errorImagePlaceholder` | Placeholder for error image. | `R.drawable.img_error_placeholder`
+
+#### *CustomMessage* class
+
+Define custom message when something's wrong, type = `String`.
+| Property | Description | Default value
+| --- | --- | :---: |
+| `reachLimitSize` | Reached the limit number of images that can be selected. | `You have reached the limit number of images.`
+| `cameraError` | Failed to open camera. | `Could not open camera.`
+| `noCamera` | Device has no camera. | `No camera found.`
+| `noImage` | Device has no image. | `No image available.`
+| `noPhotoAccessPermission` | Photos and media access permission is not granted. | `Please allow permission to access photos and media.`
+| `noCameraPermission` | Camera permisson is not granted. | `Please allow permission to access camera.`
+
+Author
 --------
 
-Copyright (c) 2022 Nguyen Hoang Lam
+Copyright (c) 2023 Nguyen Hoang Lam
+- [LinkedIn](https://www.linkedin.com/in/lam-nguyen-hoang-70bb21115)
+- [Facebook](https://www.facebook.com/hoanglamvn90)

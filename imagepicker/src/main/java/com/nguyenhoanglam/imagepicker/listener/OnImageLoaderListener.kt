@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 

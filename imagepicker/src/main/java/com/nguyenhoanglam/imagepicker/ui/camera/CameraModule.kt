@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -18,7 +18,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
-import com.nguyenhoanglam.imagepicker.helper.ExifUtil
+import com.nguyenhoanglam.imagepicker.helper.ExifHelper
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 import com.nguyenhoanglam.imagepicker.model.RootDirectory
@@ -26,7 +26,8 @@ import java.io.File
 import java.io.IOException
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class CameraModule : Serializable {
 
@@ -64,7 +65,6 @@ class CameraModule : Serializable {
         return null
     }
 
-    @Suppress("DEPRECATION")
     private fun createImageFile(
         context: Context,
         rootDirectory: String,
@@ -82,7 +82,7 @@ class CameraModule : Serializable {
             isDirExisted = storageDir.mkdirs()
         }
         if (isDirExisted) {
-            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
             val filePrefix = "IMG_${timeStamp}"
 
             currentFileName = filePrefix
@@ -93,7 +93,6 @@ class CameraModule : Serializable {
         return null
     }
 
-    @Suppress("DEPRECATION")
     fun saveImage(
         context: Context,
         config: ImagePickerConfig,
@@ -108,7 +107,8 @@ class CameraModule : Serializable {
         var newFileUri: Uri? = null
         try {
             if (DeviceHelper.isMinSdk29) {
-                val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                val timeStamp: String =
+                    SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
                 val filePrefix = "IMG_${timeStamp}"
                 val fileName = filePrefix + SUFFIX
                 val relativePath = config.rootDirectory.value + File.separator + config.subDirectory
@@ -122,7 +122,7 @@ class CameraModule : Serializable {
                 }
 
                 val bitmap = getBitmapFromUri(contentResolver, currentFileUri!!)
-                val orientedBitmap = ExifUtil.rotateBitmap(currentFilePath, bitmap)
+                val orientedBitmap = ExifHelper.rotateBitmap(currentFilePath, bitmap)
 
                 contentResolver.run {
                     val url =
@@ -132,8 +132,14 @@ class CameraModule : Serializable {
                     newFileUri = contentResolver.insert(url, values)
                     if (newFileUri != null) {
                         val imageOutputStream = openOutputStream(newFileUri!!)
-                        orientedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageOutputStream)
-
+                        if (imageOutputStream != null) {
+                            orientedBitmap.compress(
+                                Bitmap.CompressFormat.JPEG,
+                                100,
+                                imageOutputStream
+                            )
+                        }
+                        imageOutputStream?.close()
                         val images = arrayListOf(
                             Image(newFileUri!!, currentFileName!!, 0, config.subDirectory!!)
                         )

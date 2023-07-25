@@ -8,12 +8,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/imagepicker_padding_large"
         android:src="@drawable/imagepicker_ic_back" />
-
 
     <TextView
         android:id="@+id/text_toolbar_title"
@@ -21,17 +19,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/imagepicker_margin_large"
-        android:layout_marginRight="@dimen/imagepicker_margin_large"
-        android:layout_toStartOf="@+id/image_toolbar_camera"
-        android:layout_toLeftOf="@+id/image_toolbar_camera"
+        android:layout_toStartOf="@+id/image_toolbar_select_all"
         android:layout_toEndOf="@id/image_toolbar_back"
-        android:layout_toRightOf="@id/image_toolbar_back"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Folder"
+        android:text="@string/imagepicker_title_folder"
         android:textColor="@color/imagepicker_white" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_toolbar_select_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/image_toolbar_unselect_all"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:paddingHorizontal="@dimen/imagepicker_padding_medium"
+        android:paddingVertical="@dimen/imagepicker_padding_large"
+        android:src="@drawable/imagepicker_ic_select_all" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image_toolbar_unselect_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/image_toolbar_camera"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:paddingHorizontal="@dimen/imagepicker_padding_medium"
+        android:paddingVertical="@dimen/imagepicker_padding_large"
+        android:src="@drawable/imagepicker_ic_unselect_all" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_toolbar_camera"
@@ -40,23 +57,21 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/text_toolbar_done"
-        android:layout_toLeftOf="@+id/text_toolbar_done"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="16dp"
+        android:paddingHorizontal="@dimen/imagepicker_padding_medium"
+        android:paddingVertical="@dimen/imagepicker_padding_large"
         android:src="@drawable/imagepicker_ic_camera" />
-
 
     <TextView
         android:id="@+id/text_toolbar_done"
         style="@style/imagepicker_ToolbarMenuText"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/imagepicker_padding_large"
+        android:paddingHorizontal="@dimen/imagepicker_padding_medium"
+        android:paddingVertical="@dimen/imagepicker_padding_large"
         android:text="@string/imagepicker_action_done"
         android:textAllCaps="true"
         android:textColor="@color/imagepicker_white"
         android:visibility="gone" />
-
 </merge>

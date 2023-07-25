@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.databinding.ImagepickerFragmentBinding
+import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.LayoutManagerHelper
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener
@@ -47,9 +48,13 @@ class FolderFragment : BaseFragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gridCount = arguments?.getParcelable(GRID_COUNT)!!
+        gridCount = if (DeviceHelper.isMinSdk33)
+            arguments?.getParcelable(
+                GRID_COUNT, GridCount::class.java
+            )!! else arguments?.getParcelable(GRID_COUNT)!!
 
         viewModel = activity?.run {
             ViewModelProvider(this, ImagePickerViewModelFactory(requireActivity().application)).get(
@@ -75,8 +80,8 @@ class FolderFragment : BaseFragment() {
         _binding = ImagepickerFragmentBinding.inflate(inflater, container, false)
 
         binding.apply {
-            root.setBackgroundColor(Color.parseColor(config.backgroundColor))
-            progressIndicator.setIndicatorColor(Color.parseColor(config.progressIndicatorColor))
+            root.setBackgroundColor(Color.parseColor(config.customColor!!.background))
+            progressIndicator.setIndicatorColor(Color.parseColor(config.customColor!!.loadingIndicator))
             recyclerView.apply {
                 setHasFixedSize(true)
                 layoutManager = gridLayoutManager
@@ -85,9 +90,9 @@ class FolderFragment : BaseFragment() {
             }
         }
 
-        viewModel?.result?.observe(viewLifecycleOwner, {
+        viewModel?.result?.observe(viewLifecycleOwner) {
             handleResult(it)
-        })
+        }
 
         return binding.root
     }

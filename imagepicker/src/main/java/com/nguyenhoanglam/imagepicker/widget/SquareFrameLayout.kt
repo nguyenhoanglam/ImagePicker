@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -12,7 +12,9 @@ import android.widget.FrameLayout
 class SquareFrameLayout : FrameLayout {
 
     constructor(context: Context) : super(context)
+
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,

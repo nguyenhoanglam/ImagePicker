@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -18,13 +18,14 @@ import androidx.annotation.AttrRes
 import androidx.core.view.ViewCompat
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import com.nguyenhoanglam.imagepicker.R
+import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 
 class SnackBarView : RelativeLayout {
 
     private lateinit var messageText: TextView
     private lateinit var actionButton: Button
-    var isShowing = false
-        private set
+
+    private var isShowing = false
 
     constructor(context: Context) : super(context) {
         init(context)
@@ -47,7 +48,7 @@ class SnackBarView : RelativeLayout {
         if (isInEditMode) {
             return
         }
-        setBackgroundColor(Color.parseColor("#323232"))
+
         translationY = height.toFloat()
         alpha = 0f
         isShowing = false
@@ -55,21 +56,23 @@ class SnackBarView : RelativeLayout {
         val verticalPadding = convertDpToPixels(context, 14f)
         setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
         messageText = findViewById(R.id.text_snackbar_message)
-        actionButton = findViewById(R.id.button_snackbar_action)
+        actionButton = findViewById(R.id.button_snack_bar_action)
     }
 
-    private fun setText(textResId: Int) {
-        messageText.setText(textResId)
+    fun config(config: ImagePickerConfig) {
+        setBackgroundColor(Color.parseColor(config.customColor!!.snackBarBackground))
+        messageText.setTextColor(Color.parseColor(config.customColor!!.snackBarMessage))
+        actionButton.text = config.snackBarButtonTitle
+        actionButton.setTextColor(Color.parseColor(config.customColor!!.snackBarButtonTitle))
     }
 
-    private fun setOnActionClickListener(actionText: String, onClickListener: OnClickListener) {
-        actionButton.text = actionText
+    private fun setOnActionClickListener(onClickListener: OnClickListener) {
         actionButton.setOnClickListener { view -> hide { onClickListener.onClick(view) } }
     }
 
-    fun show(textResId: Int, onClickListener: OnClickListener) {
-        setText(textResId)
-        setOnActionClickListener(context.getString(R.string.imagepicker_action_ok), onClickListener)
+    fun show(message: String?, onClickListener: OnClickListener) {
+        messageText.text = message ?: ""
+        setOnActionClickListener(onClickListener)
         ViewCompat.animate(this)
             .translationY(0f)
             .setDuration(ANIM_DURATION.toLong())

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -27,15 +27,16 @@ import java.lang.ref.WeakReference
 class ImagePickerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val contextRef = WeakReference(application.applicationContext)
-    private lateinit var config: ImagePickerConfig
     private var job: Job? = null
 
-    lateinit var selectedImages: MutableLiveData<ArrayList<Image>>
     val result = MutableLiveData(Result(CallbackStatus.IDLE, arrayListOf()))
+    lateinit var selectedImages: MutableLiveData<ArrayList<Image>>
+
+    private lateinit var config: ImagePickerConfig
 
     fun setConfig(config: ImagePickerConfig) {
         this.config = config
-        selectedImages = MutableLiveData(config.selectedImages)
+        selectedImages = MutableLiveData(ArrayList(config.selectedImages))
     }
 
     fun getConfig() = config
@@ -44,7 +45,7 @@ class ImagePickerViewModel(application: Application) : AndroidViewModel(applicat
         if (job != null) return
 
         result.postValue(Result(CallbackStatus.FETCHING, arrayListOf()))
-        job = viewModelScope.launch() {
+        job = viewModelScope.launch {
             try {
                 val images = fetchImagesFromExternalStorage()
                 result.postValue(Result(CallbackStatus.SUCCESS, images))

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -23,6 +23,7 @@ import com.nguyenhoanglam.imagepicker.helper.ToastHelper
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
+import com.nguyenhoanglam.imagepicker.model.IndicatorType
 
 class ImagePickerAdapter(
     context: Context,
@@ -30,46 +31,51 @@ class ImagePickerAdapter(
     private val imageSelectListener: OnImageSelectListener
 ) : BaseRecyclerViewAdapter<ImagePickerAdapter.ImageViewHolder?>(context) {
 
-    private val selectedImages = arrayListOf<Image>()
-    private val images: ArrayList<Image> = ArrayList()
+    private var images = arrayListOf<Image>()
+    private var selectedImages = arrayListOf<Image>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val itemView = inflater.inflate(R.layout.imagepicker_item_image, parent, false)
         return ImageViewHolder(
-            itemView,
-            config.isShowNumberIndicator,
-            config.selectedIndicatorColor
+            itemView, config.selectedIndicatorType, config.customColor!!.selectedImageIndicator!!
         )
     }
 
     override fun onBindViewHolder(
-        viewHolder: ImageViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
+        viewHolder: ImageViewHolder, position: Int, payloads: MutableList<Any>
     ) {
         if (payloads.isEmpty()) {
             onBindViewHolder(viewHolder, position)
         } else {
             when {
                 payloads.any { it is ImageSelectedOrUpdated } -> {
-                    if (config.isShowNumberIndicator) {
-                        val image = images[position]
-                        val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
-                        viewHolder.selectedNumber.text = (selectedIndex + 1).toString()
-                        viewHolder.selectedNumber.visibility = View.VISIBLE
-                        viewHolder.selectedIcon.visibility = View.GONE
-                    } else {
-                        viewHolder.selectedIcon.visibility = View.VISIBLE
-                        viewHolder.selectedNumber.visibility = View.GONE
+                    when (config.selectedIndicatorType) {
+                        IndicatorType.NUMBER -> {
+                            val image = images[position]
+                            val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
+                            viewHolder.selectedNumber.text = "${selectedIndex + 1}"
+                            viewHolder.selectedNumber.visibility = View.VISIBLE
+                            viewHolder.selectedIcon.visibility = View.GONE
+                        }
+
+                        else -> {
+                            viewHolder.selectedIcon.visibility = View.VISIBLE
+                            viewHolder.selectedNumber.visibility = View.GONE
+                        }
                     }
+
                     setupItemForeground(viewHolder.image, true)
                 }
+
                 payloads.any { it is ImageUnselected } -> {
-                    if (config.isShowNumberIndicator) viewHolder.selectedNumber.visibility =
-                        View.GONE
-                    else viewHolder.selectedIcon.visibility = View.GONE
+                    when (config.selectedIndicatorType) {
+                        IndicatorType.NUMBER -> viewHolder.selectedNumber.visibility = View.GONE
+                        else -> viewHolder.selectedIcon.visibility = View.GONE
+                    }
+
                     setupItemForeground(viewHolder.image, false)
                 }
+
                 else -> {
                     onBindViewHolder(viewHolder, position)
                 }
@@ -80,19 +86,19 @@ class ImagePickerAdapter(
     override fun onBindViewHolder(viewHolder: ImageViewHolder, position: Int) {
         val image = images[position]
         val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
-        val isSelected = config.isMultipleMode && selectedIndex != -1
+        val isSelected = config.isMultiSelectMode && selectedIndex != -1
 
         GlideHelper.loadImage(viewHolder.image, image.uri)
         setupItemForeground(viewHolder.image, isSelected)
 
         viewHolder.gifIndicator.visibility =
             if (ImageHelper.isGifFormat(image)) View.VISIBLE else View.GONE
-        viewHolder.selectedIcon.visibility =
-            if (isSelected && !config.isShowNumberIndicator) View.VISIBLE else View.GONE
         viewHolder.selectedNumber.visibility =
-            if (isSelected && config.isShowNumberIndicator) View.VISIBLE else View.GONE
+            if (isSelected && config.selectedIndicatorType == IndicatorType.NUMBER) View.VISIBLE else View.GONE
+        viewHolder.selectedIcon.visibility =
+            if (isSelected && config.selectedIndicatorType == IndicatorType.CHECK_MARK) View.VISIBLE else View.GONE
         if (viewHolder.selectedNumber.visibility == View.VISIBLE) {
-            viewHolder.selectedNumber.text = (selectedIndex + 1).toString()
+            viewHolder.selectedNumber.text = "${selectedIndex + 1}"
         }
         viewHolder.itemView.setOnClickListener {
             selectOrRemoveImage(image, position)
@@ -107,15 +113,14 @@ class ImagePickerAdapter(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             view.foreground = if (isSelected) ColorDrawable(
                 ContextCompat.getColor(
-                    context,
-                    R.color.imagepicker_black_alpha_30
+                    context, R.color.imagepicker_black_alpha_30
                 )
             ) else null
         }
     }
 
     private fun selectOrRemoveImage(image: Image, position: Int) {
-        if (config.isMultipleMode) {
+        if (config.isMultiSelectMode) {
             val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
             if (selectedIndex != -1) {
                 selectedImages.removeAt(selectedIndex)
@@ -125,13 +130,8 @@ class ImagePickerAdapter(
                     notifyItemChanged(index, ImageSelectedOrUpdated())
                 }
             } else {
-                if (selectedImages.size >= config.maxSize) {
-                    val message =
-                        if (config.limitMessage != null) config.limitMessage!! else String.format(
-                            context.resources.getString(R.string.imagepicker_msg_limit_images),
-                            config.maxSize
-                        )
-                    ToastHelper.show(context, message)
+                if (selectedImages.size >= config.limitSize) {
+                    ToastHelper.show(context, config.customMessage!!.reachLimitSize!!)
                     return
                 } else {
                     selectedImages.add(image)
@@ -144,20 +144,36 @@ class ImagePickerAdapter(
         }
     }
 
-    fun setData(images: List<Image>) {
-        this.images.clear()
-        this.images.addAll(images)
+    fun setImages(images: ArrayList<Image>) {
+        this.images = images
         notifyDataSetChanged()
     }
 
     fun setSelectedImages(selectedImages: ArrayList<Image>) {
-        this.selectedImages.clear()
-        this.selectedImages.addAll(selectedImages)
+        this.selectedImages = selectedImages
         notifyDataSetChanged()
-
     }
 
-    class ImageViewHolder(itemView: View, isShowNumberIndicator: Boolean, indicatorColor: String) :
+    fun setSelectedAndAddedImages(selectedImages: ArrayList<Image>, addedImages: ArrayList<Image>) {
+        this.selectedImages = selectedImages
+        val addedIndexes = ImageHelper.findImageIndexes(addedImages, images)
+        for (index in addedIndexes) {
+            notifyItemChanged(index, ImageSelectedOrUpdated())
+        }
+    }
+
+    fun setSelectedAndRemovedImages(
+        selectedImages: ArrayList<Image>,
+        removedImages: ArrayList<Image>
+    ) {
+        this.selectedImages = selectedImages
+        val removedIndexes = ImageHelper.findImageIndexes(removedImages, images)
+        for (index in removedIndexes) {
+            notifyItemChanged(index, ImageUnselected())
+        }
+    }
+
+    class ImageViewHolder(itemView: View, indicatorType: IndicatorType, indicatorColor: String) :
         RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.image_thumbnail)
         val selectedIcon: ImageView = itemView.findViewById(R.id.image_selected_icon)
@@ -165,8 +181,11 @@ class ImagePickerAdapter(
         val gifIndicator: View = itemView.findViewById(R.id.gif_indicator)
 
         init {
-            val drawable: GradientDrawable =
-                (if (isShowNumberIndicator) selectedNumber.background.mutate() else selectedIcon.background.mutate()) as GradientDrawable
+            val drawable: GradientDrawable = when (indicatorType) {
+                IndicatorType.NUMBER -> selectedNumber.background.mutate()
+                else -> selectedIcon.background.mutate()
+            } as GradientDrawable
+
             drawable.setColor(Color.parseColor(indicatorColor))
         }
     }

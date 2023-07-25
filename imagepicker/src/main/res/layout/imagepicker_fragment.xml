@@ -16,7 +16,7 @@
         style="@style/imagepicker_TextMedium"
         android:layout_gravity="center"
         android:padding="@dimen/imagepicker_padding_medium"
-        android:text="@string/imagepicker_msg_no_images"
+        android:text="@string/imagepicker_msg_no_image"
         android:textColor="@color/imagepicker_white"
         android:visibility="gone"
         tools:visibility="visible" />

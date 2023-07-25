@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -9,6 +9,11 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.nguyenhoanglam.imagepicker.model.Folder
 import com.nguyenhoanglam.imagepicker.model.Image
+
+enum class SelectionState {
+    NOT_SELECTED,
+    SELECTED,
+}
 
 object ImageHelper {
 
@@ -33,16 +38,32 @@ object ImageHelper {
         return ArrayList(folderMap.values)
     }
 
-    fun filterImages(images: ArrayList<Image>, bucketId: Long?): ArrayList<Image> {
-        if (bucketId == null || bucketId == 0L) return images
+    fun filter(images: ArrayList<Image>?, bucketId: Long?): ArrayList<Image> {
+        if (images == null) return arrayListOf()
 
-        val filteredImages = arrayListOf<Image>()
-        for (image in images) {
-            if (image.bucketId == bucketId) {
-                filteredImages.add(image)
-            }
-        }
-        return filteredImages
+        if (bucketId == null || bucketId == 0L) return ArrayList(images)
+
+        return images.filter { it.bucketId == bucketId } as ArrayList<Image>
+    }
+
+    fun filterNot(images: ArrayList<Image>?, bucketId: Long?): ArrayList<Image> {
+        if (images == null) return arrayListOf()
+
+        if (bucketId == null || bucketId == 0L) return ArrayList(images)
+
+        return images.filter { it.bucketId != bucketId } as ArrayList<Image>
+    }
+
+    fun filterExclude(
+        images: ArrayList<Image>?,
+        excludedImages: ArrayList<Image>?
+    ): ArrayList<Image> {
+        if (images.isNullOrEmpty()) return arrayListOf()
+
+        if (excludedImages.isNullOrEmpty()) return ArrayList(images)
+
+        return images.filter { findImageIndex(it, excludedImages) == -1 } as ArrayList<Image>
+
     }
 
     fun findImageIndex(image: Image, images: ArrayList<Image>): Int {
@@ -51,6 +72,7 @@ object ImageHelper {
                 return i
             }
         }
+
         return -1
     }
 
@@ -64,12 +86,27 @@ object ImageHelper {
                 }
             }
         }
+
         return indexes
+    }
+
+    fun getBucketSelectionState(
+        images: ArrayList<Image>?,
+        selectedImages: ArrayList<Image>?,
+        bucketId: Long?,
+    ): SelectionState {
+        if (bucketId == 0L) {
+            if (images?.isEmpty() == true) return SelectionState.NOT_SELECTED
+            return if (selectedImages?.isEmpty() == true) SelectionState.NOT_SELECTED else SelectionState.SELECTED
+        } else {
+            if (images?.any { it.bucketId == bucketId } == false) return SelectionState.NOT_SELECTED
+            return if (selectedImages?.any { it.bucketId == bucketId } == false) SelectionState.NOT_SELECTED else SelectionState.SELECTED
+        }
     }
 
 
     fun isGifFormat(image: Image): Boolean {
-        val fileName = image.name;
+        val fileName = image.name
         val extension = if (fileName.contains(".")) {
             fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length)
         } else ""

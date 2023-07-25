@@ -1,19 +1,17 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 package com.nguyenhoanglam.imagepicker.helper
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import java.io.IOException
 
-object ExifUtil {
+object ExifHelper {
     fun rotateBitmap(photoPath: String?, bitmap: Bitmap): Bitmap {
-        if (photoPath == null) {
-            return bitmap;
-        }
+        if (photoPath == null) return bitmap
 
         try {
             val ei = ExifInterface(photoPath)
@@ -34,15 +32,18 @@ object ExifUtil {
                     matrix.setRotate(180f)
                     matrix.postScale(-1f, 1f)
                 }
+
                 5 -> {
                     matrix.setRotate(90f)
                     matrix.postScale(-1f, 1f)
                 }
+
                 6 -> matrix.setRotate(90f)
                 7 -> {
                     matrix.setRotate(-90f)
                     matrix.postScale(-1f, 1f)
                 }
+
                 8 -> matrix.setRotate(-90f)
                 else -> return bitmap
             }
@@ -59,6 +60,7 @@ object ExifUtil {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+
         return bitmap
     }
 }

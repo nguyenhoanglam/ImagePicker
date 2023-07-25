@@ -10,10 +10,11 @@
     <string name="imagepicker_text_gif">GIF</string>
 
     <string name="imagepicker_error_no_camera">No camera found.</string>
-    <string name="imagepicker_error_open_camera">Could not open camera.</string>
+    <string name="imagepicker_error_camera">Could not open camera.</string>
 
-    <string name="imagepicker_msg_no_images">No image available.</string>
-    <string name="imagepicker_msg_no_external_storage_permission">Please allow permission to access photos and media.</string>
-    <string name="imagepicker_msg_limit_images">You can select up to %d images.</string>
+    <string name="imagepicker_msg_no_image">No image available.</string>
+    <string name="imagepicker_msg_no_photo_access_permission">Please allow permission to access photos and media.</string>
+    <string name="imagepicker_msg_no_camera_permission">Please allow permission to access camera.</string>
+    <string name="imagepicker_msg_selection_limit">You have reached the limit number of images.</string>
 
 </resources>

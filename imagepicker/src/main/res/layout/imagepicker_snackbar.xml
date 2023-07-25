@@ -8,23 +8,20 @@
         android:id="@+id/text_snackbar_message"
         style="@style/imagepicker_TextSmall"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/button_snackbar_action"
-        android:layout_toLeftOf="@+id/button_snackbar_action"
+        android:layout_toStartOf="@+id/button_snack_bar_action"
         android:textColor="@color/imagepicker_white"
         tools:text="Please grant app permissions to capture photo!" />
 
     <Button
-        android:id="@+id/button_snackbar_action"
+        android:id="@+id/button_snack_bar_action"
         style="@style/imagepicker_TextSmall"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
         android:background="?selectableItemBackground"
         android:text="@string/imagepicker_action_ok"
         android:textAllCaps="true"
-        android:textColor="#009688" />
+        android:textColor="@color/imagepicker_snack_bar_button_title"
+        android:textStyle="bold" />
 </merge>

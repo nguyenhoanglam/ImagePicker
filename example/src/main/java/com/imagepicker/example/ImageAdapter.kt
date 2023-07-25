@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Nguyen Hoang Lam.
- * All rights reserved.
+ * Copyright (C) 2023 Image Picker
+ * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 package com.imagepicker.example
 
@@ -20,8 +20,7 @@ internal class ImageAdapter(private val context: Context) :
 
     private val images = ArrayList<Image>()
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val options = RequestOptions().placeholder(R.drawable.image_placeholder)
-        .error(R.drawable.image_placeholder)
+    private val options = RequestOptions().placeholder(R.drawable.img_loading_placeholder)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         return ImageViewHolder(inflater.inflate(R.layout.item_image, parent, false))

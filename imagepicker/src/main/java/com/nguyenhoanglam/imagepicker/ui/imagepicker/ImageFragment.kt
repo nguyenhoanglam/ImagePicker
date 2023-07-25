@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.databinding.ImagepickerFragmentBinding
+import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.LayoutManagerHelper
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
@@ -62,22 +63,27 @@ class ImageFragment : BaseFragment() {
     }
 
     private val selectedImageObserver = object : Observer<ArrayList<Image>> {
-        override fun onChanged(it: ArrayList<Image>) {
-            imageAdapter.setSelectedImages(it)
+        override fun onChanged(value: ArrayList<Image>) {
+            imageAdapter.setSelectedImages(value)
             viewModel.selectedImages.removeObserver(this)
         }
-
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bucketId = arguments?.getLong(BUCKET_ID)
-        gridCount = arguments?.getParcelable(GRID_COUNT)!!
+        gridCount = if (DeviceHelper.isMinSdk33)
+            arguments?.getParcelable(
+                GRID_COUNT,
+                GridCount::class.java
+            )!! else arguments?.getParcelable(GRID_COUNT)!!
 
         viewModel = requireActivity().run {
-            ViewModelProvider(this, ImagePickerViewModelFactory(requireActivity().application)).get(
-                ImagePickerViewModel::class.java
-            )
+            ViewModelProvider(
+                this,
+                ImagePickerViewModelFactory(requireActivity().application)
+            )[ImagePickerViewModel::class.java]
         }
     }
 
@@ -99,8 +105,8 @@ class ImageFragment : BaseFragment() {
         _binding = ImagepickerFragmentBinding.inflate(inflater, container, false)
 
         binding.apply {
-            root.setBackgroundColor(Color.parseColor(config.backgroundColor))
-            progressIndicator.setIndicatorColor(Color.parseColor(config.progressIndicatorColor))
+            root.setBackgroundColor(Color.parseColor(config.customColor!!.background))
+            progressIndicator.setIndicatorColor(Color.parseColor(config.customColor!!.loadingIndicator))
             recyclerView.apply {
                 setHasFixedSize(true)
                 layoutManager = gridLayoutManager
@@ -110,21 +116,53 @@ class ImageFragment : BaseFragment() {
         }
 
         viewModel.apply {
-            result.observe(viewLifecycleOwner, {
+            result.observe(viewLifecycleOwner) {
                 handleResult(it)
-            })
+            }
             selectedImages.observe(viewLifecycleOwner, selectedImageObserver)
         }
 
         return binding.root
     }
 
+    fun getBucketId(): Long? {
+        return bucketId
+    }
+
+    fun selectAllImages() {
+        val images = viewModel.result.value?.images ?: arrayListOf()
+        val selectedImages = viewModel.selectedImages.value ?: arrayListOf()
+
+        if (bucketId != null && bucketId != 0L) {
+            val imagesByBucket = ImageHelper.filter(images, bucketId)
+            selectedImages.addAll(imagesByBucket)
+            imageAdapter.setSelectedAndAddedImages(selectedImages, imagesByBucket)
+        } else {
+            selectedImages.addAll(images)
+            imageAdapter.setSelectedAndAddedImages(selectedImages, images)
+        }
+
+        viewModel.selectedImages.value = selectedImages
+    }
+
+    fun unselectAllImages() {
+        val selectedImages = viewModel.selectedImages.value ?: arrayListOf()
+        val selectedImagesByBucket = ImageHelper.filter(selectedImages, bucketId)
+
+        selectedImages.removeAll(selectedImagesByBucket.toSet())
+        imageAdapter.setSelectedAndRemovedImages(
+            selectedImages,
+            selectedImagesByBucket
+        )
+
+        viewModel.selectedImages.value = selectedImages
+    }
 
     private fun handleResult(result: Result) {
         if (result.status is CallbackStatus.SUCCESS) {
-            val images = ImageHelper.filterImages(result.images, bucketId)
+            val images = ImageHelper.filter(result.images, bucketId)
             if (images.isNotEmpty()) {
-                imageAdapter.setData(images)
+                imageAdapter.setImages(images)
                 binding.recyclerView.visibility = View.VISIBLE
             } else {
                 binding.recyclerView.visibility = View.GONE
@@ -157,5 +195,4 @@ class ImageFragment : BaseFragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

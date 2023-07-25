@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Image Picker
+ * Copyright (C) 2023 Image Picker
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
@@ -18,21 +18,37 @@ import androidx.core.app.ActivityCompat
 
 object PermissionHelper {
 
-    fun checkPermission(activity: Activity, permission: String, listener: PermissionAskListener) {
+    enum class STATUS {
+        GRANTED,
+        NOT_GRANTED,
+        DENIED,
+        DISABLED
+    }
+
+    private const val PREFERENCE_FILE_NAME = "ImagePicker"
+
+    fun checkPermission(activity: Activity, permission: String): STATUS {
         if (!hasSelfPermission(activity, permission)) {
-            if (shouldShowRequestPermissionRationale(activity, permission)) {
-                listener.onPermissionPreviouslyDenied()
-            } else {
-                if (PreferenceHelper.isFirstTimeAskingPermission(activity, permission)) {
-                    PreferenceHelper.firstTimeAskingPermission(activity, permission, false)
-                    listener.onNeedPermission()
-                } else {
-                    listener.onPermissionDisabled()
-                }
+            if (shouldShowRequestPermissionRationale(activity, permission)) return STATUS.DENIED
+
+            if (!isInitialRequestCalled(activity, permission)) {
+                setInitialRequestCalled(activity, permission)
+                return STATUS.NOT_GRANTED
             }
-        } else {
-            listener.onPermissionGranted()
+
+            return STATUS.DISABLED
         }
+
+        return STATUS.GRANTED
+    }
+
+    fun checkPermissions(activity: Activity, permissions: Array<String>): Array<STATUS> {
+        val statuses = ArrayList<STATUS>()
+        for (permission in permissions) {
+            statuses.add(checkPermission(activity, permission))
+        }
+
+        return statuses.toTypedArray()
     }
 
     fun openAppSettings(activity: Activity) {
@@ -47,16 +63,7 @@ object PermissionHelper {
         activity.startActivity(intent)
     }
 
-    fun asArray(vararg permissions: String): Array<String?> {
-        require(permissions.isNotEmpty()) { "There is no given permission" }
-        val dest = arrayOfNulls<String>(permissions.size)
-        for (i in permissions.indices) {
-            dest[i] = permissions[i]
-        }
-        return dest
-    }
-
-    fun hasGranted(grantResult: Int): Boolean {
+    private fun hasGranted(grantResult: Int): Boolean {
         return grantResult == PackageManager.PERMISSION_GRANTED
     }
 
@@ -66,13 +73,14 @@ object PermissionHelper {
                 return false
             }
         }
+
         return true
     }
 
     private fun hasSelfPermission(context: Context, permission: String): Boolean {
-        return if (shouldAskPermission()) {
-            permissionHasGranted(context, permission)
-        } else true
+        if (shouldAskPermission()) return permissionHasGranted(context, permission)
+
+        return true
     }
 
     fun hasSelfPermissions(context: Context, permissions: Array<String>): Boolean {
@@ -83,6 +91,7 @@ object PermissionHelper {
                 }
             }
         }
+
         return true
     }
 
@@ -112,17 +121,37 @@ object PermissionHelper {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     }
 
-    private fun shouldShowRequestPermissionRationale(activity: Activity?, permission: String): Boolean {
-        if (activity != null) {
-            return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
-        }
+    private fun shouldShowRequestPermissionRationale(
+        activity: Activity?,
+        permission: String
+    ): Boolean {
+        if (activity != null) return ActivityCompat.shouldShowRequestPermissionRationale(
+            activity,
+            permission
+        )
+
         return false
     }
 
-    interface PermissionAskListener {
-        fun onNeedPermission()
-        fun onPermissionPreviouslyDenied()
-        fun onPermissionDisabled()
-        fun onPermissionGranted()
+    fun isPermissionDeclared(context: Context, permission: String): Boolean {
+        val packagePermissions = context.packageManager.getPackageInfo(
+            context.packageName,
+            PackageManager.GET_PERMISSIONS
+        ).requestedPermissions
+
+        return packagePermissions?.any { p -> permission == p }
+            ?: false
+    }
+
+    private fun setInitialRequestCalled(context: Context, permission: String) {
+        context.getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(permission, true)
+            .apply()
+    }
+
+    private fun isInitialRequestCalled(context: Context, permission: String): Boolean {
+        return context.getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE)
+            .getBoolean(permission, false)
     }
 }

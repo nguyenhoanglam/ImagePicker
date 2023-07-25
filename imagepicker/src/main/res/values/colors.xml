@@ -5,6 +5,17 @@
     <color name="imagepicker_black_alpha_30">#4D000000</color>
     <color name="imagepicker_grey">#424242</color>
     <color name="imagepicker_dark">#323232</color>
-    <color name="imagepicker_teal">#009688</color>
     <color name="imagepicker_blue">#1976D2</color>
+
+    <color name="imagepicker_background">#000000</color>
+    <color name="imagepicker_status_bar">#000000</color>
+    <color name="imagepicker_toolbar">#212121</color>
+    <color name="imagepicker_toolbar_title">#FFFFFF</color>
+    <color name="imagepicker_toolbar_icon">#FFFFFF</color>
+    <color name="imagepicker_done_button_title">#FFFFFF</color>
+    <color name="imagepicker_snack_bar_background">#323232</color>
+    <color name="imagepicker_snack_bar_message">#FFFFFF</color>
+    <color name="imagepicker_snack_bar_button_title">#4CAF50</color>
+    <color name="imagepicker_loading_indicator">#757575</color>
+    <color name="imagepicker_selected_image_indicator">#1976D2</color>
 </resources>
