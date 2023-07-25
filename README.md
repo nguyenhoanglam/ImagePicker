@@ -30,7 +30,7 @@ dependencyResolutionManagement {
 Add the dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.6.0'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.6.1'
 }
 ```
 
