@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun start() {
         val folderMode = binding.folderModeSwitch.isChecked
-        val multiSelectMode = binding.multiSelectModeSwitch.isChecked
+        val singleSelectMode = binding.singleSelectModeSwitch.isChecked
         val cameraMode = binding.cameraModeSwitch.isChecked
         val showCamera = binding.showCameraSwitch.isChecked
         val selectAllEnabled = binding.showSelectAllSwitch.isChecked
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         val config = ImagePickerConfig(
             isCameraMode = cameraMode,
-            isMultiSelectMode = multiSelectMode,
+            isSingleSelectMode = singleSelectMode,
             isFolderMode = folderMode,
             isShowCamera = showCamera,
             isSelectAllEnabled = selectAllEnabled,
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun launchFragment() {
         val folderMode = binding.folderModeSwitch.isChecked
-        val multiSelectMode = binding.multiSelectModeSwitch.isChecked
+        val singleSelectMode = binding.singleSelectModeSwitch.isChecked
         val cameraMode = binding.cameraModeSwitch.isChecked
         val showCamera = binding.showCameraSwitch.isChecked
         val selectAllEnabled = binding.showSelectAllSwitch.isChecked
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
         val config = ImagePickerConfig(
             isCameraMode = cameraMode,
-            isMultiSelectMode = multiSelectMode,
+            isSingleSelectMode = singleSelectMode,
             isFolderMode = folderMode,
             isShowCamera = showCamera,
             isSelectAllEnabled = selectAllEnabled,

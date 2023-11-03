@@ -86,7 +86,7 @@ class ImagePickerAdapter(
     override fun onBindViewHolder(viewHolder: ImageViewHolder, position: Int) {
         val image = images[position]
         val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
-        val isSelected = config.isMultiSelectMode && selectedIndex != -1
+        val isSelected = !config.isSingleSelectMode && selectedIndex != -1
 
         GlideHelper.loadImage(viewHolder.image, image.uri)
         setupItemForeground(viewHolder.image, isSelected)
@@ -120,7 +120,9 @@ class ImagePickerAdapter(
     }
 
     private fun selectOrRemoveImage(image: Image, position: Int) {
-        if (config.isMultiSelectMode) {
+        if (config.isSingleSelectMode) {
+            imageSelectListener.onSingleModeImageSelected(image)
+        } else {
             val selectedIndex = ImageHelper.findImageIndex(image, selectedImages)
             if (selectedIndex != -1) {
                 selectedImages.removeAt(selectedIndex)
@@ -139,8 +141,6 @@ class ImagePickerAdapter(
                 }
             }
             imageSelectListener.onSelectedImagesChanged(selectedImages)
-        } else {
-            imageSelectListener.onSingleModeImageSelected(image)
         }
     }
 

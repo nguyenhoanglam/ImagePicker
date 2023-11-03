@@ -89,13 +89,13 @@ class ImagePickerViewModel(application: Application) : AndroidViewModel(applicat
 
                 while (cursor.moveToNext()) {
                     val id = cursor.getLong(idColumn)
-                    val name = cursor.getString(nameColumn)
+                    val name = cursor.getStringOrNull(nameColumn) ?: ""
                     val bucketId = cursor.getLong(bucketIdColumn)
                     val bucketName = cursor.getStringOrNull(bucketNameColumn) ?: ""
 
                     val uri = ContentUris.withAppendedId(imageCollectionUri, id)
 
-                    val image = Image(uri, name, bucketId, bucketName)
+                    val image = Image(uri, name.toString(), bucketId, bucketName)
                     images.add(image)
                 }
                 cursor.close()

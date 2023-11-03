@@ -29,13 +29,13 @@
                     android:text="Folder Mode" />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/multiSelectModeSwitch"
+                    android:id="@+id/singleSelectModeSwitch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:checked="true"
+                    android:checked="false"
                     android:gravity="right"
-                    android:text="Multiple Mode" />
+                    android:text="Single Mode" />
             </LinearLayout>
 
             <LinearLayout
@@ -117,7 +117,7 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:gravity="right"
-                    android:text="Enable Image Transition" />
+                    android:text="Image Transition" />
             </LinearLayout>
 
             <Button

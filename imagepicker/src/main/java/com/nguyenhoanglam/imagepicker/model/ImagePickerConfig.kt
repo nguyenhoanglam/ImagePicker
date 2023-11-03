@@ -37,7 +37,7 @@ fun Context.getHexColorFromResId(resId: Int): String {
 @Parcelize
 class ImagePickerConfig(
     var isCameraMode: Boolean = false,
-    var isMultiSelectMode: Boolean = true,
+    var isSingleSelectMode: Boolean = false,
     var isFolderMode: Boolean = true,
     var isShowCamera: Boolean = true,
     var isAlwaysShowDoneButton: Boolean = true,

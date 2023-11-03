@@ -57,6 +57,11 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
                     config,
                     object : OnImageReadyListener {
                         override fun onImageReady(images: ArrayList<Image>) {
+                            if (config.isSingleSelectMode || images.isNotEmpty()) {
+                                onSingleModeImageSelected(images.first())
+                                return
+                            }
+
                             fetchDataWithPermission()
                         }
 
@@ -246,7 +251,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
     private fun configSelectAllButtons(
         bucketId: Long?, images: ArrayList<Image>?, selectedImages: ArrayList<Image>?
     ) {
-        if (!config.isMultiSelectMode) return
+        if (config.isSingleSelectMode) return
 
         val state = ImageHelper.getBucketSelectionState(
             images, selectedImages, bucketId
