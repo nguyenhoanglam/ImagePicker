@@ -4,7 +4,7 @@
     <string name="imagepicker_action_done">DONE</string>
     <string name="imagepicker_action_cancel">CANCEL</string>
 
-    <string name="imagepicker_title_folder">Albums</string>
+    <string name="imagepicker_title_folder">Gallery</string>
     <string name="imagepicker_title_image">Photos</string>
 
     <string name="imagepicker_text_gif">GIF</string>

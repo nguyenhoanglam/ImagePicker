@@ -18,4 +18,5 @@
     <color name="imagepicker_snack_bar_button_title">#4CAF50</color>
     <color name="imagepicker_loading_indicator">#757575</color>
     <color name="imagepicker_selected_image_indicator">#1976D2</color>
+    <color name="imagepicker_popup_backdrop">#CC000000</color>
 </resources>

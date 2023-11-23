@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize">
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_toolbar_back"

@@ -8,16 +8,21 @@ package com.nguyenhoanglam.imagepicker.ui.imagepicker
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.databinding.ImagepickerFragmentBinding
+import com.nguyenhoanglam.imagepicker.helper.CustomGridLayoutManager
 import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.LayoutManagerHelper
+import com.nguyenhoanglam.imagepicker.listener.OnImageLongPressListener
+import com.nguyenhoanglam.imagepicker.listener.OnImagePreviewListener
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
 import com.nguyenhoanglam.imagepicker.model.CallbackStatus
 import com.nguyenhoanglam.imagepicker.model.GridCount
@@ -26,7 +31,7 @@ import com.nguyenhoanglam.imagepicker.model.Result
 import com.nguyenhoanglam.imagepicker.ui.adapter.ImagePickerAdapter
 import com.nguyenhoanglam.imagepicker.widget.GridSpacingItemDecoration
 
-class ImageFragment : BaseFragment() {
+class ImageFragment : BaseFragment(), OnImageLongPressListener {
 
     private var _binding: ImagepickerFragmentBinding? = null
     private val binding get() = _binding!!
@@ -36,8 +41,10 @@ class ImageFragment : BaseFragment() {
 
     private lateinit var viewModel: ImagePickerViewModel
     private lateinit var imageAdapter: ImagePickerAdapter
-    private lateinit var gridLayoutManager: GridLayoutManager
+    private lateinit var gridLayoutManager: CustomGridLayoutManager
     private lateinit var itemDecoration: GridSpacingItemDecoration
+
+    private var isShowingPreview = false
 
     companion object {
 
@@ -95,7 +102,12 @@ class ImageFragment : BaseFragment() {
         val config = viewModel.getConfig()
 
         imageAdapter =
-            ImagePickerAdapter(requireActivity(), config, activity as OnImageSelectListener)
+            ImagePickerAdapter(
+                requireActivity(),
+                config,
+                activity as OnImageSelectListener,
+                this
+            )
         gridLayoutManager = LayoutManagerHelper.newInstance(requireContext(), gridCount)
         itemDecoration = GridSpacingItemDecoration(
             gridLayoutManager.spanCount,
@@ -112,7 +124,30 @@ class ImageFragment : BaseFragment() {
                 layoutManager = gridLayoutManager
                 addItemDecoration(itemDecoration)
                 adapter = imageAdapter
+                addOnItemTouchListener(object : OnItemTouchListener {
+                    override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                        if (isShowingPreview && (e.action == MotionEvent.ACTION_UP || e.action == MotionEvent.ACTION_CANCEL)) {
+                            gridLayoutManager.setScrollEnabled(true)
+                            (activity as OnImagePreviewListener).onHideImagePreview()
+                            isShowingPreview = false
+
+                            return true
+                        }
+
+                        return false
+                    }
+
+                    override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+
+                    }
+
+                    override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+
+                    }
+
+                })
             }
+
         }
 
         viewModel.apply {
@@ -194,5 +229,11 @@ class ImageFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onLongPress(image: Image) {
+        gridLayoutManager.setScrollEnabled(false)
+        (activity as OnImagePreviewListener).onShowImagePreview(image)
+        isShowingPreview = true
     }
 }

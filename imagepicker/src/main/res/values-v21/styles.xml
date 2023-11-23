@@ -24,4 +24,9 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="imagepicker_ImagePreviewPopupWindow">
+        <item name="android:windowEnterAnimation">@anim/imagepicker_preview_zoom_in</item>
+        <item name="android:windowExitAnimation">@anim/imagepicker_preview_zoom_out</item>
+    </style>
+
 </resources>

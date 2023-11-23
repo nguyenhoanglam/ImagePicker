@@ -12,14 +12,28 @@ import com.nguyenhoanglam.imagepicker.model.GridCount
 
 object LayoutManagerHelper {
 
-    fun newInstance(context: Context, gridCount: GridCount): GridLayoutManager {
+    fun newInstance(context: Context, gridCount: GridCount): CustomGridLayoutManager {
         val spanCount = getSpanCountForCurrentConfiguration(context, gridCount)
-        return GridLayoutManager(context, spanCount)
+        return CustomGridLayoutManager(context, spanCount)
     }
 
     fun getSpanCountForCurrentConfiguration(context: Context, gridCount: GridCount): Int {
         val isPortrait =
             context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
         return if (isPortrait) gridCount.portrait else gridCount.landscape
+    }
+}
+
+class CustomGridLayoutManager(context: Context?, spanCount: Int) :
+    GridLayoutManager(context, spanCount) {
+
+    private var isScrollEnabled = true
+
+    fun setScrollEnabled(enabled: Boolean) {
+        isScrollEnabled = enabled
+    }
+
+    override fun canScrollVertically(): Boolean {
+        return isScrollEnabled && super.canScrollVertically()
     }
 }

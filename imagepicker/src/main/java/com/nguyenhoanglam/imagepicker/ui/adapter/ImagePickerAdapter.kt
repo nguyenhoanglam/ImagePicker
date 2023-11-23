@@ -20,6 +20,7 @@ import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.helper.GlideHelper
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.ToastHelper
+import com.nguyenhoanglam.imagepicker.listener.OnImageLongPressListener
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
@@ -28,7 +29,8 @@ import com.nguyenhoanglam.imagepicker.model.IndicatorType
 class ImagePickerAdapter(
     context: Context,
     private val config: ImagePickerConfig,
-    private val imageSelectListener: OnImageSelectListener
+    private val imageSelectListener: OnImageSelectListener,
+    private val imageLongPressListener: OnImageLongPressListener
 ) : BaseRecyclerViewAdapter<ImagePickerAdapter.ImageViewHolder?>(context) {
 
     private var images = arrayListOf<Image>()
@@ -102,6 +104,10 @@ class ImagePickerAdapter(
         }
         viewHolder.itemView.setOnClickListener {
             selectOrRemoveImage(image, position)
+        }
+        viewHolder.itemView.setOnLongClickListener {
+            imageLongPressListener.onLongPress(image)
+            true
         }
     }
 

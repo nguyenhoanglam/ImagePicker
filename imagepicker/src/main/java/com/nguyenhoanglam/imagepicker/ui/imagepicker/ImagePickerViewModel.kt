@@ -17,6 +17,8 @@ import com.nguyenhoanglam.imagepicker.model.CallbackStatus
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 import com.nguyenhoanglam.imagepicker.model.Result
+import com.nguyenhoanglam.imagepicker.model.SortBy
+import com.nguyenhoanglam.imagepicker.model.SortOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -69,13 +71,22 @@ class ImagePickerViewModel(application: Application) : AndroidViewModel(applicat
             )
 
             val imageCollectionUri = ImageHelper.getImageCollectionUri()
+            val sortBy = when (config.imageSort.by) {
+                SortBy.DISPLAY_NAME -> MediaStore.Images.Media.DISPLAY_NAME
+                SortBy.DATE_MODIFIED -> MediaStore.Images.Media.DATE_MODIFIED
+                else -> MediaStore.Images.Media.DATE_ADDED
+            }
+            val sortOrder = when (config.imageSort.order) {
+                SortOrder.DESC -> "DESC"
+                else -> "ASC"
+            }
 
             contextRef.get()!!.contentResolver.query(
                 imageCollectionUri,
                 projection,
                 null,
                 null,
-                MediaStore.Images.Media.DATE_ADDED + " DESC"
+                "$sortBy $sortOrder"
             )?.use { cursor ->
                 val images = arrayListOf<Image>()
 
@@ -95,7 +106,7 @@ class ImagePickerViewModel(application: Application) : AndroidViewModel(applicat
 
                     val uri = ContentUris.withAppendedId(imageCollectionUri, id)
 
-                    val image = Image(uri, name.toString(), bucketId, bucketName)
+                    val image = Image(uri, name, bucketId, bucketName)
                     images.add(image)
                 }
                 cursor.close()

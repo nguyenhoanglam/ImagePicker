@@ -10,7 +10,12 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.PopupWindow
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +23,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.imageview.ShapeableImageView
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.databinding.ImagepickerActivityImagepickerBinding
 import com.nguyenhoanglam.imagepicker.helper.Constants
@@ -28,6 +34,7 @@ import com.nguyenhoanglam.imagepicker.helper.PermissionHelper
 import com.nguyenhoanglam.imagepicker.helper.SelectionState
 import com.nguyenhoanglam.imagepicker.helper.ToastHelper
 import com.nguyenhoanglam.imagepicker.listener.OnFolderClickListener
+import com.nguyenhoanglam.imagepicker.listener.OnImagePreviewListener
 import com.nguyenhoanglam.imagepicker.listener.OnImageSelectListener
 import com.nguyenhoanglam.imagepicker.model.Folder
 import com.nguyenhoanglam.imagepicker.model.Image
@@ -36,7 +43,9 @@ import com.nguyenhoanglam.imagepicker.model.StatusBarContent
 import com.nguyenhoanglam.imagepicker.ui.camera.CameraModule
 import com.nguyenhoanglam.imagepicker.ui.camera.OnImageReadyListener
 
-class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageSelectListener {
+
+class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageSelectListener,
+    OnImagePreviewListener {
 
     private lateinit var binding: ImagepickerActivityImagepickerBinding
     private lateinit var config: ImagePickerConfig
@@ -49,6 +58,8 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
     private val selectAllClickListener = View.OnClickListener { handleSelectAllImages() }
     private val unselectAllClickListener = View.OnClickListener { handleUnselectAllImages() }
     private val doneClickListener = View.OnClickListener { onDone() }
+
+    private var popupWindow: PopupWindow? = null
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -427,5 +438,30 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
 
     override fun onSingleModeImageSelected(image: Image) {
         finishPickImages(ImageHelper.singleListFromImage(image))
+    }
+
+    override fun onShowImagePreview(image: Image) {
+        val previewLayout =
+            layoutInflater.inflate(R.layout.imagepicker_image_preview, null)
+        val imageView = previewLayout.findViewById<ShapeableImageView>(R.id.image)
+
+        popupWindow = PopupWindow(
+            previewLayout,
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
+        popupWindow?.animationStyle = R.style.imagepicker_ImagePreviewPopupWindow
+        popupWindow?.showAtLocation(previewLayout, Gravity.CENTER, 0, 0)
+
+        GlideHelper.loadPreviewImage(imageView, image.uri)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.overlay.visibility = View.VISIBLE
+        }, 100)
+    }
+
+    override fun onHideImagePreview() {
+        popupWindow?.dismiss()
+        binding.overlay.visibility = View.GONE
     }
 }

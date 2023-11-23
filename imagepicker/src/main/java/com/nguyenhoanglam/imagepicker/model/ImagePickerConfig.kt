@@ -15,19 +15,17 @@ import com.nguyenhoanglam.imagepicker.R
 import kotlinx.parcelize.Parcelize
 
 enum class StatusBarContent {
-    LIGHT,
-    DARK
+    LIGHT, DARK
 }
 
 enum class RootDirectory(val value: String) {
-    DCIM(Environment.DIRECTORY_DCIM),
-    PICTURES(Environment.DIRECTORY_PICTURES),
-    DOWNLOADS(Environment.DIRECTORY_DOWNLOADS)
+    DCIM(Environment.DIRECTORY_DCIM), PICTURES(Environment.DIRECTORY_PICTURES), DOWNLOADS(
+        Environment.DIRECTORY_DOWNLOADS
+    )
 }
 
 enum class IndicatorType {
-    NUMBER,
-    CHECK_MARK
+    NUMBER, CHECK_MARK
 }
 
 fun Context.getHexColorFromResId(resId: Int): String {
@@ -49,6 +47,7 @@ class ImagePickerConfig(
     var limitSize: Int = Int.MAX_VALUE,
     var folderGridCount: GridCount = GridCount(2, 4),
     var imageGridCount: GridCount = GridCount(3, 5),
+    var imageSort: ImageSort = ImageSort(by = SortBy.DATE_ADDED, order = SortOrder.DESC),
     var doneButtonTitle: String? = null,
     var snackBarButtonTitle: String? = null,
     var folderTitle: String? = null,
