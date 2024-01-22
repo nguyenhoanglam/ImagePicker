@@ -58,10 +58,7 @@ class CameraActivity : AppCompatActivity() {
         }
 
         @Suppress("DEPRECATION")
-        config = if (DeviceHelper.isMinSdk33) intent.getParcelableExtra(
-            Constants.EXTRA_CONFIG, ImagePickerConfig::class.java
-        )!!
-        else intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
+        config = intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
         config.initDefaultValues(this@CameraActivity)
 
         binding = ImagepickerActivityCameraBinding.inflate(layoutInflater)

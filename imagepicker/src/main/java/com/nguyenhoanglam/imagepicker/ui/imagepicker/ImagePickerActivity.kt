@@ -91,9 +91,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
             return
         }
 
-        config = if (DeviceHelper.isMinSdk33) intent.getParcelableExtra(
-            Constants.EXTRA_CONFIG, ImagePickerConfig::class.java
-        )!! else intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
+        config = intent.getParcelableExtra(Constants.EXTRA_CONFIG)!!
         config.initDefaultValues(this@ImagePickerActivity)
 
         // Setup status bar theme

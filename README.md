@@ -29,7 +29,7 @@ dependencyResolutionManagement {
 Add the dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.6.2'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.6.3'
 }
 ```
 
@@ -123,7 +123,7 @@ launcher.launch(config)
 Define sorting for images
 | Property | Description | Default value
 | -------- | ----------- | :---: |
-| `by` | Sorting type: date added, date modified and display name | `DATE_ADDED`
+| `by` | Sorting type: date added, date modified and display name. | `DATE_ADDED`
 | `order` | Sorting order: ascending and descending. | `DESC`
 
 #### *CustomColor* class

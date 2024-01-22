@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import com.nguyenhoanglam.imagepicker.R
 import com.nguyenhoanglam.imagepicker.databinding.ImagepickerFragmentBinding
 import com.nguyenhoanglam.imagepicker.helper.CustomGridLayoutManager
-import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
 import com.nguyenhoanglam.imagepicker.helper.ImageHelper
 import com.nguyenhoanglam.imagepicker.helper.LayoutManagerHelper
 import com.nguyenhoanglam.imagepicker.listener.OnImageLongPressListener
@@ -80,11 +79,7 @@ class ImageFragment : BaseFragment(), OnImageLongPressListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bucketId = arguments?.getLong(BUCKET_ID)
-        gridCount = if (DeviceHelper.isMinSdk33)
-            arguments?.getParcelable(
-                GRID_COUNT,
-                GridCount::class.java
-            )!! else arguments?.getParcelable(GRID_COUNT)!!
+        gridCount = arguments?.getParcelable(GRID_COUNT)!!
 
         viewModel = requireActivity().run {
             ViewModelProvider(

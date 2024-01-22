@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.nguyenhoanglam.imagepicker.helper.Constants
-import com.nguyenhoanglam.imagepicker.helper.DeviceHelper
 import com.nguyenhoanglam.imagepicker.model.Image
 import com.nguyenhoanglam.imagepicker.model.ImagePickerConfig
 import com.nguyenhoanglam.imagepicker.ui.camera.CameraActivity
@@ -52,13 +51,7 @@ private fun createImagePickerIntent(context: Context, config: ImagePickerConfig)
 
 @Suppress("DEPRECATION")
 fun getImages(data: Intent?): ArrayList<Image> {
-    return if (data != null)
-        if (DeviceHelper.isMinSdk33)
-            data.getParcelableArrayListExtra(
-                Constants.EXTRA_IMAGES,
-                Image::class.java
-            )!!
-        else data.getParcelableArrayListExtra(Constants.EXTRA_IMAGES)!!
+    return if (data != null) data.getParcelableArrayListExtra(Constants.EXTRA_IMAGES)!!
     else arrayListOf()
 }
 

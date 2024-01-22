@@ -4,7 +4,6 @@
  */
 package com.imagepicker.example
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,11 +41,7 @@ class MainFragment : Fragment() {
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        config = if (Build.VERSION.SDK_INT >= 33)
-            requireArguments().getParcelable(
-                EXTRA_CONFIG,
-                ImagePickerConfig::class.java
-            ) else requireArguments().getParcelable(EXTRA_CONFIG)
+        config = requireArguments().getParcelable(EXTRA_CONFIG)
     }
 
     override fun onCreateView(
