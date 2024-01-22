@@ -8,10 +8,7 @@ An Android library that allows you to select images from the device library or c
 
 ## Changelog
 
-- Display preview mode when long pressing an image.
-- Fix bugs [#153](https://github.com/nguyenhoanglam/ImagePicker/issues/153), [#157](https://github.com/nguyenhoanglam/ImagePicker/issues/157)
-- Add ```imageSort``` for sorting images.
-- Replace ```isMultiSelectMode``` by ```isSingleSelectMode```.
+- Revert to parcelable's old methods due to the issue [#158](https://github.com/nguyenhoanglam/ImagePicker/issues/158).
 
 ## Installation
 
