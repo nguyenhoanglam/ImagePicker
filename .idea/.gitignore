@@ -1,0 +1,9 @@
+/codeStyles
+/inspectionProfiles
+/libraries
+# Android Studio 3 in .gitignore file.
+/caches
+modules.xml
+# Comment next line if keeping position of elements in Navigation Editor is relevant for you
+navEditor.xml
+jarRepositories.xml
