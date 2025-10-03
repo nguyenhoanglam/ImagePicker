@@ -8,6 +8,10 @@ package com.imagepicker.example
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.imagepicker.example.databinding.ActivityMainBinding
 import com.nguyenhoanglam.imagepicker.model.CustomColor
@@ -36,6 +40,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // In your Activity's onCreate method or Fragment's onViewCreated
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.isAppearanceLightStatusBars = true
+
+        WindowCompat.setDecorFitsSystemWindows(window,false)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root){ view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left,systemBars.top,systemBars.right,systemBars.bottom)
+            return@setOnApplyWindowInsetsListener insets
+        }
 
         adapter = ImageAdapter(this)
         binding.recyclerView.layoutManager =

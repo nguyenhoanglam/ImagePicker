@@ -8,7 +8,7 @@ An Android library that allows you to select images from the device library or c
 
 ## Changelog
 
-- Revert to parcelable's old methods due to the issue [#158](https://github.com/nguyenhoanglam/ImagePicker/issues/158).
+- Upgrade some dependencies.
 
 ## Installation
 
@@ -26,7 +26,7 @@ dependencyResolutionManagement {
 Add the dependency in app build.gradle:
 ```
 dependencies {
-    implementation 'com.github.nguyenhoanglam:ImagePicker:1.6.3'
+    implementation 'com.github.nguyenhoanglam:ImagePicker:1.6.4'
 }
 ```
 
@@ -167,8 +167,7 @@ Define custom message when something's wrong, type = `String`.
 Author
 --------
 
-Copyright © 2016 Nguyen Hoang Lam
+Copyright © 2025 Nguyen Hoang Lam
 
-[![LinkedIn](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:hoanglamvn90@gmail.com)
-[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/hoanglamvn90)
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/lam_dev)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lam-nguyen-hoang-70bb21115)

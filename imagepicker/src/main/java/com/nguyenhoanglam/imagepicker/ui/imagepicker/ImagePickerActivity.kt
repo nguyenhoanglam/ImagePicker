@@ -6,9 +6,7 @@
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,6 +17,7 @@ import android.widget.PopupWindow
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.toColorInt
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
@@ -63,8 +62,9 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                cameraModule.saveImage(this@ImagePickerActivity,
+            if (result.resultCode == RESULT_OK) {
+                cameraModule.saveImage(
+                    this@ImagePickerActivity,
                     config,
                     object : OnImageReadyListener {
                         override fun onImageReady(images: ArrayList<Image>) {
@@ -95,7 +95,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
         config.initDefaultValues(this@ImagePickerActivity)
 
         // Setup status bar theme
-        window.statusBarColor = Color.parseColor(config.customColor!!.statusBar)
+        window.statusBarColor = config.customColor!!.statusBar!!.toColorInt()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars =
             config.statusBarContentMode == StatusBarContent.DARK
@@ -413,7 +413,7 @@ class ImagePickerActivity : AppCompatActivity(), OnFolderClickListener, OnImageS
     private fun finishPickImages(images: ArrayList<Image>) {
         val data = Intent()
         data.putParcelableArrayListExtra(Constants.EXTRA_IMAGES, images)
-        setResult(Activity.RESULT_OK, data)
+        setResult(RESULT_OK, data)
         finish()
     }
 
