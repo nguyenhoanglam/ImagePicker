@@ -86,6 +86,8 @@ val config = ImagePickerConfig(
 launcher.launch(config)
 ```
 
+Java example: [MainActivity.java](example/src/main/java/com/imagepicker/example/java/MainActivity.java)
+
 ## Configuration options
 
 | Option                     | Description                                                                                                                                                                                                         | Default value

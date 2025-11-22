@@ -3,6 +3,8 @@
  * Author: Nguyen Hoang Lam <hoanglamvn90@gmail.com>
  */
 
+@file:JvmName("ImagePicker")
+
 package com.nguyenhoanglam.imagepicker.ui.imagepicker
 
 import android.content.Context
@@ -55,6 +57,7 @@ fun getImages(data: Intent?): ArrayList<Image> {
     else arrayListOf()
 }
 
+@JvmOverloads
 fun ComponentActivity.registerImagePicker(
     context: () -> Context = { this },
     callback: ImagePickerCallback
@@ -62,6 +65,7 @@ fun ComponentActivity.registerImagePicker(
     return ImagePickerLauncher(context, createLauncher(callback))
 }
 
+@JvmOverloads
 fun Fragment.registerImagePicker(
     context: () -> Context = { requireContext() },
     callback: ImagePickerCallback
